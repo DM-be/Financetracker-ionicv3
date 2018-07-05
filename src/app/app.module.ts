@@ -11,6 +11,10 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+import { HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { MyHammerConfig } from '../configs/MyHammerConfig';
+import { DbProvider } from '../providers/db/db';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -34,7 +38,12 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    { 
+      provide: HAMMER_GESTURE_CONFIG, 
+      useClass: MyHammerConfig 
+    },
+    DbProvider
   ]
 })
 export class AppModule {}

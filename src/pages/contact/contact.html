@@ -1,17 +1,22 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      Contact
-    </ion-title>
-  </ion-navbar>
+  <ion-item>
+    <ion-label>Date</ion-label>
+    <ion-datetime displayFormat="MM/YYYY" pickerFormat="MMMM YYYY"  [(ngModel)]="selectedDate" (ionChange)="logIt()"></ion-datetime>
+  </ion-item>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-list-header>Follow us on Twitter</ion-list-header>
-    <ion-item>
-      <ion-icon name="ionic" item-start></ion-icon>
-      @ionicframework
-    </ion-item>
-  </ion-list>
+<ion-content padding >
+  <div (swipe)="handleSwipe($event)"><h1> Expenses Overview</h1>
+  
+    <p *ngFor="let categoryCost of categoryCosts">
+     {{categoryCost.categoryName}} + {{categoryCost.categoryTotalCost}}</p>
+    
+
+    
+  </div>
+  
+
+
+
 </ion-content>
+
