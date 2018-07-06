@@ -14,6 +14,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { MyHammerConfig } from '../configs/MyHammerConfig';
 import { DbProvider } from '../providers/db/db';
+import { LoginPage } from '../pages/login/login';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
   declarations: [
@@ -21,11 +23,13 @@ import { DbProvider } from '../providers/db/db';
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    LoginPage
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    HttpModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -33,7 +37,8 @@ import { DbProvider } from '../providers/db/db';
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    LoginPage
   ],
   providers: [
     StatusBar,
