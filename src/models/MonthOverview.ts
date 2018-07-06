@@ -14,4 +14,8 @@ export class MonthOverView {
         this.endBalance = startBalance; // always starts with default value startbalance
     }
 
+
+    // 20 af van april uitgaven --> eindsaldo - 20
+    // mei --> start en eind - 20
+    
 }

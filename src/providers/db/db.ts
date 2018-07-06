@@ -30,8 +30,21 @@ export class DbProvider {
 
   async setup() {
     this.db = new PouchDB('finance');
-    this.getMonthOverview(this._id_now);
+    let thismonth = await this.getMonthOverview(this._id_now);
+    console.log(thismonth)
   }
+
+
+  async defaultMonthOverview() {
+    try {
+      let newMonthOverview = new MonthOverView(this._id_now, 0);
+      await this.db.put(newMonthOverview); // surround in catch?
+      return newMonthOverview;
+    } catch (error) {
+      console.log('error in making a default month overview');
+    }
+  }
+
 
   async newMonthOverview(): Promise < MonthOverView > {
 
@@ -44,11 +57,11 @@ export class DbProvider {
       return newMonthOverview;
     } catch (error) {
       if (error.name === 'not_found') {
-        let newMonthOverview = new MonthOverView(this._id_now, 0);
-        await this.db.put(newMonthOverview); // surround in catch?
-        return newMonthOverview;
+        console.log('in catch');
+        return await this.defaultMonthOverview();
+        
       } else {
-        console.log('error in putting a new monthoverview', error);
+        //console.log('error in putting a new monthoverview', error);
       }
 
     }
@@ -56,12 +69,14 @@ export class DbProvider {
   }
 
 
-  async getMonthOverview(_id_month: string): Promise < MonthOverView > {
+  async getMonthOverview(_id_month: string) {
     try {
       return await this.db.get(_id_month);
     } catch (error) {
+      console.log(error);
       if (error.name === 'not_found') {
-        return this.newMonthOverview();
+        console.log('did not find, making new month overview');
+        return await this.newMonthOverview();
       }
     }
 
@@ -127,11 +142,13 @@ export class DbProvider {
     let categoryCosts = [];
     categoryNames.forEach(categoryName => {
       let categoryTotalCost = 0;
+      let expenses = [];
       let filteredExpensesByCategoryName = doc.expenses.filter(expense => expense.categoryName === categoryName);
       filteredExpensesByCategoryName.forEach(expense => {
+        expenses.push(expense);
         categoryTotalCost += expense.cost;
       });
-      let newCategoryCost = new CategoryCost(categoryName, categoryTotalCost);
+      let newCategoryCost = new CategoryCost(categoryName, categoryTotalCost, expenses);
       categoryCosts.push(newCategoryCost);
     });
     return categoryCosts;

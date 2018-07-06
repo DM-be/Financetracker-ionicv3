@@ -11,15 +11,15 @@
   <form (ngSubmit)="addExpense()">
     <ion-item>
       <ion-label>CategoryName</ion-label>
-      <ion-input type="text" [(ngModel)]="ex.categoryName" name="categoryName"></ion-input>
+      <ion-input type="text" [(ngModel)]="categoryName" name="categoryName"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>Description</ion-label>
-      <ion-textarea [(ngModel)]="ex.description" name="description"></ion-textarea>
+      <ion-textarea [(ngModel)]="description" name="description"></ion-textarea>
     </ion-item>
     <ion-item>
       <ion-label>cost</ion-label>
-       <ion-input type="number"[(ngModel)]="ex.cost" name="cost"></ion-input>
+       <ion-input type="number"[(ngModel)]="cost" name="cost"></ion-input>
     </ion-item>
     <button ion-button type="submit" block>Add expense</button>
   </form>

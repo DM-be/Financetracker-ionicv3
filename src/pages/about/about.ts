@@ -12,17 +12,21 @@ import { Expense } from '../../models/Expense';
 export class AboutPage {
 
   public _id_now: string;
-  public ex = new Expense('test', 0, 'test');
+  public description: string;
+  public categoryName: string;
+  public cost: string;
+
+
   constructor(public navCtrl: NavController, public dbProvider: DbProvider) {
-   // this.ex = new Expense('', 0, '');
     this._id_now = moment().format('YYYY-MM');
   }
 
   addExpense() {
-    this.ex.cost = parseInt(this.ex.cost);
-    this.dbProvider.addExpense(this._id_now, this.ex);
+
+    let expense = new Expense(this.categoryName, parseInt(this.cost), this.description, moment().format());
+    this.dbProvider.addExpense(this._id_now, expense);
     console.log('added expense');
-    console.log(this.ex);
+    console.log(expense);
   }
 
 }

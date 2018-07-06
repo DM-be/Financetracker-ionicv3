@@ -38,7 +38,7 @@ import { DbProvider } from '../providers/db/db';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    //{provide: ErrorHandler, useClass: IonicErrorHandler},
     { 
       provide: HAMMER_GESTURE_CONFIG, 
       useClass: MyHammerConfig 
