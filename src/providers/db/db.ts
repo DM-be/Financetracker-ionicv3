@@ -21,6 +21,8 @@ import { Expense } from '../../models/Expense';
 export class DbProvider {
   private db: PouchDB;
   private _id_now; // moment object
+  private remote: any;
+  private username: string
 
 
   constructor() {
@@ -28,8 +30,29 @@ export class DbProvider {
     this._id_now = moment().format('YYYY-MM');
   }
 
-  async setup() {
+  initSignIn(details): void{
+    this.remote = details.userDBs.supertest;
+    this.username = details.user_id;
     this.db = new PouchDB('finance');
+    this.db.sync(this.remote).on('complete', () => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
+      this.db.sync(this.remote, {
+        live: true,
+        retry: true, // waiting is overkill?
+        continuous: true
+      });
+    })
+    }
+
+    initSignUp(details) {
+      this.initSignIn(details);
+      this.db.put(this.username);
+      
+    }
+
+
+
+  async setup() {
+    
     let thismonth = await this.getMonthOverview(this._id_now);
     console.log(thismonth)
   }

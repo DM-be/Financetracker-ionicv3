@@ -5,6 +5,7 @@ import {
   Headers
 } from '@angular/http';
 import { TabsPage } from '../tabs/tabs';
+import { DbProvider } from '../../providers/db/db';
 
 /**
  * Generated class for the LoginPage page.
@@ -32,6 +33,7 @@ export class LoginPage {
     public events: Events,
     public platform: Platform,
     public alertCtrl: AlertController,
+    public dbProvider: DbProvider
   ) {
   }
 
@@ -56,7 +58,9 @@ export class LoginPage {
         headers: headers
       }).subscribe(async res => {
     
+        this.dbProvider.init(res.json());
         this.appCtrl.getRootNav().setRoot(TabsPage);
+        console.log(res);
         loader.dismiss();
     }, error => {
       loader.dismiss();
