@@ -110,9 +110,12 @@ export class DbProvider {
     }
   }
 
+  
   async addExpense(_id_month: string, expense: Expense) {
     try {
       let doc = await this.db.get(_id_month);
+      let account = doc.accounts.find((account) => account.accountName === expense.usedAccount);
+      account.balance = account.balance - expense.cost;
       doc.expenses.push(expense);
       await this.db.put(doc);
     } catch (error) {
@@ -164,8 +167,8 @@ export class DbProvider {
       let expenses = [];
       let filteredExpensesByCategoryName = doc.expenses.filter(expense => expense.categoryName === categoryName);
       filteredExpensesByCategoryName.forEach(expense => {
-        let expenseObject = new Expense(expense.categoryName, expense.cost, expense.description, expense.dateCreated);
-        expenses.push(expenseObject);
+     //   let expenseObject = new Expense(expense.categoryName, expense.cost, expense.description, expense.dateCreated);
+      //  expenses.push(expenseObject);
         categoryTotalCost += expense.cost;
       });
       let newCategoryCost = new CategoryCost(categoryName, categoryTotalCost, expenses);
