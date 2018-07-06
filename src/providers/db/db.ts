@@ -145,7 +145,8 @@ export class DbProvider {
       let expenses = [];
       let filteredExpensesByCategoryName = doc.expenses.filter(expense => expense.categoryName === categoryName);
       filteredExpensesByCategoryName.forEach(expense => {
-        expenses.push(expense);
+        let expenseObject = new Expense(expense.categoryName,expense.cost,expense.description,expense.dateCreated);
+        expenses.push(expenseObject);
         categoryTotalCost += expense.cost;
       });
       let newCategoryCost = new CategoryCost(categoryName, categoryTotalCost, expenses);
