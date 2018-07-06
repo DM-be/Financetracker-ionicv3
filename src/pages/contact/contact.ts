@@ -20,7 +20,7 @@ export class ContactPage {
 
   constructor(public navCtrl: NavController, public dbProvider: DbProvider) {
     this.selectedDate = moment().format('YYYY-MM');
-    this.dbProvider.setup();
+    
     
   }
 

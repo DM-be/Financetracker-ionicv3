@@ -5,15 +5,11 @@ export class MonthOverView {
 
     private _id: string;
     private expenses: Expense [];
-    private startBalance: number;
-    private endBalance: number;
-    private accounts: Account [];
+    private accounts: Account []; // a copy of the userDoc balance, kept to keep track of balances each month.
 
-    constructor(_id: string, startBalance : number, accounts: Account []) {
+    constructor(_id: string, accounts: Account []) {
         this._id = _id;
         this.expenses = [];
-        this.startBalance = startBalance; // always from the previous month
-        this.endBalance = startBalance; // always starts with default value startbalance
         this.accounts = accounts;
     }
 
@@ -26,9 +22,6 @@ export class MonthOverView {
     {
         return this.accounts.filter(account => account.getAccountName() === accountName)
     }
-
-    
-
 
     // 20 af van april uitgaven --> eindsaldo - 20
     // mei --> start en eind - 20

@@ -16,6 +16,8 @@ import { MyHammerConfig } from '../configs/MyHammerConfig';
 import { DbProvider } from '../providers/db/db';
 import { LoginPage } from '../pages/login/login';
 import { HttpModule } from '@angular/http';
+import { SignupPage } from '../pages/signup/signup';
+import { AccountsPage } from '../pages/accounts/accounts';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { HttpModule } from '@angular/http';
     ContactPage,
     HomePage,
     TabsPage,
-    LoginPage
+    LoginPage,
+    SignupPage,
+    AccountsPage
   ],
   imports: [
     BrowserModule,
@@ -38,7 +42,9 @@ import { HttpModule } from '@angular/http';
     ContactPage,
     HomePage,
     TabsPage,
-    LoginPage
+    LoginPage,
+    SignupPage,
+    AccountsPage
   ],
   providers: [
     StatusBar,

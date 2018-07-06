@@ -6,10 +6,12 @@ export class UserOverview {
      */
 
     private username: string;
+    private _id: string;
     private accounts: Account []; // holds all the accounts of the user --> balances get copied to respective docs
     constructor(username: string, accounts: Account []) {
         this.username = username;
         this.accounts = accounts;
+        this._id = username;
         
     }
 

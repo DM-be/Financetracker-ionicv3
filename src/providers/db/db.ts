@@ -1,4 +1,6 @@
-import { CategoryCost } from './../../viewmodels/CategoryCost';
+import {
+  CategoryCost
+} from './../../viewmodels/CategoryCost';
 import * as moment from 'moment';
 
 import {
@@ -8,7 +10,11 @@ import PouchDB from 'pouchdb';
 import {
   MonthOverView
 } from '../../models/monthOverview';
-import { Expense } from '../../models/Expense';
+import {
+  Expense
+} from '../../models/Expense';
+import { Account } from '../../models/Account';
+import { UserOverview } from '../../models/UserOverview';
 
 
 /*
@@ -30,7 +36,7 @@ export class DbProvider {
     this._id_now = moment().format('YYYY-MM');
   }
 
-  initSignIn(details): void{
+  initSignIn(details): void {
     this.remote = details.userDBs.supertest;
     this.username = details.user_id;
     this.db = new PouchDB('finance');
@@ -41,56 +47,43 @@ export class DbProvider {
         continuous: true
       });
     })
-    }
-
-    initSignUp(details) {
-      this.initSignIn(details);
-      this.db.put(this.username);
-      
-    }
-
-
-
-  async setup() {
-    
-    let thismonth = await this.getMonthOverview(this._id_now);
-    console.log(thismonth)
   }
 
+  initSignUp(details) {
+    this.initSignIn(details);
+  }
 
-  async defaultMonthOverview() {
+  public async setupUserOverview(accounts: Account []) {
+
     try {
-      let newMonthOverview = new MonthOverView(this._id_now, 0);
-      await this.db.put(newMonthOverview); // surround in catch?
-      return newMonthOverview;
+      let userOverview = new UserOverview(this.username, accounts);
+      await this.db.put(userOverview);
     } catch (error) {
-      console.log('error in making a default month overview');
+      console.log('problem with useroverview setup', error);
+    }
+
+  }
+
+  public async setupFirstMonthOverview(accounts: Account[]) {
+    try {
+      let firstMonthOverview = new MonthOverView(this._id_now, accounts);
+      await this.db.put(firstMonthOverview);
+    } catch (error) {
+      console.log('problem with adding first montoverview', error);
     }
   }
 
-
-  async newMonthOverview(): Promise < MonthOverView > {
-
-    let _id_previousMonth = moment(this._id_now).subtract(1, 'M').format('YYYY-MM');
+  public async createNewMonthOverview() {
     try {
+      let _id_previousMonth = moment(this._id_now).subtract(1, 'M').format('YYYY-MM');
       let previousMonthOverview = await this.db.get(_id_previousMonth);
-      let previousEndBalance = previousMonthOverview.endBalance;
-      let newMonthOverview = new MonthOverView(this._id_now, previousEndBalance);
-      await this.db.put(newMonthOverview);
-      return newMonthOverview;
+      let newMonthOverview = new MonthOverView(this._id_now, previousMonthOverview.accounts);
+      return newMonthOverview; // dont always need a return
+      // any gotchas? think about it 
     } catch (error) {
-      if (error.name === 'not_found') {
-        console.log('in catch');
-        return await this.defaultMonthOverview();
-        
-      } else {
-        //console.log('error in putting a new monthoverview', error);
-      }
-
+      console.log('error in creating a new month overview');
     }
-
   }
-
 
   async getMonthOverview(_id_month: string) {
     try {
@@ -99,11 +92,15 @@ export class DbProvider {
       console.log(error);
       if (error.name === 'not_found') {
         console.log('did not find, making new month overview');
-        return await this.newMonthOverview();
+        return await this.createNewMonthOverview();
       }
     }
 
   }
+
+
+ 
+ 
 
   async getRangeOfDateTimes() { // implement range for date time picker via end and start, look at docs
     try {
@@ -152,13 +149,12 @@ export class DbProvider {
 
   }
 
-  async getCategoryCosts(_id_month: string){
+  async getCategoryCosts(_id_month: string) {
 
     let doc = await this.db.get(_id_month);
     let categoryNames = [];
     doc.expenses.forEach(expense => {
-      if(categoryNames.findIndex(exp => exp === expense.categoryName) == -1 )
-      {
+      if (categoryNames.findIndex(exp => exp === expense.categoryName) == -1) {
         categoryNames.push(expense.categoryName);
       }
     });
@@ -168,7 +164,7 @@ export class DbProvider {
       let expenses = [];
       let filteredExpensesByCategoryName = doc.expenses.filter(expense => expense.categoryName === categoryName);
       filteredExpensesByCategoryName.forEach(expense => {
-        let expenseObject = new Expense(expense.categoryName,expense.cost,expense.description,expense.dateCreated);
+        let expenseObject = new Expense(expense.categoryName, expense.cost, expense.description, expense.dateCreated);
         expenses.push(expenseObject);
         categoryTotalCost += expense.cost;
       });
@@ -176,7 +172,7 @@ export class DbProvider {
       categoryCosts.push(newCategoryCost);
     });
     return categoryCosts;
-    
+
 
   }
 }

@@ -58,7 +58,7 @@ export class LoginPage {
         headers: headers
       }).subscribe(async res => {
     
-        this.dbProvider.init(res.json());
+        this.dbProvider.initSignIn(res.json());
         this.appCtrl.getRootNav().setRoot(TabsPage);
         console.log(res);
         loader.dismiss();

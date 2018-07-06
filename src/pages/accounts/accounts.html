@@ -1,0 +1,22 @@
+<ion-content padding>
+
+  <form (ngSubmit)="addAccount()">
+    <ion-item>
+      <ion-label>CategoryName</ion-label>
+      <ion-input type="text" [(ngModel)]="accountName" name="accountName"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Description</ion-label>
+      <ion-textarea [(ngModel)]="owner" name="owner"></ion-textarea>
+    </ion-item>
+    <ion-item>
+      <ion-label>cost</ion-label>
+       <ion-input type="number"[(ngModel)]="balance" name="cost"></ion-input>
+    </ion-item>
+    <button ion-button type="submit" block>Add account</button>
+  </form>
+
+  <button ion-button (click)="finishAccounts()">done</button>
+
+
+</ion-content>
