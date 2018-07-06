@@ -24,7 +24,7 @@ export class AboutPage {
   addExpense() {
 
     let expense = new Expense(this.categoryName, parseInt(this.cost), this.description, moment().format(), this.usedAccount);
-    this.dbProvider.addExpense(this._id_now, expense);
+    this.dbProvider.addExpenses(this._id_now, expense);
     console.log('added expense');
     console.log(expense);
   }

@@ -1,32 +1,23 @@
 export class Account {
-    private owner: string; // name of the owner of the account
-    private accountName: string;
-    private balance: number;
+    public owner: string; // name of the owner of the account
+    public accountName: string;
+    public initialBalance: number;
+    public finalBalance: number;
     
     /**
      *
      */
-    constructor(owner: string, accountName: string,balance: number) {
+    constructor(owner: string, accountName: string,initialBalance: number) {
         this.owner = owner;
         this.accountName = accountName;
-        this.balance = balance;
+        this.initialBalance = initialBalance;
+        this.finalBalance = initialBalance; // always the same when created 
     }
 
     public getAccountName() {
         return this.accountName;
     }
 
-    public getBalance() {
-        return this.balance;
-    }
-
-    public increaseBalance(amount: number)
-    {
-        this.balance = this.balance + amount;
-    } 
-    public decreaseBalance(amount: number)
-    {
-        this.balance = this.balance - amount;
-    }
-
+   
+   
 }

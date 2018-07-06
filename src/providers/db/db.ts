@@ -76,8 +76,12 @@ export class DbProvider {
   public async createNewMonthOverview() {
     try {
       let _id_previousMonth = moment(this._id_now).subtract(1, 'M').format('YYYY-MM');
-      let previousMonthOverview = await this.db.get(_id_previousMonth);
-      let newMonthOverview = new MonthOverView(this._id_now, previousMonthOverview.accounts);
+      let {accounts} = await this.db.get(_id_previousMonth);
+      accounts.forEach(acc => {
+        acc.initialBalance = acc.finalBalance;
+      });
+      let newMonthOverview = new MonthOverView(this._id_now, accounts);
+      await this.db.put(newMonthOverview);
       return newMonthOverview; // dont always need a return
       // any gotchas? think about it 
     } catch (error) {
@@ -110,16 +114,38 @@ export class DbProvider {
     }
   }
 
-  
-  async addExpense(_id_month: string, expense: Expense) {
+  private async addExpenseToMonthOverview(_id_month, expense: Expense) {
     try {
       let doc = await this.db.get(_id_month);
       let account = doc.accounts.find((account) => account.accountName === expense.usedAccount);
-      account.balance = account.balance - expense.cost;
+      account.finalBalance = account.finalBalance - expense.cost;
       doc.expenses.push(expense);
       await this.db.put(doc);
     } catch (error) {
-      console.log('error in adding expense');
+      console.log('error in adding expense to month overview', error);
+    }
+
+  }
+
+  private async addExpenseToUserOverview(expense: Expense) 
+  {
+    try {
+      let doc = await this.db.get(this.username);
+      let account = doc.accounts.find((account) => account.accountName === expense.usedAccount);
+      account.finalBalance = account.finalBalance - expense.cost;
+      await this.db.put(doc);
+    } catch (error) {
+      console.log('error in adding expense to user overview', error);
+    }
+  }
+  
+  
+  async addExpenses(_id_month: string, expense: Expense) {
+    try {
+      this.addExpenseToMonthOverview(_id_month, expense);
+      this.addExpenseToUserOverview(expense);
+    } catch (error) {
+      console.log('error in adding expenses', error);
     }
 
   }
