@@ -25,6 +25,11 @@
       <ion-label>cost</ion-label>
        <ion-input type="number"[(ngModel)]="cost" name="cost"></ion-input>
     </ion-item>
+    <ion-item>
+      <ion-label>date</ion-label>
+      <ion-datetime displayFormat="MM/YYYY" pickerFormat="MMMM YYYY"  [(ngModel)]="selectedDate" name="date"></ion-datetime>
+    </ion-item>
+
     <button ion-button type="submit" block>Add expense</button>
   </form>
 

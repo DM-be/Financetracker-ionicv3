@@ -2,7 +2,7 @@ import {
   CategoryCost
 } from './../../viewmodels/CategoryCost';
 import * as moment from 'moment';
-
+import * as pouchdbUpsert from 'pouchdb-upsert';
 import {
   Injectable
 } from '@angular/core';
@@ -34,6 +34,7 @@ export class DbProvider {
   constructor() {
     console.log('Hello DbProvider Provider');
     this._id_now = moment().format('YYYY-MM');
+    //PouchDB.plugin(pouchdbUpsert);
   }
 
   initSignIn(details): void {
@@ -83,7 +84,7 @@ export class DbProvider {
         acc.initialBalance = acc.finalBalance;
       });
       // a get without a put --> dont need to make a copy, just dont put it back in.
-      
+
       //let newMonthOverview = new MonthOverView(this._id_now, doc.accounts);
       let newMonthOverview = new MonthOverView(_id_month, doc.accounts);
       await this.db.put(newMonthOverview);
@@ -145,11 +146,44 @@ export class DbProvider {
     }
   }
   
+  myDeltaFunction(doc) {
+    doc.counter = doc.counter || 0;
+    doc.counter++;
+    return doc;
+  }
+  
+
+  private async updateBalanceInFollowingMonths(_id_month, expense: Expense)
+  {
+
+    console.log('in updating balances')
+    let nowPlusAmonth = moment(this._id_now).add(1,'M').format('YYYY-MM');
+
+    while (_id_month != nowPlusAmonth  ) {
+
+      let doc = await this.db.get(_id_month);
+      console.log(doc)
+      let account = doc.accounts.find((account) => account.accountName === expense.usedAccount);
+      account.initialBalance = account.initialBalance - expense.cost;
+      account.finalBalance = account.finalBalance - expense.cost;
+      await this.db.put(doc, {latest:true, force: true});  // MAYBE SYNC MANUALLY....
+      _id_month = moment(_id_month).add(1, 'M').format('YYYY-MM');
+    }
+  }
   
   async addExpenses(_id_month: string, expense: Expense) {
     try {
+      
+      this.addExpenseToUserOverview(expense); // rename into add Cost!
+
       this.addExpenseToMonthOverview(_id_month, expense);
-      this.addExpenseToUserOverview(expense);
+      // if idmonth != id now --> go into range between month and now and adjust accordingly
+      if(_id_month != this._id_now)
+      {
+        console.log('updating balances');
+        this.updateBalanceInFollowingMonths(_id_month, expense);
+      }
+      
     } catch (error) {
       console.log('error in adding expenses', error);
     }

@@ -16,17 +16,19 @@ export class AboutPage {
   public categoryName: string;
   public cost: string;
   public usedAccount: string;
+  public selectedDate;
 
   constructor(public navCtrl: NavController, public dbProvider: DbProvider) {
     this._id_now = moment().format('YYYY-MM');
+    this.selectedDate = moment().format('YYYY-MM');
   }
 
   addExpense() {
 
     let expense = new Expense(this.categoryName, parseInt(this.cost), this.description, moment().format(), this.usedAccount);
-    this.dbProvider.addExpenses(this._id_now, expense);
+    this.dbProvider.addExpenses(this.selectedDate, expense);
     console.log('added expense');
-    console.log(expense);
+    console.log(this.selectedDate);
   }
 
 }

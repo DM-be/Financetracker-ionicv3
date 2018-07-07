@@ -25,16 +25,12 @@ export class ContactPage {
   }
 
   async updateDate() {
-    console.log(this.selectedDate);
-    this.selectedDate = moment(this.selectedDate).format('YYYY-MM');
-    console.log(this.selectedDate);
     await this.dbProvider.getMonthOverview(this.selectedDate);
     await this.dbProvider.getCategoryCosts(this.selectedDate);
   }
 
   async ionViewDidEnter() {
     this.categoryCosts = await this.dbProvider.getCategoryCosts(this.selectedDate);
-    console.log(this.categoryCosts);
   }
 
   handleSwipe($e) {
