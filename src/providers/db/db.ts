@@ -73,14 +73,19 @@ export class DbProvider {
     }
   }
 
-  public async createNewMonthOverview() {
+  public async createNewMonthOverview(_id_month) {
     try {
-      let _id_previousMonth = moment(this._id_now).subtract(1, 'M').format('YYYY-MM');
-      let {accounts} = await this.db.get(_id_previousMonth);
-      accounts.forEach(acc => {
+      //let _id_previousMonth = moment(this._id_now).subtract(1, 'M').format('YYYY-MM');
+      let _id_previousMonth = moment(_id_month).subtract(1, 'M').format('YYYY-MM');
+      console.log(_id_previousMonth);
+      let doc = await this.db.get(_id_previousMonth);
+      doc.accounts.forEach(acc => {
         acc.initialBalance = acc.finalBalance;
       });
-      let newMonthOverview = new MonthOverView(this._id_now, accounts);
+      // a get without a put --> dont need to make a copy, just dont put it back in.
+      
+      //let newMonthOverview = new MonthOverView(this._id_now, doc.accounts);
+      let newMonthOverview = new MonthOverView(_id_month, doc.accounts);
       await this.db.put(newMonthOverview);
       return newMonthOverview; // dont always need a return
       // any gotchas? think about it 
@@ -96,7 +101,8 @@ export class DbProvider {
       console.log(error);
       if (error.name === 'not_found') {
         console.log('did not find, making new month overview');
-        return await this.createNewMonthOverview();
+        //return await this.createNewMonthOverview(); // use current month!
+        return await this.createNewMonthOverview(_id_month); // purely for testing ! 
       }
     }
 
