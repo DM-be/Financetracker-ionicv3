@@ -10,12 +10,22 @@ export class Account {
     /**
      *
      */
-    constructor(owner: string, accountName: string,initialBalance: number) {
+    constructor(owner: string, accountName: string,initialBalance: number, finalBalance?: number, transactions?: Transaction []) {
         this.owner = owner;
         this.accountName = accountName;
         this.initialBalance = initialBalance;
         this.finalBalance = initialBalance; // always the same when created 
         this.transactions = [];
+
+        if(finalBalance)
+        {
+            this.finalBalance = finalBalance;
+        }
+        if(transactions)
+        {
+            this.transactions = transactions;
+        }
+        
     }
 
     public getAccountName() {
@@ -29,6 +39,30 @@ export class Account {
     public addTransaction(transaction: Transaction) {
         this.transactions.push(transaction);
     }
+
+    public updateInitialBalance(operation: string, amount: number)
+    {
+        if(operation === 'decrease')
+        {
+            this.initialBalance = this.initialBalance - amount;
+        }
+        else {
+            this.initialBalance = this.initialBalance + amount;
+        }
+    }
+
+    public updateFinalBalance(operation: string, amount: number)
+    {
+        if(operation === 'decrease')
+        {
+            this.finalBalance = this.finalBalance - amount;
+        }
+        else {
+            this.finalBalance = this.finalBalance + amount;
+        }
+    }
+
+   
 
    
    

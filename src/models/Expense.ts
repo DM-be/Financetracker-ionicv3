@@ -4,7 +4,7 @@ export class Expense {
     public cost: number;
     public description: string;
     public createdDate: string;
-    public usedAccount: string; 
+    public usedAccountName: string; 
 
 
     constructor(categoryName: string, cost: number, description: string, createdDate: string, usedAccount) {
@@ -12,7 +12,7 @@ export class Expense {
         this.cost = cost;
         this.description = description;
         this.createdDate = createdDate;
-        this.usedAccount = usedAccount;
+        this.usedAccountName = usedAccount;
 
     }
 
@@ -20,7 +20,7 @@ export class Expense {
         return this.cost;
     }
 
-    public getUsedAccount() {
-        return this.usedAccount;
+    public getUsedAccountName() {
+        return this.usedAccountName;
     }
 }

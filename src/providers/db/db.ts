@@ -124,7 +124,7 @@ export class DbProvider {
   private async addExpenseToMonthOverview(_id_month, expense: Expense) {
     try {
       let doc = await this.db.get(_id_month);
-      let account = doc.accounts.find((account) => account.accountName === expense.getUsedAccount());
+      let account = doc.accounts.find((account) => account.accountName === expense.getUsedAccountName());
       account.finalBalance = account.finalBalance - expense.getCost();
       doc.expenses.push(expense);
       await this.db.put(doc);
@@ -138,8 +138,9 @@ export class DbProvider {
   {
     try {
       let doc = await this.db.get(this.username);
-      let account = doc.accounts.find(account => account.accountName === expense.getUsedAccount());
-      account.finalBalance = account.finalBalance - expense.getCost();
+      let acc = doc.accounts.find(account => account.accountName === expense.getUsedAccountName());
+      let account = new Account(acc.owner, acc.accountName, acc.initialBalance, acc.finalBalance, acc.transactions);
+      account.updateFinalBalance('decrease', expense.getCost());
       await this.db.put(doc);
     } catch (error) {
       console.log('error in adding expense to user overview', error);
@@ -158,7 +159,7 @@ export class DbProvider {
 
       let doc = await this.db.get(_id_month);
       console.log(doc)
-      let account = doc.accounts.find((account) => account.accountName === expense.getUsedAccount());
+      let account = doc.accounts.find((account) => account.accountName === expense.getUsedAccountName());
       account.initialBalance = account.initialBalance - expense.getCost();
       account.finalBalance = account.finalBalance - expense.getCost();
       await this.db.put(doc, {latest:true, force: true});  // MAYBE SYNC MANUALLY....
