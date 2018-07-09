@@ -8,15 +8,22 @@ export class Transaction {
      */
 
 
-    private amount: number;
-    private sendingAccount: Account;
-    private recievingAccount: Account; 
-    private transactionDate: string
-    constructor(amount: number, sendingAccount: Account, recievingAccount: Account) {
+    public amount: number;
+    public sendingAccountName: Account;
+    public recievingAccountName: Account; 
+    public transactionDate: string
+    constructor(amount: number, sendingAccountName: Account, recievingAccountName: Account, transactionDate? : string) {
         this.amount = amount;
-        this.sendingAccount = sendingAccount;
-        this.recievingAccount = recievingAccount;
-        this.transactionDate = moment().format();
+        this.sendingAccountName = sendingAccountName;
+        this.recievingAccountName = recievingAccountName;
+        if(transactionDate)
+        {
+            this.transactionDate = transactionDate;
+        }
+        else {
+            this.transactionDate = moment().format();
+        }
+        
     }
 
 

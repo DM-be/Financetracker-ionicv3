@@ -124,10 +124,11 @@ export class DbProvider {
   private async addExpenseToMonthOverview(_id_month, expense: Expense) {
     try {
       let doc = await this.db.get(_id_month);
-      let account = doc.accounts.find((account) => account.accountName === expense.getUsedAccountName());
-      account.finalBalance = account.finalBalance - expense.getCost();
-      doc.expenses.push(expense);
-      await this.db.put(doc);
+      let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.expenses, doc._rev);
+      let account = monthOverview.getAccByName(expense.getUsedAccountName());
+      account.updateFinalBalance('decrease', expense.getCost());
+      monthOverview.addExpense(expense);
+      await this.db.put(monthOverview);
     } catch (error) {
       console.log('error in adding expense to month overview', error);
     }
