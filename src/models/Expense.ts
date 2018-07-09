@@ -3,16 +3,24 @@ export class Expense {
     public categoryName: string;
     public cost: number;
     public description: string;
-    public dateCreated: string;
+    public createdDate: string;
     public usedAccount: string; 
 
 
-    constructor(categoryName: string, cost: number, description: string, dateCreated: string, usedAccount) {
+    constructor(categoryName: string, cost: number, description: string, createdDate: string, usedAccount) {
         this.categoryName = categoryName;
         this.cost = cost;
         this.description = description;
-        this.dateCreated = dateCreated;
+        this.createdDate = createdDate;
         this.usedAccount = usedAccount;
 
+    }
+
+    public getCost() {
+        return this.cost;
+    }
+
+    public getUsedAccount() {
+        return this.usedAccount;
     }
 }

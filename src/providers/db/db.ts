@@ -124,8 +124,8 @@ export class DbProvider {
   private async addExpenseToMonthOverview(_id_month, expense: Expense) {
     try {
       let doc = await this.db.get(_id_month);
-      let account = doc.accounts.find((account) => account.accountName === expense.usedAccount);
-      account.finalBalance = account.finalBalance - expense.cost;
+      let account = doc.accounts.find((account) => account.accountName === expense.getUsedAccount());
+      account.finalBalance = account.finalBalance - expense.getCost();
       doc.expenses.push(expense);
       await this.db.put(doc);
     } catch (error) {
@@ -134,47 +134,42 @@ export class DbProvider {
 
   }
 
-  private async addExpenseToUserOverview(expense: Expense) 
+  private async addExpenseCostToUserOverview(expense: Expense) 
   {
     try {
       let doc = await this.db.get(this.username);
-      let account = doc.accounts.find((account) => account.accountName === expense.usedAccount);
-      account.finalBalance = account.finalBalance - expense.cost;
+      let account = doc.accounts.find(account => account.accountName === expense.getUsedAccount());
+      account.finalBalance = account.finalBalance - expense.getCost();
       await this.db.put(doc);
     } catch (error) {
       console.log('error in adding expense to user overview', error);
     }
   }
   
-  myDeltaFunction(doc) {
-    doc.counter = doc.counter || 0;
-    doc.counter++;
-    return doc;
-  }
   
 
   private async updateBalanceInFollowingMonths(_id_month, expense: Expense)
   {
 
     console.log('in updating balances')
-    let nowPlusAmonth = moment(this._id_now).add(1,'M').format('YYYY-MM');
+    let nowPlusAmonth = moment(this._id_now).add(1,'M').format('YYYY-MM');  // refactor in moment provider.
 
     while (_id_month != nowPlusAmonth  ) {
 
       let doc = await this.db.get(_id_month);
       console.log(doc)
-      let account = doc.accounts.find((account) => account.accountName === expense.usedAccount);
-      account.initialBalance = account.initialBalance - expense.cost;
-      account.finalBalance = account.finalBalance - expense.cost;
+      let account = doc.accounts.find((account) => account.accountName === expense.getUsedAccount());
+      account.initialBalance = account.initialBalance - expense.getCost();
+      account.finalBalance = account.finalBalance - expense.getCost();
       await this.db.put(doc, {latest:true, force: true});  // MAYBE SYNC MANUALLY....
-      _id_month = moment(_id_month).add(1, 'M').format('YYYY-MM');
+      _id_month = moment(_id_month).add(1, 'M').format('YYYY-MM'); // refactor in moment provider.
     }
   }
   
   async addExpenses(_id_month: string, expense: Expense) {
     try {
       
-      this.addExpenseToUserOverview(expense); // rename into add Cost!
+      this.addExpenseCostToUserOverview(expense); // rename into add Cost!
 
       this.addExpenseToMonthOverview(_id_month, expense);
       // if idmonth != id now --> go into range between month and now and adjust accordingly
