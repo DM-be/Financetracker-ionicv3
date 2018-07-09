@@ -5,7 +5,7 @@ export class Account {
     public accountName: string;
     public initialBalance: number;
     public finalBalance: number;
-    private transactions: Transaction [];
+    public transactions: Transaction [];
     
     /**
      *

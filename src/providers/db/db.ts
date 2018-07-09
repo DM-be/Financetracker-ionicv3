@@ -54,16 +54,16 @@ export class DbProvider {
     this.initSignIn(details);
   }
 
-  public async setupUserOverview(accounts: Account []) {
+  // public async setupUserOverview(accounts: Account []) {
 
-    try {
-      let userOverview = new UserOverview(this.username, accounts);
-      await this.db.put(userOverview);
-    } catch (error) {
-      console.log('problem with useroverview setup', error);
-    }
+  //   try {
+  //     let userOverview = new UserOverview(this.username, accounts);
+  //     await this.db.put(userOverview);
+  //   } catch (error) {
+  //     console.log('problem with useroverview setup', error);
+  //   }
 
-  }
+  // }
 
   public async setupFirstMonthOverview(accounts: Account[]) {
     try {
@@ -135,46 +135,44 @@ export class DbProvider {
 
   }
 
-  private async addExpenseCostToUserOverview(expense: Expense) 
-  {
-    try {
-      let doc = await this.db.get(this.username);
-      let acc = doc.accounts.find(account => account.accountName === expense.getUsedAccountName());
-      let account = new Account(acc.owner, acc.accountName, acc.initialBalance, acc.finalBalance, acc.transactions);
-      account.updateFinalBalance('decrease', expense.getCost());
-      await this.db.put(doc);
-    } catch (error) {
-      console.log('error in adding expense to user overview', error);
-    }
-  }
+  // private async addExpenseCostToUserOverview(expense: Expense) 
+  // {
+  //   try {
+  //     let doc = await this.db.get(this.username);
+  //     let acc = doc.accounts.find(account => account.accountName === expense.getUsedAccountName());
+  //     let account = new Account(acc.owner, acc.accountName, acc.initialBalance, acc.finalBalance, acc.transactions);
+  //     account.updateFinalBalance('decrease', expense.getCost());
+  //     await this.db.put(doc);
+  //   } catch (error) {
+  //     console.log('error in adding expense to user overview', error);
+  //   }
+  // }
   
   
 
   private async updateBalanceInFollowingMonths(_id_month, expense: Expense)
   {
+    var _id_monthPlusAmonth = moment(_id_month).add(1,'M').format('YYYY-MM'); 
+    var nowPlusAmonth = moment(this._id_now).add(1,'M').format('YYYY-MM');  // refactor in moment provider.
+    while (_id_monthPlusAmonth != nowPlusAmonth  ) {
+      let doc = await this.db.get(_id_monthPlusAmonth);
+      console.log(`monthplusamonth: ${_id_monthPlusAmonth}`)
+      console.log(`nowplusamonth: ${nowPlusAmonth}`);
 
-    console.log('in updating balances')
-    let nowPlusAmonth = moment(this._id_now).add(1,'M').format('YYYY-MM');  // refactor in moment provider.
-
-    while (_id_month != nowPlusAmonth  ) {
-
-      let doc = await this.db.get(_id_month);
-      console.log(doc)
       let account = doc.accounts.find((account) => account.accountName === expense.getUsedAccountName());
       account.initialBalance = account.initialBalance - expense.getCost();
       account.finalBalance = account.finalBalance - expense.getCost();
       await this.db.put(doc, {latest:true, force: true});  // MAYBE SYNC MANUALLY....
-      _id_month = moment(_id_month).add(1, 'M').format('YYYY-MM'); // refactor in moment provider.
+      _id_monthPlusAmonth = moment(_id_monthPlusAmonth).add(1, 'M').format('YYYY-MM'); // refactor in moment provider.
     }
   }
   
   async addExpenses(_id_month: string, expense: Expense) {
     try {
-      
-      this.addExpenseCostToUserOverview(expense); // rename into add Cost!
 
       this.addExpenseToMonthOverview(_id_month, expense);
-      // if idmonth != id now --> go into range between month and now and adjust accordingly
+      console.log(_id_month);
+      console.log(this._id_now);
       if(_id_month != this._id_now)
       {
         console.log('updating balances');

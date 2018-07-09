@@ -32,7 +32,7 @@ export class AccountsPage {
   }
 
   finishAccounts() {
-    this.dbProvider.setupUserOverview(this.accounts);
+   // this.dbProvider.setupUserOverview(this.accounts);
     this.dbProvider.setupFirstMonthOverview(this.accounts);
     this.appCtrl.getRootNav().setRoot(TabsPage);
   }

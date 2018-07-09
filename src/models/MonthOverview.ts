@@ -13,11 +13,18 @@ export class MonthOverView {
         this._rev = _rev;
         this.expenses = [];
         this.accounts = [];
+        if(!(accounts instanceof Account) )
+        {
+            this.accounts = accounts.map(a => new Account(a.owner, a.accountName, a.initialBalance, a.finalBalance, a.transactions));
+        }
+        else {
+            this.accounts = accounts;
+        }
         if(expenses)
         {
             this.expenses = expenses.map(e => new Expense(e.categoryName, e.cost, e.description, e.createdDate, e.usedAccountName));
         }
-        this.accounts = accounts.map(a => new Account(a.owner, a.accountName, a.initialBalance, a.finalBalance, a.transactions));
+        
     }
 
     public getAllAccounts() 
