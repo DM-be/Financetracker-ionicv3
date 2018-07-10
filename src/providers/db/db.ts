@@ -80,14 +80,18 @@ export class DbProvider {
     try {
       //let _id_previousMonth = moment(this._id_now).subtract(1, 'M').format('YYYY-MM');
       let _id_previousMonth = moment(_id_month).subtract(1, 'M').format('YYYY-MM');
-      console.log(_id_previousMonth);
       let doc = await this.db.get(_id_previousMonth);
+      
       doc.accounts.forEach(acc => {
         acc.initialBalance = acc.finalBalance;
       });
       // a get without a put --> dont need to make a copy, just dont put it back in.
 
       //let newMonthOverview = new MonthOverView(this._id_now, doc.accounts);
+
+
+
+
       let newMonthOverview = new MonthOverView(_id_month, doc.accounts);
       await this.db.put(newMonthOverview);
       return newMonthOverview; // dont always need a return
@@ -103,7 +107,7 @@ export class DbProvider {
     } catch (error) {
       console.log(error);
       if (error.name === 'not_found') {
-        console.log('did not find, making new month overview');
+        console.log('did not find month overview, making a new month overview');
         //return await this.createNewMonthOverview(); // use current month!
         return await this.createNewMonthOverview(_id_month); // purely for testing ! 
       }
@@ -124,8 +128,11 @@ export class DbProvider {
     else {
       let category = new Category(categoryName);
       category.addExpense(expense);
+      
       monthOverview.addCategory(category);
     }
+    let account = monthOverview.getAccByName(expense.getUsedAccountName());
+    account.updateFinalBalance('decrease', expense.getCost());
     await this.db.put(monthOverview);
 
 
@@ -138,20 +145,6 @@ export class DbProvider {
     } catch (error) {
 
     }
-  }
-
-  private async addExpenseToMonthOverview(_id_month, expense: Expense) {
-    try {
-      let doc = await this.db.get(_id_month);
-      let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.expenses, doc._rev);
-      let account = monthOverview.getAccByName(expense.getUsedAccountName());
-      account.updateFinalBalance('decrease', expense.getCost());
-    //  monthOverview.addExpense(expense);
-      await this.db.put(monthOverview);
-    } catch (error) {
-      console.log('error in adding expense to month overview', error);
-    }
-
   }
 
 
@@ -170,17 +163,12 @@ export class DbProvider {
     }
   }
   
-// CATEGORIES HAVE EXPENSES ! 
-
-  async addExpenses(_id_month: string, expense: Expense, categoryName: string) {
+  public async addExpenses(_id_month: string, expense: Expense, categoryName: string) {
     try {
-
-    //  this.addExpenseToMonthOverview(_id_month, expense);
       this.addExpenseToCategoryToMonthOverview(_id_month, categoryName, expense );
-
       if(_id_month !== this._id_now)
       {
-        console.log('updating balances');
+        console.log('updating balances in following months');
         this.updateBalanceInFollowingMonths(_id_month, expense);
       }
       

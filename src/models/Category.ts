@@ -1,17 +1,18 @@
 import { Expense } from "./Expense";
 import * as moment from 'moment';
+import { Budget } from "./Budget";
 
 export class Category {
     public categoryName: string;
     public expenses: Expense []
-    public budget: number;
+    public budget: Budget;
     public createdDate: string; // added hobby at 07 2018 --> get docs starting from 07 to ... 
 
 
     /**
      *
      */
-    constructor(categoryName: string, expenses?: Expense [], budget?: number, createdDate?: string) {
+    constructor(categoryName: string, expenses?: Expense [], budget?: Budget, createdDate?: string) {
         this.categoryName = categoryName;
         if(createdDate)
         {
@@ -22,17 +23,17 @@ export class Category {
         }
         if(expenses)
         {
-            this.expenses = expenses.map(e => new Expense(e.categoryName, e.cost, e.description, e.createdDate, e.usedAccountName));
+            this.expenses = expenses.map(e => new Expense(e.cost, e.description, e.createdDate, e.usedAccountName));
         }
         else{
             this.expenses = [];
         }
         if(budget)
         {
-            this.budget = budget;
+            this.budget = new Budget(budget.limitAmount);
         }
         else {
-            this.budget = 0;
+            this.budget = new Budget();
         }
         
     }
@@ -44,5 +45,9 @@ export class Category {
     public addExpense(expense: Expense): void {
         this.expenses.push(expense);
     }
+
+    
+
+    
 
 }
