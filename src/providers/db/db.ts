@@ -16,6 +16,7 @@ import {
   Expense
 } from '../../models/Expense';
 import { Account } from '../../models/Account';
+import { Transaction } from '../../models/Transaction';
 
 
 
@@ -119,7 +120,7 @@ export class DbProvider {
   private async addExpenseToCategoryToMonthOverview(_id_month: string, categoryName: string, expense: Expense)
   {
     let doc = await this.db.get(_id_month);
-    let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev);
+    let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
     let account = monthOverview.getAccByName(expense.getUsedAccountName());
     account.updateFinalBalance('decrease', expense.getCost());
 
@@ -142,12 +143,41 @@ export class DbProvider {
       monthOverview.addTagsToUsedTags(expense.getTags());
       await this.db.put(monthOverview);
     }
-    
-    
-
 
   } 
+
+  private transferFunds(accountA: Account, accountB: Account, amount: number)
+  {
+    // from a to b
+    accountA.updateFinalBalance('decrease', amount);
+    accountB.updateFinalBalance('increase', amount);
+    accountA.addTransaction(new Transaction(amount, accountA.getAccountName(), accountB.getAccountName(), '-'));
+    accountB.addTransaction(new Transaction(amount, accountA.getAccountName(), accountB.getAccountName(), '+'));
+    
+  } 
+
+  private addIncomeFromEmployer(employerName: string, recievingAccount: Account, amount: number)
+  {
+    recievingAccount.updateFinalBalance('increase',amount);
+    recievingAccount.addTransaction(new Transaction(amount, employerName, recievingAccount.getAccountName(), '+'));
+  }
+
+  public async transferBetweenOwnAccounts(_id_month: string, accountNameA: string, accountNameB: string, amount: number)
+  {
+    try {
+    let doc = await this.db.get(_id_month);
+    let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
+    let accountA = monthOverview.getAccByName(accountNameA);
+    let accountB = monthOverview.getAccByName(accountNameB);
+    this.transferFunds(accountA, accountB, amount);
+    await this.db.put(monthOverview);
+
+    } catch (error) {
+      console.log('error in transferring funds between accounts',error);
+    }
+  }
  
+
 
   async getRangeOfDateTimes() { // implement range for date time picker via end and start, look at docs
     try {

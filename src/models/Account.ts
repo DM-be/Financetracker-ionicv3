@@ -23,7 +23,7 @@ export class Account {
         }
         if(transactions)
         {
-            this.transactions = transactions.map(t => new Transaction(t.amount, t.sendingAccountName, t.recievingAccountName));
+            this.transactions = transactions.map(t => new Transaction(t.amount, t.sendingAccountName, t.recievingAccountName, t.operation));
         }
         
     }
