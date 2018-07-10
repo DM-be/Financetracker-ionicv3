@@ -17,7 +17,7 @@ export class Expense {
         this.createdDate = createdDate;
         this.usedAccountName = usedAccount;
         
-        if(!(tags instanceof Tag)) {
+        if(tags) {
             this.tags = tags.map(t => new Tag(t.tagName));
         }
         else {
@@ -33,4 +33,8 @@ export class Expense {
     public getUsedAccountName() {
         return this.usedAccountName;
     }
+    public getTags(): Tag[] {
+        return this.tags;
+    }
+    
 }

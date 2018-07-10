@@ -71,6 +71,21 @@ export class MonthOverView {
         }
     }
 
+    public addTagsToUsedTags(tags: Tag[])
+    {
+       tags.forEach(tag => {
+           if((this.usedTags.findIndex(t => t.getTagName() === tag.getTagName()) === -1))
+           {
+            this.addTagToUsedTags(tag);
+           }
+       });
+    }
+
+    private addTagToUsedTags(tag: Tag)
+    {
+        this.usedTags.push(tag);
+    }
+
 
     
 
