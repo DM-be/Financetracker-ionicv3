@@ -26,9 +26,8 @@ export class AboutPage {
   addExpense() {
 
     let expense = new Expense(this.categoryName, parseInt(this.cost), this.description, moment().format(), this.usedAccount);
-    this.dbProvider.addExpenses(this.selectedDate, expense);
-    console.log('added expense');
-    console.log(this.selectedDate);
+    this.dbProvider.addExpenses(this.selectedDate, expense, this.categoryName);
+
   }
 
 }

@@ -1,46 +1,66 @@
 import { Expense } from "./Expense";
 import { Account } from "./Account";
+import { Category } from "./Category";
 
 export class MonthOverView {
 
     private _id: string;
     private _rev: string;
-    private expenses: Expense [];
+    private categories: Category [];
     private accounts: Account []; // a copy of the userDoc balance, kept to keep track of balances each month.
 
-    constructor(_id: string, accounts: Account [], expenses?: Expense [] , _rev?: string,) {
+    // todo: 
+    constructor(_id: string, accounts: Account [], categories?: Category [] , _rev?: string,) {
         this._id = _id;
-        this._rev = _rev;
-        this.expenses = [];
+        this._rev = _rev;// to do if else or always start with empty arr? be consistent
+
+        this.categories = [];
         this.accounts = [];
-        if(!(accounts instanceof Account) )
+        if(!(accounts instanceof Account))
         {
             this.accounts = accounts.map(a => new Account(a.owner, a.accountName, a.initialBalance, a.finalBalance, a.transactions));
         }
         else {
             this.accounts = accounts;
         }
-        if(expenses)
+        if(categories)
         {
-            this.expenses = expenses.map(e => new Expense(e.categoryName, e.cost, e.description, e.createdDate, e.usedAccountName));
+            this.categories = categories.map(c => new Category(c.categoryName, c.expenses, c.budget, c.createdDate ));
         }
         
     }
 
-    public getAllAccounts() 
+    public getAllAccounts(): Account []
     {
         return this.accounts;
     }
 
-    public getAccByName(accountName: string)
+    public getAccByName(accountName: string): Account
     {
-        return this.accounts.find(account => account.getAccountName() === accountName)
+        return this.accounts.find(account => account.getAccountName() === accountName);
     
     }
 
-    public addExpense(expense: Expense)
+    public getCategoryByName(categoryName: string): Category 
     {
-        this.expenses.push(expense);
+        return this.categories.find(category => category.getCategoryName() === categoryName);
+    }
+
+    public addCategory(category: Category): void 
+    {
+        this.categories.push(category);
+    }
+
+    public doesContainCategory(categoryName: string): boolean {
+        // refactor
+        let index = this.categories.findIndex(category => category.getCategoryName() === categoryName);
+        if(index === -1)
+        {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
 

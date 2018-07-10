@@ -1,8 +1,10 @@
+
+import { Category } from './../../models/Category';
 import {
   CategoryCost
 } from './../../viewmodels/CategoryCost';
 import * as moment from 'moment';
-import * as pouchdbUpsert from 'pouchdb-upsert';
+
 import {
   Injectable
 } from '@angular/core';
@@ -14,7 +16,7 @@ import {
   Expense
 } from '../../models/Expense';
 import { Account } from '../../models/Account';
-import { UserOverview } from '../../models/UserOverview';
+
 
 
 /*
@@ -110,7 +112,24 @@ export class DbProvider {
   }
 
 
- 
+  private async addExpenseToCategoryToMonthOverview(_id_month: string, categoryName: string, expense: Expense)
+  {
+    let doc = await this.db.get(_id_month);
+    let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev);
+    if(monthOverview.doesContainCategory(categoryName))
+    {
+      let category = monthOverview.getCategoryByName(categoryName);
+      category.addExpense(expense);
+    }
+    else {
+      let category = new Category(categoryName);
+      category.addExpense(expense);
+      monthOverview.addCategory(category);
+    }
+    await this.db.put(monthOverview);
+
+
+  } 
  
 
   async getRangeOfDateTimes() { // implement range for date time picker via end and start, look at docs
@@ -127,7 +146,7 @@ export class DbProvider {
       let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.expenses, doc._rev);
       let account = monthOverview.getAccByName(expense.getUsedAccountName());
       account.updateFinalBalance('decrease', expense.getCost());
-      monthOverview.addExpense(expense);
+    //  monthOverview.addExpense(expense);
       await this.db.put(monthOverview);
     } catch (error) {
       console.log('error in adding expense to month overview', error);
@@ -135,45 +154,31 @@ export class DbProvider {
 
   }
 
-  // private async addExpenseCostToUserOverview(expense: Expense) 
-  // {
-  //   try {
-  //     let doc = await this.db.get(this.username);
-  //     let acc = doc.accounts.find(account => account.accountName === expense.getUsedAccountName());
-  //     let account = new Account(acc.owner, acc.accountName, acc.initialBalance, acc.finalBalance, acc.transactions);
-  //     account.updateFinalBalance('decrease', expense.getCost());
-  //     await this.db.put(doc);
-  //   } catch (error) {
-  //     console.log('error in adding expense to user overview', error);
-  //   }
-  // }
-  
-  
 
-  private async updateBalanceInFollowingMonths(_id_month, expense: Expense)
+  private async updateBalanceInFollowingMonths(_id_month: string, expense: Expense)
   {
     var _id_monthPlusAmonth = moment(_id_month).add(1,'M').format('YYYY-MM'); 
     var nowPlusAmonth = moment(this._id_now).add(1,'M').format('YYYY-MM');  // refactor in moment provider.
-    while (_id_monthPlusAmonth != nowPlusAmonth  ) {
+    while (_id_monthPlusAmonth !== nowPlusAmonth  ) {
       let doc = await this.db.get(_id_monthPlusAmonth);
-      console.log(`monthplusamonth: ${_id_monthPlusAmonth}`)
-      console.log(`nowplusamonth: ${nowPlusAmonth}`);
-
-      let account = doc.accounts.find((account) => account.accountName === expense.getUsedAccountName());
-      account.initialBalance = account.initialBalance - expense.getCost();
-      account.finalBalance = account.finalBalance - expense.getCost();
-      await this.db.put(doc, {latest:true, force: true});  // MAYBE SYNC MANUALLY....
+      let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.expenses, doc._rev);
+      let account = monthOverview.getAccByName(expense.getUsedAccountName());
+      account.updateFinalBalance('decrease', expense.getCost());
+      account.updateInitialBalance('decrease', expense.getCost());
+      await this.db.put(monthOverview, {latest:true, force: true});  // MAYBE SYNC MANUALLY....
       _id_monthPlusAmonth = moment(_id_monthPlusAmonth).add(1, 'M').format('YYYY-MM'); // refactor in moment provider.
     }
   }
   
-  async addExpenses(_id_month: string, expense: Expense) {
+// CATEGORIES HAVE EXPENSES ! 
+
+  async addExpenses(_id_month: string, expense: Expense, categoryName: string) {
     try {
 
-      this.addExpenseToMonthOverview(_id_month, expense);
-      console.log(_id_month);
-      console.log(this._id_now);
-      if(_id_month != this._id_now)
+    //  this.addExpenseToMonthOverview(_id_month, expense);
+      this.addExpenseToCategoryToMonthOverview(_id_month, categoryName, expense );
+
+      if(_id_month !== this._id_now)
       {
         console.log('updating balances');
         this.updateBalanceInFollowingMonths(_id_month, expense);
@@ -212,6 +217,8 @@ export class DbProvider {
     });
 
   }
+
+
 
   async getCategoryCosts(_id_month: string) {
 

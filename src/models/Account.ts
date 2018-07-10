@@ -28,19 +28,19 @@ export class Account {
         
     }
 
-    public getAccountName() {
+    public getAccountName(): string {
         return this.accountName;
     }
 
-    public getTransactions() {
+    public getTransactions(): Transaction [] {
         return this.transactions;
     }
 
-    public addTransaction(transaction: Transaction) {
+    public addTransaction(transaction: Transaction): void {
         this.transactions.push(transaction);
     }
 
-    public updateInitialBalance(operation: string, amount: number)
+    public updateInitialBalance(operation: string, amount: number): void
     {
         if(operation === 'decrease')
         {
@@ -51,7 +51,7 @@ export class Account {
         }
     }
 
-    public updateFinalBalance(operation: string, amount: number)
+    public updateFinalBalance(operation: string, amount: number): void
     {
         if(operation === 'decrease')
         {
