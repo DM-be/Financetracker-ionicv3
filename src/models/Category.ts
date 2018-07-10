@@ -23,7 +23,7 @@ export class Category {
         }
         if(expenses)
         {
-            this.expenses = expenses.map(e => new Expense(e.cost, e.description, e.createdDate, e.usedAccountName));
+            this.expenses = expenses.map(e => new Expense(e.cost, e.description, e.createdDate, e.usedAccountName, e.tags));
         }
         else{
             this.expenses = [];

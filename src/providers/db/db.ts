@@ -120,20 +120,27 @@ export class DbProvider {
   {
     let doc = await this.db.get(_id_month);
     let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev);
+    console.log(monthOverview);
+    let account = monthOverview.getAccByName(expense.getUsedAccountName());
+    account.updateFinalBalance('decrease', expense.getCost());
+
+
     if(monthOverview.doesContainCategory(categoryName))
     {
       let category = monthOverview.getCategoryByName(categoryName);
       category.addExpense(expense);
+      console.log(category);
+      await this.db.put(monthOverview);
     }
     else {
       let category = new Category(categoryName);
       category.addExpense(expense);
-      
       monthOverview.addCategory(category);
+      console.log(category);
+      await this.db.put(monthOverview);
     }
-    let account = monthOverview.getAccByName(expense.getUsedAccountName());
-    account.updateFinalBalance('decrease', expense.getCost());
-    await this.db.put(monthOverview);
+    
+    
 
 
   } 

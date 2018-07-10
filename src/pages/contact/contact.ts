@@ -26,7 +26,7 @@ export class ContactPage {
 
   async updateDate() {
     await this.dbProvider.getMonthOverview(this.selectedDate);
-    await this.dbProvider.getCategoryCosts(this.selectedDate);
+   // await this.dbProvider.getCategoryCosts(this.selectedDate);
   }
 
   async ionViewDidEnter() {

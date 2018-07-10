@@ -16,7 +16,11 @@ export class Expense {
         this.description = description;
         this.createdDate = createdDate;
         this.usedAccountName = usedAccount;
-        if(tags) {
+        
+        if(!(tags instanceof Tag)) {
+            this.tags = tags.map(t => new Tag(t.tagName));
+        }
+        else {
             this.tags = tags;
         }
 
