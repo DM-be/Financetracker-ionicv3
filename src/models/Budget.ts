@@ -3,7 +3,7 @@ export class Budget {
     public limitAmount: number; // limit amount
     public currentAmountSpent: number; // current amount spent
 
-    constructor(limitAmount?: number) {
+    constructor(limitAmount?: number, currentAmountSpent?: number) {
         if(limitAmount)
         {
             this.limitAmount = limitAmount;
@@ -11,7 +11,13 @@ export class Budget {
         else {
             this.limitAmount = 0;
         }
-        this.currentAmountSpent = 0;
+        if(currentAmountSpent)
+        {
+            this.currentAmountSpent = currentAmountSpent;
+        }
+        else {
+            this.currentAmountSpent = 0;
+        }
     }
 
     public isBeingTracked(): boolean {

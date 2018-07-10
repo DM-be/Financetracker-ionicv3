@@ -115,7 +115,7 @@ export class DbProvider {
 
   }
 
-
+  // REFACTOR 
   private async addExpenseToCategoryToMonthOverview(_id_month: string, categoryName: string, expense: Expense)
   {
     let doc = await this.db.get(_id_month);
@@ -128,12 +128,16 @@ export class DbProvider {
     {
       let category = monthOverview.getCategoryByName(categoryName);
       category.addExpense(expense);
+      let budget = category.getBudget();
+      budget.addToAmountSpentInBudget(expense.getCost()); // always add to amountspent --> when a user decides to add a budget to this category, it will already be tracked 
       monthOverview.addTagsToUsedTags(expense.getTags());
       await this.db.put(monthOverview);
     }
     else {
       let category = new Category(categoryName);
       category.addExpense(expense);
+      let budget = category.getBudget();
+      budget.addToAmountSpentInBudget(expense.getCost());
       monthOverview.addCategory(category);
       monthOverview.addTagsToUsedTags(expense.getTags());
       await this.db.put(monthOverview);

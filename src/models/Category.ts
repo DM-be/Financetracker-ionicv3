@@ -30,7 +30,7 @@ export class Category {
         }
         if(budget)
         {
-            this.budget = new Budget(budget.limitAmount);
+            this.budget = new Budget(budget.limitAmount, budget.currentAmountSpent);
         }
         else {
             this.budget = new Budget();
@@ -44,6 +44,10 @@ export class Category {
     
     public addExpense(expense: Expense): void {
         this.expenses.push(expense);
+    }
+
+    public getBudget(): Budget {
+        return this.budget;
     }
 
     

@@ -2,6 +2,7 @@ import { Expense } from "./Expense";
 import { Account } from "./Account";
 import { Category } from "./Category";
 import { Tag } from "./Tag";
+import * as moment from 'moment';
 
 export class MonthOverView {
 
@@ -76,7 +77,8 @@ export class MonthOverView {
        tags.forEach(tag => {
            if((this.usedTags.findIndex(t => t.getTagName() === tag.getTagName()) === -1))
            {
-            this.addTagToUsedTags(tag);
+            let newTagWithDate = new Tag(tag.getTagName(), moment().format('YYYY-MM'))
+            this.addTagToUsedTags(newTagWithDate);
            }
        });
     }
@@ -84,6 +86,10 @@ export class MonthOverView {
     private addTagToUsedTags(tag: Tag)
     {
         this.usedTags.push(tag);
+    }
+
+    public getArrayOfCategoryNames() {
+        return this.categories.map(c => c.categoryName);
     }
 
 
