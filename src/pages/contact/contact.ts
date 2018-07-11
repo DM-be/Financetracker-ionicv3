@@ -30,7 +30,7 @@ export class ContactPage {
   }
 
   async ionViewDidEnter() {
-    this.categoryCosts = await this.dbProvider.getCategoryCosts(this.selectedDate);
+   // this.categoryCosts = await this.dbProvider.getCategoryCosts(this.selectedDate);
   }
 
   handleSwipe($e) {

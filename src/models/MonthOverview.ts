@@ -3,6 +3,7 @@ import { Account } from "./Account";
 import { Category } from "./Category";
 import { Tag } from "./Tag";
 import * as moment from 'moment';
+import { ExternalAccount } from "./ExternalAccount";
 
 export class MonthOverView {
 
@@ -11,16 +12,17 @@ export class MonthOverView {
     private categories: Category [];
     private accounts: Account []; 
     private usedTags: Tag []; // keeps track of all tags (for use in auto completion instead of looping over every expense)
-
+    private externalAccounts: ExternalAccount [];
 
     // todo: 
-    constructor(_id: string, accounts: Account [], categories?: Category [] , _rev?: string, usedTags?: Tag []) {
+    constructor(_id: string, accounts: Account [], categories?: Category [] , _rev?: string, usedTags?: Tag [], externalAccounts?: ExternalAccount []) {
         this._id = _id;
         this._rev = _rev;// to do if else or always start with empty arr? be consistent
 
         this.categories = [];
         this.accounts = [];
         this.usedTags = [];
+        this.externalAccounts = [];
         if(!(accounts instanceof Account))
         {
             this.accounts = accounts.map(a => new Account(a.owner, a.accountName, a.initialBalance, a.finalBalance, a.transactions));
@@ -36,6 +38,11 @@ export class MonthOverView {
         {
             this.usedTags = usedTags.map(t => new Tag(t.tagName, t.createdDate));
         }
+        if(externalAccounts)
+        {
+            this.externalAccounts = externalAccounts.map(acc => new ExternalAccount(acc.accountHolderName, acc.dateCreated));
+        }
+
       
     }
 
@@ -81,6 +88,14 @@ export class MonthOverView {
             this.addTagToUsedTags(newTagWithDate);
            }
        });
+    }
+
+    public addExternalAccount(externalAccount: ExternalAccount)
+    {
+        if((this.externalAccounts.findIndex(acc => acc.getAccountHolderName() === externalAccount.getAccountHolderName()) === -1))
+        {
+            this.externalAccounts.push(externalAccount);
+        }
     }
 
     private addTagToUsedTags(tag: Tag)

@@ -141,12 +141,11 @@ export class DbProvider {
     accountB.addTransaction(new Transaction(amount, accountA.getAccountName(), accountB.getAccountName(), operationB, transactionDate));
   }
 
-  private updateFinalBalancesBetweenAccounts(accountA: Account, operationA: string, accountB: Account, operationB: string, amount: number, transactionDate?: string)
+  private updateFinalBalancesBetweenAccounts(accountA: Account, operationA: string, accountB: Account, operationB: string, amount: number)
   {
     // from a to b
     accountA.updateFinalBalance(operationA, amount); // decrease
     accountB.updateFinalBalance(operationB, amount); // increase
-    this.addTransactionBetweenAccounts(accountA, operationA, accountB, operationB, amount,transactionDate);
   } 
 
   private updateFinalAndInitialBalancesBetweenAccounts(accountA: Account, operationA: string, accountB: Account, operationB: string, amount: number)
@@ -159,9 +158,29 @@ export class DbProvider {
 
   private addIncomeFromEmployer(employerName: string, recievingAccount: Account, amount: number)
   {
-    recievingAccount.updateFinalBalance('increase',amount);
-    recievingAccount.addTransaction(new Transaction(amount, employerName, recievingAccount.getAccountName(), '+'));
+    
   }
+
+  private updateFinalBalanceRecievingAccount(recievingAccount: Account, amount: number)
+  {
+    recievingAccount.updateFinalBalance('increase',amount);
+  }
+
+
+  private async transferFromExternalAccount(_id_month: string, accountHolderName: string, recievingAccountName: string, amount: number, transactionDate?: string)
+  {
+   try {
+    let monthOverview = await this.getMonthOverviewObject(_id_month);
+    let recievingAccount = monthOverview.getAccByName(recievingAccountName);
+    this.updateFinalBalanceRecievingAccount(recievingAccount, amount);
+    recievingAccount.addTransaction(new Transaction(amount, accountHolderName, recievingAccount.getAccountName(), 'increase', transactionDate));
+    await this.db.put(monthOverview);
+   } catch (error) {
+    console.log('error in transferring funds between accounts',error);
+   }
+  }
+
+
 
   public async transferBetweenOwnAccounts(_id_month: string, accountNameA: string, accountNameB: string, amount: number, transactionDate?: string)
   {
@@ -169,7 +188,8 @@ export class DbProvider {
     let monthOverview = await this.getMonthOverviewObject(_id_month);
     let accountA = monthOverview.getAccByName(accountNameA);
     let accountB = monthOverview.getAccByName(accountNameB);
-    this.updateFinalBalancesBetweenAccounts(accountA,'decrease', accountB, 'increase', amount, transactionDate);
+    this.updateFinalBalancesBetweenAccounts(accountA,'decrease', accountB, 'increase', amount);
+    this.addTransactionBetweenAccounts(accountA, 'decrease', accountB, 'increase', amount,transactionDate);
     await this.db.put(monthOverview);
     } catch (error) {
       console.log('error in transferring funds between accounts',error);
@@ -191,6 +211,18 @@ export class DbProvider {
 
   }
 
+  private async updateBalanceInFollowingMonthsAfterExternalTransfer(_id_month: string, accountHolderName: string, recievingAccountName: string, amount: number)
+  {
+    var _id_monthPlusAmonth = moment(_id_month).add(1,'M').format('YYYY-MM'); 
+    var nowPlusAmonth = moment(this._id_now).add(1,'M').format('YYYY-MM');  // refactor in moment provider.
+    while (_id_monthPlusAmonth !== nowPlusAmonth  ) {
+      let monthOverview = await this.getMonthOverviewObject(_id_monthPlusAmonth);
+      let recievingAccount = monthOverview.getAccByName(recievingAccountName);
+      this.updateFinalBalanceRecievingAccount(recievingAccount, amount);
+      await this.db.put(monthOverview, {latest:true, force: true});
+      _id_monthPlusAmonth = moment(_id_monthPlusAmonth).add(1, 'M').format('YYYY-MM'); // refactor in moment provider.
+    }
+  }
 
   async getRangeOfDateTimes() { // implement range for date time picker via end and start, look at docs
     try {
@@ -218,7 +250,7 @@ export class DbProvider {
   
   public async addExpenses(_id_month: string, expense: Expense, categoryName: string) {
     try {
-      this.addExpenseToCategoryToMonthOverview(_id_month, categoryName, expense );
+      this.addExpenseToCategoryToMonthOverview(_id_month, categoryName, expense);
       if(_id_month !== this._id_now)
       {
         console.log('updating balances in following months');
@@ -239,68 +271,26 @@ export class DbProvider {
       {
         this.updateBalanceInFollowingMonthsAfterTransfer(_id_month, accountNameA,accountNameB, amount );
         console.log('updating balances in following months after a transfer');
-
-
       }
     } catch (error) {
       
     }
   }
 
-  async getExpensesByCategoryName(categoryName: string) {
-
-  }
-
-  async getTotalExpenseCostByMonth(_id_month) {
+  public async addTransferFromExternalAccount(_id_month: string, accountHolderName: string, recievingAccountName: string, amount: number, transactionDate: string)
+  {
     try {
-      let doc = await this.db.get(_id_month);
-      let totalCost: number;
-      doc.expenses.forEach(expense => {
-        totalCost += expense.cost;
-      });
-    } catch (err) {
-      console.log(err);
+      this.transferFromExternalAccount(_id_month, accountHolderName ,recievingAccountName, amount, transactionDate);
+      if(_id_month !== this._id_now)
+      {
+        this.updateBalanceInFollowingMonthsAfterExternalTransfer(_id_month, accountHolderName ,recievingAccountName, amount);
+        console.log('updating balances in following months after an external transfer');
+      }
+    } catch (error) {
+      console.log('error in updating balances in following months after external transfer');
     }
   }
-
-  // beware multiple db calls
-  async getTotalExpenseCostByMonthAndCategoryName(_id_month: string, categoryName: string) {
-    let doc = await this.db.get(_id_month);
-
-    let filteredExpenses = doc.expenses.filter(expense => expense.categoryName === categoryName);
-    let totalCost: number;
-    filteredExpenses.forEach(expense => {
-      totalCost += expense.cost;
-    });
-
-  }
+  
 
 
-
-  async getCategoryCosts(_id_month: string) {
-
-    let doc = await this.db.get(_id_month);
-    let categoryNames = [];
-    doc.expenses.forEach(expense => {
-      if (categoryNames.findIndex(exp => exp === expense.categoryName) == -1) {
-        categoryNames.push(expense.categoryName);
-      }
-    });
-    let categoryCosts = [];
-    categoryNames.forEach(categoryName => {
-      let categoryTotalCost = 0;
-      let expenses = [];
-      let filteredExpensesByCategoryName = doc.expenses.filter(expense => expense.categoryName === categoryName);
-      filteredExpensesByCategoryName.forEach(expense => {
-     //   let expenseObject = new Expense(expense.categoryName, expense.cost, expense.description, expense.dateCreated);
-      //  expenses.push(expenseObject);
-        categoryTotalCost += expense.cost;
-      });
-      let newCategoryCost = new CategoryCost(categoryName, categoryTotalCost, expenses);
-      categoryCosts.push(newCategoryCost);
-    });
-    return categoryCosts;
-
-
-  }
 }
