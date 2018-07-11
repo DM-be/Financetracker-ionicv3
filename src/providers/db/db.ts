@@ -93,12 +93,12 @@ export class DbProvider {
 
 
 
-      let newMonthOverview = new MonthOverView(_id_month, doc.accounts);
+      let newMonthOverview = new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
       await this.db.put(newMonthOverview);
       return newMonthOverview; // dont always need a return
       // any gotchas? think about it 
     } catch (error) {
-      console.log('error in creating a new month overview');
+      console.log('error in creating a new month overview', error );
     }
   }
 
@@ -146,15 +146,27 @@ export class DbProvider {
 
   } 
 
-  private transferFunds(accountA: Account, accountB: Account, amount: number)
+  private addTransactionBetweenAccounts(accountA: Account, operationA: string, accountB: Account, operationB: string, amount: number, transactionDate?: string)
+  {
+    accountA.addTransaction(new Transaction(amount, accountA.getAccountName(), accountB.getAccountName(), operationA, transactionDate));
+    accountB.addTransaction(new Transaction(amount, accountA.getAccountName(), accountB.getAccountName(), operationB, transactionDate));
+  }
+
+  private updateFinalBalancesBetweenAccounts(accountA: Account, operationA: string, accountB: Account, operationB: string, amount: number, transactionDate?: string)
   {
     // from a to b
-    accountA.updateFinalBalance('decrease', amount);
-    accountB.updateFinalBalance('increase', amount);
-    accountA.addTransaction(new Transaction(amount, accountA.getAccountName(), accountB.getAccountName(), '-'));
-    accountB.addTransaction(new Transaction(amount, accountA.getAccountName(), accountB.getAccountName(), '+'));
-    
+    accountA.updateFinalBalance(operationA, amount); // decrease
+    accountB.updateFinalBalance(operationB, amount); // increase
+    this.addTransactionBetweenAccounts(accountA, operationA, accountB, operationB, amount,transactionDate);
   } 
+
+  private updateFinalAndInitialBalancesBetweenAccounts(accountA: Account, operationA: string, accountB: Account, operationB: string, amount: number)
+  {
+    accountA.updateInitialBalance(operationA, amount); // decrease
+    accountA.updateFinalBalance(operationA, amount);
+    accountB.updateInitialBalance(operationB, amount);
+    accountB.updateFinalBalance(operationB, amount);
+  }
 
   private addIncomeFromEmployer(employerName: string, recievingAccount: Account, amount: number)
   {
@@ -162,21 +174,35 @@ export class DbProvider {
     recievingAccount.addTransaction(new Transaction(amount, employerName, recievingAccount.getAccountName(), '+'));
   }
 
-  public async transferBetweenOwnAccounts(_id_month: string, accountNameA: string, accountNameB: string, amount: number)
+  public async transferBetweenOwnAccounts(_id_month: string, accountNameA: string, accountNameB: string, amount: number, transactionDate?: string)
   {
     try {
     let doc = await this.db.get(_id_month);
     let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
     let accountA = monthOverview.getAccByName(accountNameA);
     let accountB = monthOverview.getAccByName(accountNameB);
-    this.transferFunds(accountA, accountB, amount);
+    this.updateFinalBalancesBetweenAccounts(accountA,'decrease', accountB, 'increase', amount, transactionDate);
     await this.db.put(monthOverview);
-
     } catch (error) {
       console.log('error in transferring funds between accounts',error);
     }
   }
  
+  private async updateBalanceInFollowingMonthsAfterTransfer(_id_month: string, accountNameA: string, accountNameB: string, amount: number)
+  {
+    var _id_monthPlusAmonth = moment(_id_month).add(1,'M').format('YYYY-MM'); 
+    var nowPlusAmonth = moment(this._id_now).add(1,'M').format('YYYY-MM');  // refactor in moment provider.
+    while (_id_monthPlusAmonth !== nowPlusAmonth  ) {
+      let doc = await this.db.get(_id_monthPlusAmonth);
+      let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
+      let accountA = monthOverview.getAccByName(accountNameA);
+      let accountB = monthOverview.getAccByName(accountNameB);
+      this.updateFinalAndInitialBalancesBetweenAccounts(accountA, 'decrease', accountB, 'increase', amount);
+      await this.db.put(monthOverview, {latest:true, force: true});
+      _id_monthPlusAmonth = moment(_id_monthPlusAmonth).add(1, 'M').format('YYYY-MM'); // refactor in moment provider.
+    }
+
+  }
 
 
   async getRangeOfDateTimes() { // implement range for date time picker via end and start, look at docs
@@ -216,6 +242,22 @@ export class DbProvider {
       console.log('error in adding expenses', error);
     }
 
+  }
+
+  public async addTransfer(_id_month: string, accountNameA: string, accountNameB: string, amount: number, transactionDate: string)
+  {
+    try {
+      this.transferBetweenOwnAccounts(_id_month, accountNameA, accountNameB, amount, transactionDate);
+      if(_id_month !== this._id_now)
+      {
+        this.updateBalanceInFollowingMonthsAfterTransfer(_id_month, accountNameA,accountNameB, amount );
+        console.log('updating balances in following months after a transfer');
+
+
+      }
+    } catch (error) {
+      
+    }
   }
 
   async getExpensesByCategoryName(categoryName: string) {

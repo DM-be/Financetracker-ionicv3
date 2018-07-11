@@ -15,8 +15,14 @@
   </ion-item>
   <ion-item>
     <ion-label>date</ion-label>
-    <ion-datetime displayFormat="MM/YYYY" pickerFormat="MMMM YYYY"  [(ngModel)]="selectedDate" name="date"></ion-datetime>
+    <ion-datetime displayFormat="MM/YYYY" pickerFormat="MMMM YYYY"  [(ngModel)]="selectedDate" name="selectedDate"></ion-datetime>
   </ion-item>
+  <div *ngIf="isDateInThePast()">
+    <ion-item>
+      <ion-label>date</ion-label>
+      <ion-datetime displayFormat="MM/YYYY/DD" pickerFormat="MMMM YYYY DD"  [(ngModel)]="transferDate" name="transferDate"></ion-datetime>
+    </ion-item>
+  </div>
 </form>
 
 <button ion-button (click)="transferFunds()"></button>
