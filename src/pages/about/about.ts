@@ -28,7 +28,7 @@ export class AboutPage {
   }
 
   public addTag(ev) {
-    this.tags.push(new Tag(this.newTag));
+    this.tags.push(new Tag(this.newTag, this.selectedDate));
     this.newTag = "";
   }
 

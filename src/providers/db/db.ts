@@ -57,26 +57,16 @@ export class DbProvider {
     this.initSignIn(details);
   }
 
-  // public async setupUserOverview(accounts: Account []) {
-
-  //   try {
-  //     let userOverview = new UserOverview(this.username, accounts);
-  //     await this.db.put(userOverview);
-  //   } catch (error) {
-  //     console.log('problem with useroverview setup', error);
-  //   }
-
-  // }
-
   public async setupFirstMonthOverview(accounts: Account[]) {
     try {
-      let firstMonthOverview = new MonthOverView(this._id_now, accounts);
+      let firstMonthOverview = new MonthOverView(this._id_now, accounts); // accounts are passed after registering
       await this.db.put(firstMonthOverview);
     } catch (error) {
       console.log('problem with adding first montoverview', error);
     }
   }
 
+  // todo: refactor
   public async createNewMonthOverview(_id_month) {
     try {
       //let _id_previousMonth = moment(this._id_now).subtract(1, 'M').format('YYYY-MM');
@@ -87,12 +77,7 @@ export class DbProvider {
         acc.initialBalance = acc.finalBalance;
       });
       // a get without a put --> dont need to make a copy, just dont put it back in.
-
       //let newMonthOverview = new MonthOverView(this._id_now, doc.accounts);
-
-
-
-
       let newMonthOverview = new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
       await this.db.put(newMonthOverview);
       return newMonthOverview; // dont always need a return
@@ -102,6 +87,7 @@ export class DbProvider {
     }
   }
 
+  // TODO: update to current month when finished
   async getMonthOverview(_id_month: string) {
     try {
       return await this.db.get(_id_month);
@@ -113,19 +99,22 @@ export class DbProvider {
         return await this.createNewMonthOverview(_id_month); // purely for testing ! 
       }
     }
+  }
+
+  private async getMonthOverviewObject(_id_month: string): Promise<MonthOverView> {
+
+    let doc = await this.db.get(_id_month);
+    return new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
 
   }
 
   // REFACTOR 
   private async addExpenseToCategoryToMonthOverview(_id_month: string, categoryName: string, expense: Expense)
   {
-    let doc = await this.db.get(_id_month);
-    let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
+    let monthOverview = await this.getMonthOverviewObject(_id_month);
     let account = monthOverview.getAccByName(expense.getUsedAccountName());
     account.updateFinalBalance('decrease', expense.getCost());
-
-
-    if(monthOverview.doesContainCategory(categoryName))
+    if(monthOverview.containsCategory(categoryName))
     {
       let category = monthOverview.getCategoryByName(categoryName);
       category.addExpense(expense);
@@ -177,8 +166,7 @@ export class DbProvider {
   public async transferBetweenOwnAccounts(_id_month: string, accountNameA: string, accountNameB: string, amount: number, transactionDate?: string)
   {
     try {
-    let doc = await this.db.get(_id_month);
-    let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
+    let monthOverview = await this.getMonthOverviewObject(_id_month);
     let accountA = monthOverview.getAccByName(accountNameA);
     let accountB = monthOverview.getAccByName(accountNameB);
     this.updateFinalBalancesBetweenAccounts(accountA,'decrease', accountB, 'increase', amount, transactionDate);
@@ -193,8 +181,7 @@ export class DbProvider {
     var _id_monthPlusAmonth = moment(_id_month).add(1,'M').format('YYYY-MM'); 
     var nowPlusAmonth = moment(this._id_now).add(1,'M').format('YYYY-MM');  // refactor in moment provider.
     while (_id_monthPlusAmonth !== nowPlusAmonth  ) {
-      let doc = await this.db.get(_id_monthPlusAmonth);
-      let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
+      let monthOverview = await this.getMonthOverviewObject(_id_monthPlusAmonth);
       let accountA = monthOverview.getAccByName(accountNameA);
       let accountB = monthOverview.getAccByName(accountNameB);
       this.updateFinalAndInitialBalancesBetweenAccounts(accountA, 'decrease', accountB, 'increase', amount);
@@ -219,11 +206,11 @@ export class DbProvider {
     var _id_monthPlusAmonth = moment(_id_month).add(1,'M').format('YYYY-MM'); 
     var nowPlusAmonth = moment(this._id_now).add(1,'M').format('YYYY-MM');  // refactor in moment provider.
     while (_id_monthPlusAmonth !== nowPlusAmonth  ) {
-      let doc = await this.db.get(_id_monthPlusAmonth);
-      let monthOverview = new MonthOverView(doc._id, doc.accounts, doc.expenses, doc._rev);
+      let monthOverview = await this.getMonthOverviewObject(_id_monthPlusAmonth);
       let account = monthOverview.getAccByName(expense.getUsedAccountName());
       account.updateFinalBalance('decrease', expense.getCost());
       account.updateInitialBalance('decrease', expense.getCost());
+      monthOverview.addTagsToUsedTags(expense.getTags());
       await this.db.put(monthOverview, {latest:true, force: true});  // MAYBE SYNC MANUALLY....
       _id_monthPlusAmonth = moment(_id_monthPlusAmonth).add(1, 'M').format('YYYY-MM'); // refactor in moment provider.
     }

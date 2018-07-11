@@ -34,7 +34,7 @@ export class MonthOverView {
         }
         if(usedTags)
         {
-            this.usedTags = usedTags.map(t => new Tag(t.tagName));
+            this.usedTags = usedTags.map(t => new Tag(t.tagName, t.createdDate));
         }
       
     }
@@ -60,7 +60,7 @@ export class MonthOverView {
         this.categories.push(category);
     }
 
-    public doesContainCategory(categoryName: string): boolean {
+    public containsCategory(categoryName: string): boolean {
         // refactor
         let index = this.categories.findIndex(category => category.getCategoryName() === categoryName);
         if(index === -1)
@@ -77,7 +77,7 @@ export class MonthOverView {
        tags.forEach(tag => {
            if((this.usedTags.findIndex(t => t.getTagName() === tag.getTagName()) === -1))
            {
-            let newTagWithDate = new Tag(tag.getTagName(), moment().format('YYYY-MM'))
+            let newTagWithDate = new Tag(tag.getTagName(), tag.getCreatedDate());
             this.addTagToUsedTags(newTagWithDate);
            }
        });
