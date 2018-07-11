@@ -1,26 +1,27 @@
-import { DbProvider } from './../../providers/db/db';
-import {
-  Component
-} from '@angular/core';
-import {
-  NavController
-} from 'ionic-angular';
-
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import * as moment from 'moment';
+import { DbProvider } from '../../providers/db/db';
+/**
+ * Generated class for the MonthOverviewPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
 
 
 @Component({
-  selector: 'page-contact',
-  templateUrl: 'contact.html'
+  selector: 'page-month-overview',
+  templateUrl: 'month-overview.html',
 })
-export class ContactPage {
+export class MonthOverviewPage {
 
   public selectedDate: string;
   categoryCosts: any;
 
   constructor(public navCtrl: NavController, public dbProvider: DbProvider) {
     this.selectedDate = moment().format('YYYY-MM');
-    
+
     
   }
 
@@ -57,5 +58,6 @@ export class ContactPage {
       this.selectedDate = moment(this.selectedDate).subtract(1, 'years').format('YYYY-MM');
     }
   }
+
 
 }

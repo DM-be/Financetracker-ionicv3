@@ -3,8 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
-import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 
@@ -18,17 +16,21 @@ import { LoginPage } from '../pages/login/login';
 import { HttpModule } from '@angular/http';
 import { SignupPage } from '../pages/signup/signup';
 import { AccountsPage } from '../pages/accounts/accounts';
+import { ExpensePage } from '../pages/expense/expense';
+import { MonthOverviewPage } from '../pages/month-overview/month-overview';
+import { LoggedInTabsPage } from '../pages/logged-in-tabs/logged-in-tabs';
 
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
-    ContactPage,
     HomePage,
     TabsPage,
     LoginPage,
     SignupPage,
-    AccountsPage
+    AccountsPage,
+    ExpensePage,
+    MonthOverviewPage,
+    LoggedInTabsPage
   ],
   imports: [
     BrowserModule,
@@ -38,13 +40,14 @@ import { AccountsPage } from '../pages/accounts/accounts';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
-    ContactPage,
     HomePage,
     TabsPage,
     LoginPage,
     SignupPage,
-    AccountsPage
+    AccountsPage,
+    ExpensePage,
+    MonthOverviewPage,
+    LoggedInTabsPage
   ],
   providers: [
     StatusBar,

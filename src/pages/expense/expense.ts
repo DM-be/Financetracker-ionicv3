@@ -6,11 +6,19 @@ import { Expense } from '../../models/Expense';
 import { Tag } from '../../models/Tag';
 
 
+/**
+ * Generated class for the ExpensePage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
+
+
 @Component({
-  selector: 'page-about',
-  templateUrl: 'about.html'
+  selector: 'page-expense',
+  templateUrl: 'expense.html',
 })
-export class AboutPage {
+export class ExpensePage {
 
   public _id_now: string;
   public description: string;
@@ -42,5 +50,4 @@ export class AboutPage {
     this.dbProvider.addExpenses(this.selectedDate, expense, this.categoryName);
 
   }
-
 }

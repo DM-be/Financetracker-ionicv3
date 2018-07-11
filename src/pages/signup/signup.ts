@@ -68,7 +68,7 @@ export class SignupPage {
       this.dbProvider.initSignUp(res.json());
       loader.dismiss();
       this.appCtrl.getRootNav().setRoot(AccountsPage);
-         // have to wait for the shared DB to be in sync to register new users
+      // todo: new pop up modal or something to input initial accounts
       }, error => {
           loader.dismiss();
           // let errorObject = error.json().validationErrors

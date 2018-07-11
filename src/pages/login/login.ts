@@ -6,6 +6,7 @@ import {
 } from '@angular/http';
 import { TabsPage } from '../tabs/tabs';
 import { DbProvider } from '../../providers/db/db';
+import { LoggedInTabsPage } from '../logged-in-tabs/logged-in-tabs';
 
 /**
  * Generated class for the LoginPage page.
@@ -59,7 +60,7 @@ export class LoginPage {
       }).subscribe(async res => {
     
         this.dbProvider.initSignIn(res.json());
-        this.appCtrl.getRootNav().setRoot(TabsPage);
+        this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
         console.log(res);
         loader.dismiss();
     }, error => {

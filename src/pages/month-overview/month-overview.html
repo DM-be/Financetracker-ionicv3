@@ -6,7 +6,8 @@
 </ion-header>
 
 <ion-content padding >
-  <div (swipe)="handleSwipe($event)"><h1> Expenses Overview</h1>
+  <ion-grid fixed>
+     <div (swipe)="handleSwipe($event)"><h1> Expenses Overview</h1>
   
     <p *ngFor="let categoryCost of categoryCosts">
      {{categoryCost.categoryName}} + {{categoryCost.categoryTotalCost}}</p>
@@ -17,6 +18,7 @@
   
 
 
+  </ion-grid>
+ 
 
 </ion-content>
-
