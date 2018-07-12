@@ -40,6 +40,10 @@ export class Account {
         this.transactions.push(transaction);
     }
 
+    public clearTransactions() {
+        this.transactions = [];
+    }
+
     public updateInitialBalance(operation: string, amount: number): void
     {
         if(operation === 'decrease')

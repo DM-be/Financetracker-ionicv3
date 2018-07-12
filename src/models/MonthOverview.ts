@@ -107,6 +107,23 @@ export class MonthOverView {
         return this.categories.map(c => c.categoryName);
     }
 
+    public clearExpensesFromCategories() {
+        this.categories.forEach(category => {
+            category.clearExpenses();
+        });
+    }
+
+    public clearCurrentAmountSpentInBudget() {
+        this.categories.forEach(category => {
+            category.clearCurrentAmountSpentInBudget();
+        });
+    }
+
+    public clearTransactionsFromAccounts() {
+        this.accounts.forEach(account => account.clearTransactions());
+    }
+
+
 
     
 

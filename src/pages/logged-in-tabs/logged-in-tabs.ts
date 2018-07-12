@@ -4,6 +4,7 @@ import { ExpensePage } from '../expense/expense';
 import { AccountsPage } from '../accounts/accounts';
 import { MonthOverviewPage } from '../month-overview/month-overview';
 import { HomePage } from '../home/home';
+import { AccountsOverviewPage } from '../accounts-overview/accounts-overview';
 
 /**
  * Generated class for the LoggedInTabsPage page.
@@ -23,7 +24,8 @@ export class LoggedInTabsPage {
   public expense = ExpensePage;
   public accounts = AccountsPage;
   public monthOverview = MonthOverviewPage;
-  public home = HomePage
+  public home = HomePage;
+  public accountsOverview = AccountsOverviewPage;
 
   public tabsPlacement: string;
   public tabsLayout: string;

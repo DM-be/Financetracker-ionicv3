@@ -72,14 +72,19 @@ export class DbProvider {
       //let _id_previousMonth = moment(this._id_now).subtract(1, 'M').format('YYYY-MM');
       let _id_previousMonth = moment(_id_month).subtract(1, 'M').format('YYYY-MM');
       let doc = await this.db.get(_id_previousMonth);
-      
+      console.log(doc);
       doc.accounts.forEach(acc => {
         acc.initialBalance = acc.finalBalance;
       });
       // a get without a put --> dont need to make a copy, just dont put it back in.
       //let newMonthOverview = new MonthOverView(this._id_now, doc.accounts);
-      let newMonthOverview = new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
+      let newMonthOverview = new MonthOverView(_id_month, doc.accounts, doc.categories, undefined, doc.usedTags, doc.externalAccounts);
+      newMonthOverview.clearExpensesFromCategories();
+      newMonthOverview.clearTransactionsFromAccounts();
+      newMonthOverview.clearCurrentAmountSpentInBudget();
+      console.log(newMonthOverview);
       await this.db.put(newMonthOverview);
+      
       return newMonthOverview; // dont always need a return
       // any gotchas? think about it 
     } catch (error) {

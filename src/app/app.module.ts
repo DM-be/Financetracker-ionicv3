@@ -19,6 +19,8 @@ import { AccountsPage } from '../pages/accounts/accounts';
 import { ExpensePage } from '../pages/expense/expense';
 import { MonthOverviewPage } from '../pages/month-overview/month-overview';
 import { LoggedInTabsPage } from '../pages/logged-in-tabs/logged-in-tabs';
+import { AccountsOverviewPage } from '../pages/accounts-overview/accounts-overview';
+import { AccountDetailsPage } from '../pages/account-details/account-details';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { LoggedInTabsPage } from '../pages/logged-in-tabs/logged-in-tabs';
     AccountsPage,
     ExpensePage,
     MonthOverviewPage,
-    LoggedInTabsPage
+    LoggedInTabsPage, 
+    AccountsOverviewPage,
+    AccountDetailsPage
   ],
   imports: [
     BrowserModule,
@@ -47,7 +51,9 @@ import { LoggedInTabsPage } from '../pages/logged-in-tabs/logged-in-tabs';
     AccountsPage,
     ExpensePage,
     MonthOverviewPage,
-    LoggedInTabsPage
+    LoggedInTabsPage,
+    AccountsOverviewPage,
+    AccountDetailsPage
   ],
   providers: [
     StatusBar,

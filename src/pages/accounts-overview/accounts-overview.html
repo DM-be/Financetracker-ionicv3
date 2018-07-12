@@ -14,5 +14,16 @@
 
 
 <ion-content padding>
+<ion-grid fixed>
 
+
+      <button *ngFor="let account of accounts" ion-item (click)="details(account)">
+        <ion-col>{{account.owner}}</ion-col>
+    <ion-col>{{account.accountName}}</ion-col>
+    <ion-col>{{account.finalBalance}}</ion-col> 
+      </button>
+    
+
+
+</ion-grid>
 </ion-content>

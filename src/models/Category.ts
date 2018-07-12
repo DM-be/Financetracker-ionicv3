@@ -50,6 +50,14 @@ export class Category {
         return this.budget;
     }
 
+    public clearExpenses() {
+        this.expenses = [];
+    }
+
+    public clearCurrentAmountSpentInBudget() {
+        this.budget.currentAmountSpent = 0;
+    }
+
     
 
     
