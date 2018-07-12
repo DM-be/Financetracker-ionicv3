@@ -21,6 +21,7 @@ import { MonthOverviewPage } from '../pages/month-overview/month-overview';
 import { LoggedInTabsPage } from '../pages/logged-in-tabs/logged-in-tabs';
 import { AccountsOverviewPage } from '../pages/accounts-overview/accounts-overview';
 import { AccountDetailsPage } from '../pages/account-details/account-details';
+import { ChartProvider } from '../providers/chart/chart';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { AccountDetailsPage } from '../pages/account-details/account-details';
       provide: HAMMER_GESTURE_CONFIG, 
       useClass: MyHammerConfig 
     },
-    DbProvider
+    DbProvider,
+    ChartProvider
   ]
 })
 export class AppModule {}

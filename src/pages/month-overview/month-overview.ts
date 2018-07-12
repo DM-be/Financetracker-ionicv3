@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import * as moment from 'moment';
 import { DbProvider } from '../../providers/db/db';
-import { Expense } from '../../models/Expense';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Category } from '../../models/Category';
+import Chart from 'chart.js';
+
 /**
  * Generated class for the MonthOverviewPage page.
  *
@@ -35,6 +35,41 @@ export class MonthOverviewPage {
   async ionViewWillEnter() {
     let monthOverviewObject = await this.dbProvider.getMonthOverview(this.selectedDate);
     this.categories = monthOverviewObject.getCategories();
+    console.log(monthOverviewObject.getTotalAmountSpent());
+    let data  = this.buildData(this.categories);
+    this.buildChart(data);
+  }
+
+  buildData(categories: Category []) {
+    let data = [];
+    categories.forEach(category => {
+      data.push(category.getBudget().currentAmountSpent);
+    });
+    return data;
+  }
+
+  buildChart(data) {
+    var ctx = document.getElementById("myChart");
+    var chartData ={
+      datasets: [{
+          data: data
+      }],
+  
+      // These labels appear in the legend and in the tooltips when hovering different arcs
+      labels: [
+          'Red',
+          'Yellow',
+          'Blue'
+      ]
+  };
+
+    var myPieChart = new Chart(ctx,{
+      type: 'pie',
+      data: chartData,
+      options: Chart.defaults.doughnut
+  });
+
+    
   }
 
   handleSwipe($e) {

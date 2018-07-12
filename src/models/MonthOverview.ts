@@ -127,6 +127,15 @@ export class MonthOverView {
         return this.categories;
     }
 
+    public getTotalAmountSpent(): number {
+        let totalAmountSpent = 0;
+        this.categories.forEach(category => {
+            totalAmountSpent += category.budget.currentAmountSpent;
+        });
+
+        return totalAmountSpent;
+    }
+
 
 
     
