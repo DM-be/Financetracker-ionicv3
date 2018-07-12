@@ -232,6 +232,41 @@ export class DbProvider {
     }
   }
 
+  public async getAllAccounts()  {
+    // get them all with alldocs, they are sorted by date, push all accounts together
+    // for every account found, push it into one object
+    // push all transactions belonging to one account together
+
+    let accountsWithAllTransactions = [];
+    let allDocs = await this.db.allDocs({include_docs: true, descending: true});
+    allDocs.rows.forEach(monthOverview => {
+      if(monthOverview.doc.accounts)
+      {
+        monthOverview.doc.accounts.forEach(account => {
+          if((accountsWithAllTransactions.findIndex(acc => acc.accountName === account.accountName) === -1 )) {
+            accountsWithAllTransactions.push(new Account(account.owner, account.accountName, account.initialBalance, account.finalBalance, account.transactions));
+          }
+          else {
+            let accountObject: Account = accountsWithAllTransactions.find(acc => acc.getAccountName() === account.accountName);
+            let transactions: Transaction [] = accountObject.getTransactions();
+            account.transactions.forEach(tr => {
+              if((transactions.findIndex(t => t.getUniqId() === tr.uniqId) === -1 ))
+              {
+                accountObject.addTransaction(new Transaction(tr.amount, tr.sendingAccountName, tr.recievingAccountName, tr.operation, tr.transactionDate, tr.uniqId));
+              }
+            });
+
+          }
+        });
+      }
+      
+    });
+
+    return accountsWithAllTransactions;
+
+    
+  }
+
 
   private async updateBalanceInFollowingMonths(_id_month: string, expense: Expense)
   {
