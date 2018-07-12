@@ -82,9 +82,7 @@ export class DbProvider {
       newMonthOverview.clearExpensesFromCategories();
       newMonthOverview.clearTransactionsFromAccounts();
       newMonthOverview.clearCurrentAmountSpentInBudget();
-      console.log(newMonthOverview);
       await this.db.put(newMonthOverview);
-      
       return newMonthOverview; // dont always need a return
       // any gotchas? think about it 
     } catch (error) {
@@ -93,9 +91,9 @@ export class DbProvider {
   }
 
   // TODO: update to current month when finished
-  async getMonthOverview(_id_month: string) {
+  public async getMonthOverview(_id_month: string): Promise<MonthOverView> {
     try {
-      return await this.db.get(_id_month);
+      return this.getMonthOverviewObject(_id_month);
     } catch (error) {
       console.log(error);
       if (error.name === 'not_found') {
@@ -110,7 +108,6 @@ export class DbProvider {
 
     let doc = await this.db.get(_id_month);
     return new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
-
   }
 
   // REFACTOR 

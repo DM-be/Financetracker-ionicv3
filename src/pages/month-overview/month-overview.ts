@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import * as moment from 'moment';
 import { DbProvider } from '../../providers/db/db';
+import { Expense } from '../../models/Expense';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Category } from '../../models/Category';
 /**
  * Generated class for the MonthOverviewPage page.
  *
@@ -17,13 +20,11 @@ import { DbProvider } from '../../providers/db/db';
 export class MonthOverviewPage {
 
   public selectedDate: string;
-  categoryCosts: any;
+  public categories: Category [];
+
 
   constructor(public navCtrl: NavController, public dbProvider: DbProvider) {
-    this.selectedDate = moment().format('YYYY-MM');
-    this.dbProvider.getAllAccounts();
-
-    
+    this.selectedDate = moment().format('YYYY-MM');    
   }
 
   async updateDate() {
@@ -31,8 +32,9 @@ export class MonthOverviewPage {
    // await this.dbProvider.getCategoryCosts(this.selectedDate);
   }
 
-  async ionViewDidEnter() {
-   // this.categoryCosts = await this.dbProvider.getCategoryCosts(this.selectedDate);
+  async ionViewWillEnter() {
+    let monthOverviewObject = await this.dbProvider.getMonthOverview(this.selectedDate);
+    this.categories = monthOverviewObject.getCategories();
   }
 
   handleSwipe($e) {

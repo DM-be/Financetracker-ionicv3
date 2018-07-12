@@ -123,6 +123,10 @@ export class MonthOverView {
         this.accounts.forEach(account => account.clearTransactions());
     }
 
+    public getCategories(): Category [] {
+        return this.categories;
+    }
+
 
 
     

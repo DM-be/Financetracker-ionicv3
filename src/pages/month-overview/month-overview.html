@@ -7,17 +7,14 @@
 
 <ion-content padding >
   <ion-grid fixed>
-     <div (swipe)="handleSwipe($event)"><h1> Expenses Overview</h1>
-  
-    <p *ngFor="let categoryCost of categoryCosts">
-     {{categoryCost.categoryName}} + {{categoryCost.categoryTotalCost}}</p>
-    
-
-    
-  </div>
-  
-
-
+    <ion-list-header>Monthly overview</ion-list-header>
+    <ion-list>
+      <ion-item *ngFor="let category of categories">
+        <h4>{{category.getCategoryName()}}</h4>
+        <p>current amount: {{category.getBudget().currentAmountSpent}}</p>
+        <p>budget limit: {{category.getBudget().limitAmount}}</p>
+      </ion-item>
+    </ion-list>
   </ion-grid>
  
 
