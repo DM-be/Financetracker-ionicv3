@@ -21,7 +21,6 @@ import { AccountsOverviewPage } from '../accounts-overview/accounts-overview';
 export class LoggedInTabsPage {
 
 
-  public expense = ExpensePage;
   public accounts = AccountsPage;
   public monthOverview = MonthOverviewPage;
   public home = HomePage;

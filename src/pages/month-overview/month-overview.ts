@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import * as moment from 'moment';
 import { DbProvider } from '../../providers/db/db';
 import { Category } from '../../models/Category';
 import Chart from 'chart.js';
+import { ExpensePage } from '../expense/expense';
 
 /**
  * Generated class for the MonthOverviewPage page.
@@ -23,7 +24,7 @@ export class MonthOverviewPage {
   public categories: Category [];
 
 
-  constructor(public navCtrl: NavController, public dbProvider: DbProvider) {
+  constructor(public navCtrl: NavController, public modalCtrl: ModalController,  public dbProvider: DbProvider) {
     this.selectedDate = moment().format('YYYY-MM');    
   }
 
@@ -70,6 +71,13 @@ export class MonthOverviewPage {
   });
 
     
+  }
+
+  addExpenseModal() {
+    let expenseModal = this.modalCtrl.create(ExpensePage, {
+      "categories": this.categories
+    });
+    expenseModal.present();
   }
 
   handleSwipe($e) {

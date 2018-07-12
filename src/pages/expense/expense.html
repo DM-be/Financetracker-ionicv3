@@ -10,12 +10,15 @@
 <ion-grid fixed>
 
     <form >
+        
         <ion-item>
-          <ion-label>CategoryName</ion-label>
-          <ion-input type="text" [(ngModel)]="categoryName" name="categoryName"></ion-input>
-        </ion-item>
+            <ion-label>Category</ion-label>
+            <ion-select [(ngModel)]="categoryName" name="categoryName">
+              <ion-option *ngFor="let category of categories" [value]="category.getCategoryName()">{{category.getCategoryName()}}</ion-option>
+            </ion-select>
+          </ion-item>
         <ion-item>
-          <ion-label>usedAccount</ion-label>
+          <ion-label>Account</ion-label>
           <ion-input type="text" [(ngModel)]="usedAccount" name="usedAccount"></ion-input>
         </ion-item>
         <ion-item>
@@ -25,10 +28,6 @@
         <ion-item>
           <ion-label>cost</ion-label>
            <ion-input type="number"[(ngModel)]="cost" name="cost"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label>date</ion-label>
-          <ion-datetime displayFormat="MM/YYYY" pickerFormat="MMMM YYYY"  [(ngModel)]="selectedDate" name="date"></ion-datetime>
         </ion-item>
         <ion-item>
           <ion-label>tags</ion-label>

@@ -1,9 +1,11 @@
 import { DbProvider } from './../../providers/db/db';
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import * as moment from 'moment';
 import { Expense } from '../../models/Expense';
 import { Tag } from '../../models/Tag';
+import { MonthOverView } from '../../models/monthOverview';
+import { Category } from '../../models/Category';
 
 
 /**
@@ -28,8 +30,12 @@ export class ExpensePage {
   public selectedDate;
   public tags: Tag [];
   public newTag: string;
-
-  constructor(public navCtrl: NavController, public dbProvider: DbProvider) {
+  public chartColor: string;
+  public categories: Category [];
+  
+  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider) {
+    this.categories = this.navParams.get("categories");
+    
     this._id_now = moment().format('YYYY-MM');
     this.selectedDate = moment().format('YYYY-MM');
     this.tags = [];
@@ -44,10 +50,27 @@ export class ExpensePage {
     this.tags.splice(i,1);
   }
 
+  public categoryDoesNotExist(categoryName: string)
+  {
+    return (this.categories.findIndex(c => c.getCategoryName() === categoryName) === -1)
+  }
+
+  setColor(ev: string)
+  {
+    this.chartColor = ev;
+    console.log(this.chartColor);
+  }
+
+
+
   addExpense() {
 
     let expense = new Expense(parseInt(this.cost), this.description, moment().format(), this.usedAccount, this.tags);
-    this.dbProvider.addExpenses(this.selectedDate, expense, this.categoryName);
+    this.dbProvider.addExpenses(this.selectedDate, expense, this.categoryName, this.chartColor);
 
+  }
+
+  compareFn(e1: Category, e2: Category): boolean {
+    return e1 && e2 ? e1.categoryName === e2.categoryName : e1 === e2;
   }
 }

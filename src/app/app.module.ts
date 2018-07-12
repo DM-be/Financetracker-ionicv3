@@ -22,6 +22,7 @@ import { LoggedInTabsPage } from '../pages/logged-in-tabs/logged-in-tabs';
 import { AccountsOverviewPage } from '../pages/accounts-overview/accounts-overview';
 import { AccountDetailsPage } from '../pages/account-details/account-details';
 import { ChartProvider } from '../providers/chart/chart';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ChartProvider } from '../providers/chart/chart';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    HttpModule
+    HttpModule,
+    ColorPickerModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
