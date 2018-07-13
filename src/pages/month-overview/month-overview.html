@@ -36,6 +36,29 @@
 
 
 
+           <ion-list>
+              <div *ngFor="let category of categories"  >
+    
+              <button ion-item (click)="showCategoryDetails(category)">
+                  <ion-icon name="cafe" item-start></ion-icon>
+                  {{category.getCategoryName()}}
+                  <ion-badge item-end>{{category.getBudget().currentAmountSpent}}</ion-badge>
+              </button>
+              
+             <div *ngIf="category.getBudget().isBeingTracked()">
+                    <button ion-item >
+                      <ion-label>
+                        <progress-bar [progress]="loadProgress()"></progress-bar>
+                      </ion-label>
+                      <ion-badge item-end>{{category.getBudget().getRemainingAmount()}}</ion-badge>
+                 </button>
+                 </div>
+              </div>
+              
+    
+           </ion-list>
+
+
 
     <ion-card>
       <ion-card-header>Categories</ion-card-header>
@@ -49,18 +72,16 @@
               <ion-badge item-end>{{category.getBudget().currentAmountSpent}}</ion-badge>
           </button>
           
-          <button ion-item >
-            <ion-grid>
-              <ion-row>
-                <ion-col col-8  >
-              <progress-bar [progress]="loadProgress()"></progress-bar>
-              </ion-col>
-            <ion-col><ion-badge item-end>{{category.getBudget().getRemainingAmount()}}</ion-badge></ion-col>
-              </ion-row>
-            </ion-grid>
-            
-          </button>
+         <div *ngIf="category.getBudget().isBeingTracked()">
+                <button ion-item >
+                  <ion-label>
+                    <progress-bar [progress]="loadProgress()"></progress-bar>
+                  </ion-label>
+                  <ion-badge item-end>{{category.getBudget().getRemainingAmount()}}</ion-badge>
+             </button>
+             </div>
           </div>
+          
 
        </ion-list>
        </ion-card>

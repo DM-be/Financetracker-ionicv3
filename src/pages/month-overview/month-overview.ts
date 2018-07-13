@@ -83,7 +83,7 @@ export class MonthOverviewPage {
   }
 
   loadProgress() {
-    return 100;
+    return 30;
   }
 
 

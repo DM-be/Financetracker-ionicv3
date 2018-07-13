@@ -21,7 +21,8 @@ export class Budget {
     }
 
     public isBeingTracked(): boolean {
-        return this.limitAmount !== 0;
+        //return this.limitAmount !== 0;
+        return true;
     }
     public addToAmountSpentInBudget(amount: number)
     {
