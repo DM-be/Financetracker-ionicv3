@@ -7,6 +7,7 @@ export class Expense {
     public createdDate: string;
     public usedAccountName: string; 
     public tags: Tag []; 
+    public categoryName: string; 
     
     
 

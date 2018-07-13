@@ -23,6 +23,7 @@ import { AccountsOverviewPage } from '../pages/accounts-overview/accounts-overvi
 import { AccountDetailsPage } from '../pages/account-details/account-details';
 import { ChartProvider } from '../providers/chart/chart';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { ProgressBarComponent } from '../components/progress-bar/progress-bar';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
     MonthOverviewPage,
     LoggedInTabsPage, 
     AccountsOverviewPage,
-    AccountDetailsPage
+    AccountDetailsPage,
+    ProgressBarComponent
   ],
   imports: [
     BrowserModule,

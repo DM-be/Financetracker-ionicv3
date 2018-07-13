@@ -136,6 +136,18 @@ export class MonthOverView {
         return totalAmountSpent;
     }
 
+    public getAllExpenses(): Expense [] {
+
+        let expenses = [];
+        this.categories.forEach(category => {
+            category.getExpenses().forEach(expense => {
+                expenses.push(expense);
+            });
+        });
+        return expenses;
+        
+    }
+
 
 
     

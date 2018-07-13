@@ -66,6 +66,14 @@ export class Account {
         }
     }
 
+    public getInitialBalance(): number {
+        return this.initialBalance;
+    }
+
+    public getFinalBalance(): number {
+        return this.finalBalance;
+    }
+
    
 
    

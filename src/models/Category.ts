@@ -47,6 +47,10 @@ export class Category {
         this.expenses.push(expense);
     }
 
+    public getExpenses(): Expense [] {
+        return this.expenses;
+    }
+
     public getBudget(): Budget {
         return this.budget;
     }

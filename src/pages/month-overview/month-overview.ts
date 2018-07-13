@@ -5,6 +5,9 @@ import { DbProvider } from '../../providers/db/db';
 import { Category } from '../../models/Category';
 import Chart from 'chart.js';
 import { ExpensePage } from '../expense/expense';
+import { Expense } from '../../models/Expense';
+import { Account } from '../../models/Account';
+import { MonthOverView } from '../../models/monthOverview';
 
 /**
  * Generated class for the MonthOverviewPage page.
@@ -22,6 +25,9 @@ export class MonthOverviewPage {
 
   public selectedDate: string;
   public categories: Category [];
+  public expenses: Expense [];
+  public accounts: Account [];
+  public monthOverviewObject: MonthOverView;
 
 
   constructor(public navCtrl: NavController, public modalCtrl: ModalController,  public dbProvider: DbProvider) {
@@ -34,8 +40,11 @@ export class MonthOverviewPage {
   }
 
   async ionViewWillEnter() {
-    let monthOverviewObject = await this.dbProvider.getMonthOverview(this.selectedDate);
+    this.monthOverviewObject = await this.dbProvider.getMonthOverview(this.selectedDate);
+    let monthOverviewObject =this.monthOverviewObject;
     this.categories = monthOverviewObject.getCategories();
+    this.expenses = monthOverviewObject.getAllExpenses();
+    this.accounts = monthOverviewObject.getAllAccounts();
     console.log(monthOverviewObject.getTotalAmountSpent());
     let data  = this.buildData(this.categories);
     this.buildChart(data);
@@ -73,11 +82,20 @@ export class MonthOverviewPage {
     
   }
 
+  loadProgress() {
+    return 100;
+  }
+
+
   addExpenseModal() {
     let expenseModal = this.modalCtrl.create(ExpensePage, {
       "categories": this.categories
     });
     expenseModal.present();
+  }
+
+  showCategoryDetails(category: Category) {
+    
   }
 
   handleSwipe($e) {

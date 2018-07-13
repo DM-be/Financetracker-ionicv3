@@ -38,5 +38,9 @@ export class Budget {
         return this.currentAmountSpent < this.limitAmount;
     }
 
+    public getRemainingAmount() {
+        return this.limitAmount - this.currentAmountSpent;
+    }
+
 
 } 
