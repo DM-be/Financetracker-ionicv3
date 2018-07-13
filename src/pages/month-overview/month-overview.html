@@ -1,107 +1,89 @@
 <ion-header>
   <ion-item>
     <ion-label>Date</ion-label>
-    <ion-datetime displayFormat="MM/YYYY" pickerFormat="MMMM YYYY"  [(ngModel)]="selectedDate" (ionChange)="updateDate()"></ion-datetime>
+    <ion-datetime displayFormat="MM/YYYY" pickerFormat="MMMM YYYY" [(ngModel)]="selectedDate" (ionChange)="updateDate()"></ion-datetime>
   </ion-item>
 </ion-header>
 
-<ion-content padding >
+<ion-content padding>
   <ion-grid fixed>
 
 
 
-      <ion-card>
-
-          <ion-card-header>Accounts</ion-card-header>
-    
-
-          <ion-card-content>
-            <ion-grid>
-              <ion-row justify-content-center>
-                <ion-col text-center>name</ion-col>
-                <ion-col text-center>start </ion-col>
-                <ion-col text-center>current</ion-col>
-              </ion-row>
-              <ion-row *ngFor="let account of accounts"  justify-content-center >
-                <ion-col text-center>{{account.getAccountName()}}</ion-col>
-                <ion-col text-center><ion-badge>{{account.getInitialBalance()}}</ion-badge></ion-col>
-                <ion-col text-center><ion-badge>{{account.getFinalBalance()}}</ion-badge></ion-col>
-              </ion-row>
-              
-            </ion-grid>
-          </ion-card-content>
-
-        
-           </ion-card>
-
-
-
-           <ion-list>
-              <div *ngFor="let category of categories"  >
-    
-              <button ion-item (click)="showCategoryDetails(category)">
-                  <ion-icon name="cafe" item-start></ion-icon>
-                  {{category.getCategoryName()}}
-                  <ion-badge item-end>{{category.getBudget().currentAmountSpent}}</ion-badge>
-              </button>
-              
-             <div *ngIf="category.getBudget().isBeingTracked()">
-                    <button ion-item >
-                      <ion-label>
-                        <progress-bar [progress]="loadProgress()"></progress-bar>
-                      </ion-label>
-                      <ion-badge item-end>{{category.getBudget().getRemainingAmount()}}</ion-badge>
-                 </button>
-                 </div>
-              </div>
-              
-    
-           </ion-list>
+    <ion-card>
+      <ion-card-header>Accounts</ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row justify-content-center>
+            <ion-col text-center>name</ion-col>
+            <ion-col text-center>start </ion-col>
+            <ion-col text-center>current</ion-col>
+          </ion-row>
+          <ion-row *ngFor="let account of accounts" justify-content-center>
+            <ion-col text-center>{{account.getAccountName()}}</ion-col>
+            <ion-col text-center>
+              <ion-badge>{{account.getInitialBalance()}}</ion-badge>
+            </ion-col>
+            <ion-col text-center>
+              <ion-badge>{{account.getFinalBalance()}}</ion-badge>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
 
 
 
     <ion-card>
-      <ion-card-header>Categories</ion-card-header>
+      <ion-item>
+        <ion-card-header>Categories</ion-card-header>
+        <button ion-button icon-only item-end large> 
+            <ion-icon name="add"></ion-icon>
+          </button>
+      </ion-item>
 
       <ion-list>
-          <div *ngFor="let category of categories"  >
+        <div *ngFor="let category of categories">
 
           <button ion-item (click)="showCategoryDetails(category)">
-              <ion-icon name="cafe" item-start></ion-icon>
-              {{category.getCategoryName()}}
-              <ion-badge item-end>{{category.getBudget().currentAmountSpent}}</ion-badge>
+            <ion-icon name="cafe" item-start></ion-icon>
+            {{category.getCategoryName()}}
+            <ion-badge item-end>{{category.getBudget().currentAmountSpent}}</ion-badge>
           </button>
-          
-         <div *ngIf="category.getBudget().isBeingTracked()">
-                <button ion-item >
-                  <ion-label>
-                    <progress-bar [progress]="loadProgress()"></progress-bar>
-                  </ion-label>
-                  <ion-badge item-end>{{category.getBudget().getRemainingAmount()}}</ion-badge>
-             </button>
-             </div>
+
+          <div *ngIf="category.getBudget().isBeingTracked()">
+            <button ion-item>
+              <ion-label>
+                <progress-bar [progress]="loadProgress()"></progress-bar>
+              </ion-label>
+              <ion-badge item-end>{{category.getBudget().getRemainingAmount()}}</ion-badge>
+            </button>
           </div>
-          
+        </div>
 
-       </ion-list>
-       </ion-card>
+      </ion-list>
+      </ion-card>
 
-       <ion-card>
-          <ion-card-header>Expenses</ion-card-header>
-    
+
+      <ion-card>
+        <ion-card-header>Expenses</ion-card-header>
+        <ion-scroll style="height:30vh" padding>
           <ion-list>
-              
-              <button ion-item *ngFor="let expense of expenses">
-                  <ion-icon name="cafe" item-start></ion-icon>
-                  {{expense.getUsedAccountName()}}
 
-                  <ion-badge item-end>{{expense.getCost()}}</ion-badge>
-                </button>
-           </ion-list>
-           </ion-card>
-     
+            <button ion-item *ngFor="let expense of expenses">
+              <ion-icon name="cafe" item-start></ion-icon>
+              {{expense.getDescription()}}
+
+              <ion-badge item-end>{{expense.getCost()}}</ion-badge>
+            </button>
+          </ion-list>
+
+        </ion-scroll>
+
+      </ion-card>
+
   </ion-grid>
- 
+
   <button ion-button (click)="addExpenseModal()">add expense</button>
 
 </ion-content>

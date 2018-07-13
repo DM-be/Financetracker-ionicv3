@@ -37,5 +37,8 @@ export class Expense {
     public getTags(): Tag[] {
         return this.tags;
     }
+    public getDescription(): string {
+        return this.description;
+    }
 
 }
