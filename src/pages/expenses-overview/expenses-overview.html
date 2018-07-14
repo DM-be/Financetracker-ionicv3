@@ -1,0 +1,36 @@
+<!--
+  Generated template for the ExpensesOverviewPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>ExpensesOverview</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <ion-list>
+
+        <button ion-item *ngFor="let expense of expenses">
+        
+          <ion-grid>
+
+          <ion-row justify-content-around>
+            <ion-col col-1 ><ion-icon name="cafe"></ion-icon></ion-col>
+            <ion-col col-4 class="wrap-text">{{expense.getDescription()}}</ion-col>
+            <ion-col col-4 class="wrap-text">{{expense.getFormattedDate()}}</ion-col>
+            <ion-col col-2 class="wrap-text"><ion-badge>{{expense.getCost()}}</ion-badge></ion-col>
+          
+        </ion-row>
+        </ion-grid>
+
+</button>
+      </ion-list>
+
+
+</ion-content>

@@ -1,4 +1,5 @@
 import { Tag } from "./Tag";
+import * as moment from 'moment';
 
 export class Expense {
 
@@ -39,6 +40,16 @@ export class Expense {
     }
     public getDescription(): string {
         return this.description;
+    }
+
+    public getCreatedDate(): string
+    {
+        return this.createdDate;
+    }
+
+    public getFormattedDate(): string 
+    {
+        return moment(this.createdDate).format('dddd, Do');
     }
 
 }

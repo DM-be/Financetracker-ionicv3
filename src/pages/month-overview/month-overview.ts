@@ -8,6 +8,7 @@ import { ExpensePage } from '../expense/expense';
 import { Expense } from '../../models/Expense';
 import { Account } from '../../models/Account';
 import { MonthOverView } from '../../models/monthOverview';
+import { CategoryDetailsPage } from '../category-details/category-details';
 
 /**
  * Generated class for the MonthOverviewPage page.
@@ -86,6 +87,14 @@ export class MonthOverviewPage {
     return 30;
   }
 
+  showCategoryDetails(category: Category)
+  {
+    this.navCtrl.push(CategoryDetailsPage, {
+      category: category
+    });
+    
+  } 
+
 
   addExpenseModal() {
     let expenseModal = this.modalCtrl.create(ExpensePage, {
@@ -94,9 +103,7 @@ export class MonthOverviewPage {
     expenseModal.present();
   }
 
-  showCategoryDetails(category: Category) {
-    
-  }
+ 
 
   handleSwipe($e) {
     if ($e.offsetDirection == 4) {

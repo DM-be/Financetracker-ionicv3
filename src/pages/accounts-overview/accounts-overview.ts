@@ -10,7 +10,6 @@ import { AccountDetailsPage } from '../account-details/account-details';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-accounts-overview',
   templateUrl: 'accounts-overview.html',

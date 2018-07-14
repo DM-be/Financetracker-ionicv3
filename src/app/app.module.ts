@@ -24,6 +24,9 @@ import { AccountDetailsPage } from '../pages/account-details/account-details';
 import { ChartProvider } from '../providers/chart/chart';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ProgressBarComponent } from '../components/progress-bar/progress-bar';
+import { CategoryDetailsPage } from '../pages/category-details/category-details';
+import { ExpensesOverviewPage } from '../pages/expenses-overview/expenses-overview';
+import { BudgetOverviewPage } from '../pages/budget-overview/budget-overview';
 
 @NgModule({
   declarations: [
@@ -38,7 +41,10 @@ import { ProgressBarComponent } from '../components/progress-bar/progress-bar';
     LoggedInTabsPage, 
     AccountsOverviewPage,
     AccountDetailsPage,
-    ProgressBarComponent
+    ProgressBarComponent,
+    CategoryDetailsPage,
+    ExpensesOverviewPage,
+    BudgetOverviewPage
   ],
   imports: [
     BrowserModule,
@@ -58,7 +64,10 @@ import { ProgressBarComponent } from '../components/progress-bar/progress-bar';
     MonthOverviewPage,
     LoggedInTabsPage,
     AccountsOverviewPage,
-    AccountDetailsPage
+    AccountDetailsPage,
+    CategoryDetailsPage,
+    ExpensesOverviewPage,
+    BudgetOverviewPage
   ],
   providers: [
     StatusBar,
