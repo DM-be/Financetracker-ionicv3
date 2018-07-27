@@ -9,29 +9,37 @@
   <ion-grid fixed>
 
 
+      <ion-card>
+          <ion-item>
+              <ion-card-header>Accounts</ion-card-header>
+              <button ion-button icon-only item-end large  > 
+                  <ion-icon name="add"></ion-icon>
+                </button>
+            </ion-item>
+        <ion-scroll style="height:30vh" padding>
+          <ion-list>
+              <ion-item-sliding *ngFor="let account of accounts">
+            <button ion-item  (click)="accountsDetailPage(account)">
+              <ion-icon name="cafe" item-start></ion-icon>
+              {{account.accountName}}
 
-    <ion-card>
-      <ion-card-header>Accounts</ion-card-header>
-      <ion-card-content>
-        <ion-grid>
-          <ion-row justify-content-center>
-            <ion-col text-center>name</ion-col>
-            <ion-col text-center>start </ion-col>
-            <ion-col text-center>current</ion-col>
-          </ion-row>
-          <ion-row *ngFor="let account of accounts" justify-content-center>
-            <ion-col text-center>{{account.getAccountName()}}</ion-col>
-            <ion-col text-center>
-              <ion-badge>{{account.getInitialBalance()}}</ion-badge>
-            </ion-col>
-            <ion-col text-center>
-              <ion-badge>{{account.getFinalBalance()}}</ion-badge>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-card-content>
-    </ion-card>
+              <ion-badge item-end>{{account.getInitialBalance()}}</ion-badge>
+              <ion-badge item-end>{{account.getFinalBalance()}}</ion-badge>
+            </button>
 
+            <ion-item-options side="right">
+                <button ion-button >delete</button>
+              </ion-item-options>
+            
+            </ion-item-sliding>
+          </ion-list>
+
+        </ion-scroll>
+
+      </ion-card>
+
+
+   
     
 
 
@@ -87,6 +95,7 @@
             <ion-item-options side="right">
                 <button ion-button (click)="detailExpenseModal(expense, 'true')">edit</button>
               </ion-item-options>
+            
             </ion-item-sliding>
           </ion-list>
 

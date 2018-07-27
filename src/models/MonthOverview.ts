@@ -148,6 +148,20 @@ export class MonthOverView {
         
     }
 
+    public getExpensesByAccountName(accountName: string): Expense [] {
+        let expenses = [];
+        this.categories.forEach(category => {
+            category.getExpenses().forEach(expense => {
+                if(expense.usedAccountName === accountName)
+                {
+                    expenses.push(expense);
+                }
+                
+            });
+        });
+        return expenses;
+    }
+
 
 
     

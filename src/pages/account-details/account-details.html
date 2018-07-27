@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>AccountDetails</ion-title>
+    <ion-title>AccountDetails: {{account.accountName}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -15,8 +15,34 @@
 
 <ion-content padding>
   <ion-grid fixed>
-    <p>{{account.accountName}}</p>
 
+
+      <ion-card>
+          <ion-item>
+              <ion-card-header>Expenses</ion-card-header>
+          </ion-item>
+        <ion-scroll style="height:30vh" padding>
+          <ion-list>
+              <ion-item-sliding *ngFor="let expense of expenses">
+            <button ion-item >
+              <ion-icon name="cafe" item-start></ion-icon>
+              {{expense.getDescription()}}
+              <ion-badge item-end>{{expense.getCost()}}</ion-badge>
+            </button>
+
+           
+            
+            </ion-item-sliding>
+          </ion-list>
+
+        </ion-scroll>
+
+      </ion-card>
+
+
+
+
+    <h1>transactions</h1>
 
     <button *ngFor="let transaction of account.getTransactions()" ion-item (click)="details(transaction)">
         <ion-col>{{transaction.operation}}</ion-col>

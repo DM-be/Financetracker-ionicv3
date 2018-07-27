@@ -10,6 +10,7 @@ import { Account } from '../../models/Account';
 import { MonthOverView } from '../../models/monthOverview';
 import { CategoryDetailsPage } from '../category-details/category-details';
 import { ExpenseDetailPage } from '../expense-detail/expense-detail';
+import { AccountDetailsPage } from '../account-details/account-details';
 
 /**
  * Generated class for the MonthOverviewPage page.
@@ -112,6 +113,10 @@ export class MonthOverviewPage {
     })
     detailExpenseModal.present();
   } 
+  accountsDetailPage(account: Account) {
+    
+    this.navCtrl.push(AccountDetailsPage, {account: account, expenses: this.monthOverviewObject.getExpensesByAccountName(account.accountName)});
+  }
 
   
 
