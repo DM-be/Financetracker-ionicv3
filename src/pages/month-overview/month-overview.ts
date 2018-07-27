@@ -9,6 +9,7 @@ import { Expense } from '../../models/Expense';
 import { Account } from '../../models/Account';
 import { MonthOverView } from '../../models/monthOverview';
 import { CategoryDetailsPage } from '../category-details/category-details';
+import { ExpenseDetailPage } from '../expense-detail/expense-detail';
 
 /**
  * Generated class for the MonthOverviewPage page.
@@ -46,9 +47,8 @@ export class MonthOverviewPage {
     this.categories = monthOverviewObject.getCategories();
     this.expenses = monthOverviewObject.getAllExpenses();
     this.accounts = monthOverviewObject.getAllAccounts();
-    console.log(monthOverviewObject.getTotalAmountSpent());
-    let data  = this.buildData(this.categories);
-    this.buildChart(data);
+   // let data  = this.buildData(this.categories);
+   // this.buildChart(data);
   }
 
   buildData(categories: Category []) {
@@ -102,6 +102,18 @@ export class MonthOverviewPage {
     });
     expenseModal.present();
   }
+
+  detailExpenseModal(expense: Expense, editMode?: any) {
+    console.log(editMode);
+    let detailExpenseModal = this.modalCtrl.create(ExpenseDetailPage, {
+      expense: expense,
+      categories: this.categories,
+      editMode: editMode
+    })
+    detailExpenseModal.present();
+  } 
+
+  
 
  
 

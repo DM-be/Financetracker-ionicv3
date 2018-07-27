@@ -76,13 +76,18 @@
             </ion-item>
         <ion-scroll style="height:30vh" padding>
           <ion-list>
-
-            <button ion-item *ngFor="let expense of expenses">
+              <ion-item-sliding *ngFor="let expense of expenses">
+            <button ion-item  (click)="detailExpenseModal(expense)">
               <ion-icon name="cafe" item-start></ion-icon>
               {{expense.getDescription()}}
 
               <ion-badge item-end>{{expense.getCost()}}</ion-badge>
             </button>
+
+            <ion-item-options side="right">
+                <button ion-button (click)="detailExpenseModal(expense, 'true')">edit</button>
+              </ion-item-options>
+            </ion-item-sliding>
           </ion-list>
 
         </ion-scroll>

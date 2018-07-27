@@ -27,6 +27,7 @@ import { ProgressBarComponent } from '../components/progress-bar/progress-bar';
 import { CategoryDetailsPage } from '../pages/category-details/category-details';
 import { ExpensesOverviewPage } from '../pages/expenses-overview/expenses-overview';
 import { BudgetOverviewPage } from '../pages/budget-overview/budget-overview';
+import { ExpenseDetailPage } from '../pages/expense-detail/expense-detail';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { BudgetOverviewPage } from '../pages/budget-overview/budget-overview';
     ProgressBarComponent,
     CategoryDetailsPage,
     ExpensesOverviewPage,
-    BudgetOverviewPage
+    BudgetOverviewPage,
+    ExpenseDetailPage
   ],
   imports: [
     BrowserModule,
@@ -67,7 +69,8 @@ import { BudgetOverviewPage } from '../pages/budget-overview/budget-overview';
     AccountDetailsPage,
     CategoryDetailsPage,
     ExpensesOverviewPage,
-    BudgetOverviewPage
+    BudgetOverviewPage,
+    ExpenseDetailPage
   ],
   providers: [
     StatusBar,

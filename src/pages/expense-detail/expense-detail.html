@@ -1,0 +1,64 @@
+<!--
+  Generated template for the ExpenseDetailPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>ExpenseDetail</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <ion-content padding>
+        <ion-grid fixed>
+        
+            <form >
+                <ion-item>
+                    <ion-label>Category</ion-label>
+                    <ion-select disabled="{{!editMode}}" [(ngModel)]="expense.categoryName" name="categoryName" >
+                      <ion-option *ngFor="let category of categories" [value]="category.getCategoryName()">{{category.getCategoryName()}}</ion-option>
+                    </ion-select>
+                  </ion-item>
+                <ion-item>
+                  <ion-label>Account</ion-label>
+                  <ion-input  disabled="{{!editMode}}" type="text" [(ngModel)]="expense.usedAccountName" name="usedAccountName"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label>createdDate</ion-label>
+                        <ion-datetime disabled="{{!editMode}}" displayFormat="DD/MM/YYYY" pickerFormat="DDDD MMMM YYYY" [(ngModel)]="expense.createdDate" name="createdDate"></ion-datetime>
+               </ion-item>
+                        <ion-item>
+                  <ion-label>Description</ion-label>
+                  <ion-textarea  disabled="{{!editMode}}" [(ngModel)]="expense.description" name="description"></ion-textarea>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Cost</ion-label>
+                   <ion-input  disabled="{{!editMode}}" type="number"[(ngModel)]="expense.cost" name="cost"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Tags</ion-label>
+                  <ion-input  disabled="{{!editMode}}" type="text" [(ngModel)]="newTag" name="newTag"></ion-input>
+                  
+                </ion-item>
+                <button hidden="{{!editMode}}" ion-button color="dark" (click)="addTag()">addTag</button>
+                <ion-scroll style="height:30vh">
+                  <ion-chip *ngFor="let tag of expense.getTags(); let i = index">
+                    <ion-label>{{tag.tagName}}</ion-label>
+                    <button ion-button clear color="dark" (click)="deleteTag(i)">
+                      <ion-icon name="close-circle"></ion-icon>
+                    </button>
+                  </ion-chip>
+                </ion-scroll>
+            
+                <button ion-button  hidden="{{!editMode}}" (click)="updateExpense()" block>update expense</button>
+              </form>
+            
+            
+          
+        </ion-grid>
+</ion-content>
