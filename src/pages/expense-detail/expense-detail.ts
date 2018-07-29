@@ -24,8 +24,10 @@ export class ExpenseDetailPage {
     this.categories = this.navParams.get("categories");
     this.expense = this.navParams.get("expense");
     this.editMode = this.navParams.get("editMode");
+    console.log(this.expense)
   }
 
+  
   /* 
 
   todo: check if usedAccount changed (best via formcontrol or touched etc, see docs)

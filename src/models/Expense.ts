@@ -13,12 +13,12 @@ export class Expense {
     
 
 
-    constructor( cost: number, description: string, createdDate: string, usedAccount: string, tags?: Tag []) {
+    constructor( cost: number, description: string, createdDate: string, usedAccount: string, categoryName: string, tags?: Tag []) {
         this.cost = cost;
         this.description = description;
         this.createdDate = createdDate;
         this.usedAccountName = usedAccount;
-        
+        this.categoryName = categoryName;
         if(tags) {
             this.tags = tags.map(t => new Tag(t.tagName, t.createdDate));
         }
@@ -50,6 +50,10 @@ export class Expense {
     public getFormattedDate(): string 
     {
         return moment(this.createdDate).format('dddd, Do');
+    }
+
+    public getCategoryName(): string {
+        return this.categoryName;
     }
 
 }

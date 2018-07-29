@@ -20,7 +20,7 @@
             <form >
                 <ion-item>
                     <ion-label>Category</ion-label>
-                    <ion-select disabled="{{!editMode}}" [(ngModel)]="expense.categoryName" name="categoryName" >
+                    <ion-select disabled="{{!editMode}}" [(ngModel)]="expense.categoryName" name="categoryName"  >
                       <ion-option *ngFor="let category of categories" [value]="category.getCategoryName()">{{category.getCategoryName()}}</ion-option>
                     </ion-select>
                   </ion-item>
@@ -30,7 +30,7 @@
                 </ion-item>
                 <ion-item>
                     <ion-label>createdDate</ion-label>
-                        <ion-datetime disabled="{{!editMode}}" displayFormat="DD/MM/YYYY" pickerFormat="DDDD MMMM YYYY" [(ngModel)]="expense.createdDate" name="createdDate"></ion-datetime>
+                        <ion-datetime disabled="{{!editMode}}" displayFormat="DD/MM/YYYY" pickerFormat="DDDD MMMM YYYY" [(ngModel)]="expense.createdDate" name="date"></ion-datetime>
                </ion-item>
                         <ion-item>
                   <ion-label>Description</ion-label>
