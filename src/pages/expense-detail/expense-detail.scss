@@ -1,10 +1,21 @@
 page-expense-detail {
 
-    .select-disabled, .item-select-disabled ion-label {
+    .item-select-disabled ion-label {
         opacity: 1;
        
     }
 
+    .item-datetime-disabled ion-label {
+        opacity: 1
+    }
+
+
+
+    // .item-input, .item-select .label-md, .item-datetime .label-md {
+    //     color: black
+    // }
+
+    
     
 
     

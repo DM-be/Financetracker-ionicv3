@@ -27,6 +27,10 @@ export class ExpenseDetailPage {
     console.log(this.expense)
   }
 
+  dismiss() {
+    this.navCtrl.pop();
+  }
+
   
   /* 
 
