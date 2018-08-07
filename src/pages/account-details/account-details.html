@@ -14,39 +14,59 @@
 
 
 <ion-content padding>
-  <ion-grid fixed>
 
 
-      <ion-card>
-          <ion-item>
-              <ion-card-header>Expenses</ion-card-header>
-          </ion-item>
-        <ion-scroll style="height:30vh" padding>
-          <ion-list>
-              <ion-item-sliding *ngFor="let expense of expenses">
-            <button ion-item >
-              <ion-icon name="cafe" item-start></ion-icon>
-              {{expense.getDescription()}}
-              <ion-badge item-end>{{expense.getCost()}}</ion-badge>
-            </button>
+  <h1>expenses</h1>
 
-           
-            
-            </ion-item-sliding>
-          </ion-list>
+  <ion-scroll style="height:40vh" padding>
+    <ion-list>
 
-        </ion-scroll>
+      <button ion-item *ngFor="let expense of expenses">
 
-      </ion-card>
+        <ion-grid>
 
+          <ion-row justify-content-around>
+            <ion-col col-1>
+              <ion-icon name="cafe"></ion-icon>
+            </ion-col>
+            <ion-col col-4 class="wrap-text">{{expense.getDescription()}}</ion-col>
+            <ion-col col-4 class="wrap-text">{{expense.getFormattedDate()}}</ion-col>
+            <ion-col col-2 class="wrap-text">
+              <ion-badge>{{expense.getCost()}}</ion-badge>
+            </ion-col>
 
+          </ion-row>
+        </ion-grid>
 
-
-    <h1>transactions</h1>
-
-    <button *ngFor="let transaction of account.getTransactions()" ion-item (click)="details(transaction)">
-        <ion-col>{{transaction.operation}}</ion-col>
-        <ion-col>amount: {{transaction.amount}}</ion-col>
       </button>
-    </ion-grid>
+    </ion-list>
+  </ion-scroll>
+
+
+
+  <h1>transactions</h1>
+
+
+  <ion-scroll style="height:40vh" padding>
+    <ion-list>
+
+      <button ion-item *ngFor="let transaction of transactions">
+
+        <ion-grid>
+
+          <ion-row justify-content-around>
+            <ion-col col-5 class="wrap-text">{{transaction.getFormattedDate()}}</ion-col>
+            <ion-col col-5 class="wrap-text">Sender: {{transaction.getSendingAccountName()}}</ion-col>
+            <ion-col col-2 class="wrap-text">
+              <ion-badge>{{getOperationSign(transaction.getOperation())}} {{transaction.getAmount()}}</ion-badge>
+            </ion-col>
+
+          </ion-row>
+        </ion-grid>
+
+      </button>
+    </ion-list>
+  </ion-scroll>
+
+
 </ion-content>

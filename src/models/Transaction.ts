@@ -42,5 +42,23 @@ export class Transaction {
         return this.uniqId;
     }
 
+    public getFormattedDate(): string 
+    {
+        return moment(this.transactionDate).format('dddd, Do');
+    }
+
+    public getSendingAccountName() : string{
+        return this.sendingAccountName;
+    }
+    
+    public getOperation(): string {
+        return this.operation;
+    }
+
+    public getAmount(): number  {
+        return this.amount;
+    }
+
+
 
 }

@@ -15,6 +15,8 @@ import { Expense } from '../../models/Expense';
   selector: 'page-account-details',
   templateUrl: 'account-details.html',
 })
+
+// TODO: make a pipe for date formatting!
 export class AccountDetailsPage {
 
   public account: Account;
@@ -23,12 +25,21 @@ export class AccountDetailsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.account = this.navParams.get("account");
     this.expenses = this.navParams.get("expenses");
+    this.transactions =  this.account.getTransactions();
     
   }
 
   details(transaction: Transaction)
   {
 
+  }
+
+  getOperationSign(operation:string): string {
+    if(operation === 'increase')
+    {
+      return '+';
+    }
+    return '-'
   }
 
   
