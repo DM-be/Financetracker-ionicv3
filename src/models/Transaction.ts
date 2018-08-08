@@ -50,6 +50,10 @@ export class Transaction {
     public getSendingAccountName() : string{
         return this.sendingAccountName;
     }
+
+    public getRecievingAccountName(): string {
+        return this.recievingAccountName;
+    }
     
     public getOperation(): string {
         return this.operation;

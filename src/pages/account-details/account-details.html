@@ -15,7 +15,7 @@
 
 <ion-content padding>
 
-
+<ion-grid fixed>
   <h1>expenses</h1>
 
   <ion-scroll style="height:40vh" padding>
@@ -55,8 +55,9 @@
         <ion-grid>
 
           <ion-row justify-content-around>
-            <ion-col col-5 class="wrap-text">{{transaction.getFormattedDate()}}</ion-col>
-            <ion-col col-5 class="wrap-text">Sender: {{transaction.getSendingAccountName()}}</ion-col>
+            <ion-col col-3 class="wrap-text">{{transaction.getFormattedDate()}}</ion-col>
+            <ion-col col-3 class="wrap-text">{{transaction.getSendingAccountName()}}</ion-col>
+            <ion-col col-3 class="wrap-text">{{transaction.getRecievingAccountName()}}</ion-col>
             <ion-col col-2 class="wrap-text">
               <ion-badge>{{getOperationSign(transaction.getOperation())}} {{transaction.getAmount()}}</ion-badge>
             </ion-col>
@@ -68,5 +69,5 @@
     </ion-list>
   </ion-scroll>
 
-
+</ion-grid>
 </ion-content>

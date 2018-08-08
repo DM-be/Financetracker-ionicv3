@@ -21,11 +21,13 @@ export class AccountDetailsPage {
 
   public account: Account;
   public expenses: Expense [];
+  public transactions: Transaction [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.account = this.navParams.get("account");
     this.expenses = this.navParams.get("expenses");
     this.transactions =  this.account.getTransactions();
+    
     
   }
 
