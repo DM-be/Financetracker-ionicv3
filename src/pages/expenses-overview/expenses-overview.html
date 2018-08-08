@@ -14,23 +14,29 @@
 
 
 <ion-content padding>
+  <ion-grid fixed>
     <ion-list>
 
-        <button ion-item *ngFor="let expense of expenses">
-        
-          <ion-grid>
+      <button ion-item *ngFor="let expense of expenses">
+
+        <ion-grid>
 
           <ion-row justify-content-around>
-            <ion-col col-1 ><ion-icon name="cafe"></ion-icon></ion-col>
+            <ion-col col-1>
+              <ion-icon name="cafe"></ion-icon>
+            </ion-col>
             <ion-col col-4 class="wrap-text">{{expense.getDescription()}}</ion-col>
             <ion-col col-4 class="wrap-text">{{expense.getFormattedDate()}}</ion-col>
-            <ion-col col-2 class="wrap-text"><ion-badge>{{expense.getCost()}}</ion-badge></ion-col>
-          
-        </ion-row>
+            <ion-col col-2 class="wrap-text">
+              <ion-badge>{{expense.getCost()}}</ion-badge>
+            </ion-col>
+
+          </ion-row>
         </ion-grid>
 
-</button>
-      </ion-list>
+      </button>
+    </ion-list>
 
+  </ion-grid>
 
 </ion-content>

@@ -1,3 +1,4 @@
+
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
@@ -31,6 +32,8 @@ import { ExpenseDetailPage } from '../pages/expense-detail/expense-detail';
 import {IonTagsInputModule} from "ionic-tags-input";
 import { ChartOverviewPage } from '../pages/chart-overview/chart-overview';
 import { SettingsPage } from '../pages/settings/settings';
+import { ColorPicker } from '../components/color-picker/color-picker';
+import { CategoryPage } from '../pages/category/category';
 
 @NgModule({
   declarations: [
@@ -51,7 +54,9 @@ import { SettingsPage } from '../pages/settings/settings';
     BudgetOverviewPage,
     ExpenseDetailPage,
     ChartOverviewPage,
-    SettingsPage
+    SettingsPage,
+    ColorPicker,
+    CategoryPage
   ],
   imports: [
     BrowserModule,
@@ -78,7 +83,8 @@ import { SettingsPage } from '../pages/settings/settings';
     BudgetOverviewPage,
     ExpenseDetailPage,
     ChartOverviewPage,
-    SettingsPage
+    SettingsPage,
+    CategoryPage
   ],
   providers: [
     StatusBar,

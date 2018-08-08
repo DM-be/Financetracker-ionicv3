@@ -11,6 +11,7 @@ import { MonthOverView } from '../../models/monthOverview';
 import { CategoryDetailsPage } from '../category-details/category-details';
 import { ExpenseDetailPage } from '../expense-detail/expense-detail';
 import { AccountDetailsPage } from '../account-details/account-details';
+import { CategoryPage } from '../category/category';
 
 /**
  * Generated class for the MonthOverviewPage page.
@@ -118,6 +119,11 @@ export class MonthOverviewPage {
       account: account, 
       expenses: this.monthOverviewObject.getExpensesByAccountName(account.accountName),
       categories: this.categories});
+  }
+
+  addCategoryModal() {
+    let categoryModal = this.modalCtrl.create(CategoryPage);
+    categoryModal.present();
   }
 
   

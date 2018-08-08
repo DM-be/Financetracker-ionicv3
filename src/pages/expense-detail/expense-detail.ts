@@ -46,7 +46,7 @@ export class ExpenseDetailPage {
 
 
     console.log(this)
-    return;
+    return true;
 
   }
 
