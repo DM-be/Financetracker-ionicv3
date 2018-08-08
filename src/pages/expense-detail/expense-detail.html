@@ -21,7 +21,6 @@
 
 
 <ion-content padding>
-  <ion-content padding>
     <ion-grid fixed>
 
       <form>
@@ -48,20 +47,11 @@
           <ion-label>Cost</ion-label>
           <ion-input text-right disabled="{{!editMode}}" type="number" [(ngModel)]="expense.cost" name="cost"></ion-input>
         </ion-item>
-        <ion-item item-end>
-          <ion-label>Tags</ion-label>
-          <ion-input text-right disabled="{{!editMode}}" type="text" [(ngModel)]="newTag" name="newTag"></ion-input>
 
-        </ion-item>
-        <button hidden="{{!editMode}}" ion-button color="dark" (click)="addTag()">addTag</button>
-        <ion-scroll style="height:30vh">
-          <ion-chip *ngFor="let tag of expense.getTags(); let i = index">
-            <ion-label>{{tag.tagName}}</ion-label>
-            <button ion-button clear color="dark" (click)="deleteTag(i)">
-              <ion-icon name="close-circle"></ion-icon>
-            </button>
-          </ion-chip>
-        </ion-scroll>
+        
+           <ion-tags-input name="tags" [(ngModel)]="tags" [separatorStr]="','" ></ion-tags-input>
+      
+
 
         <button ion-button hidden="{{!editMode}}" (click)="updateExpense()" block>update expense</button>
       </form>

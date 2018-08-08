@@ -19,6 +19,7 @@ export class ExpenseDetailPage {
   public editMode: boolean;
   public categories: Category [];
   public expense: Expense;
+  public tags: any = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.categories = this.navParams.get("categories");

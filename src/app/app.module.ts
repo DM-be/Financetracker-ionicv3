@@ -28,6 +28,7 @@ import { CategoryDetailsPage } from '../pages/category-details/category-details'
 import { ExpensesOverviewPage } from '../pages/expenses-overview/expenses-overview';
 import { BudgetOverviewPage } from '../pages/budget-overview/budget-overview';
 import { ExpenseDetailPage } from '../pages/expense-detail/expense-detail';
+import {IonTagsInputModule} from "ionic-tags-input";
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { ExpenseDetailPage } from '../pages/expense-detail/expense-detail';
     BrowserModule,
     IonicModule.forRoot(MyApp),
     HttpModule,
-    ColorPickerModule
+    ColorPickerModule,
+    IonTagsInputModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [

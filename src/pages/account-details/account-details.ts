@@ -26,7 +26,7 @@ export class AccountDetailsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.account = this.navParams.get("account");
     this.expenses = this.navParams.get("expenses");
-    this.transactions =  this.account.getTransactions();
+    this.transactions = this.account.getTransactions();
     
     
   }
