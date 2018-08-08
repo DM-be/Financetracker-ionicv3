@@ -28,13 +28,15 @@ export class Account {
         
     }
 
+    public getTransactions(): Transaction [] {
+        return this.transactions;
+    }
+
     public getAccountName(): string {
         return this.accountName;
     }
 
-    public getTransactions(): Transaction [] {
-        return this.transactions;
-    }
+    
 
     public addTransaction(transaction: Transaction): void {
         this.transactions.push(transaction);

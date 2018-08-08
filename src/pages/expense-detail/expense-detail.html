@@ -49,7 +49,7 @@
         </ion-item>
 
         
-           <ion-tags-input name="tags" [(ngModel)]="tags" [separatorStr]="','" ></ion-tags-input>
+           <ion-tags-input name="tags" [(ngModel)]="tags" [separatorStr]="','"  [readonly]=!editMode  [hideRemove]='!editMode'  [canBackspaceRemove]="!editMode" [verifyMethod]="verifyTag" [once]="'true'"></ion-tags-input>
       
 
 

@@ -20,16 +20,37 @@ export class ExpenseDetailPage {
   public categories: Category [];
   public expense: Expense;
   public tags: any = [];
+  public page = this;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.categories = this.navParams.get("categories");
     this.expense = this.navParams.get("expense");
+    this.tags = this.expense.getTags().map(tag => tag.tagName);
+    console.log(this.tags);
+    
+    
+  }
+
+  ionViewWillEnter() {
     this.editMode = this.navParams.get("editMode");
     console.log(this.expense)
+        console.log(this.editMode)
+
+        console.log(typeof this.editMode)
+
   }
 
   dismiss() {
     this.navCtrl.pop();
+  }
+
+  verifyTag(tag: string): boolean
+  {
+
+
+    console.log(this)
+    return;
+
   }
 
   

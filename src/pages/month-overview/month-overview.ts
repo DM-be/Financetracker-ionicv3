@@ -105,7 +105,6 @@ export class MonthOverviewPage {
   }
 
   detailExpenseModal(expense: Expense, editMode?: any) {
-    console.log(editMode);
     let detailExpenseModal = this.modalCtrl.create(ExpenseDetailPage, {
       expense: expense,
       categories: this.categories,
