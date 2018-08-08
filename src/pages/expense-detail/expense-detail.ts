@@ -26,17 +26,14 @@ export class ExpenseDetailPage {
     this.categories = this.navParams.get("categories");
     this.expense = this.navParams.get("expense");
     this.tags = this.expense.getTags().map(tag => tag.tagName);
-    console.log(this.tags);
-    
+    console.log(this.expense.getCategoryName())
     
   }
 
   ionViewWillEnter() {
     this.editMode = this.navParams.get("editMode");
-    console.log(this.expense)
-        console.log(this.editMode)
-
-        console.log(typeof this.editMode)
+    console.log(this.categories)
+   
 
   }
 

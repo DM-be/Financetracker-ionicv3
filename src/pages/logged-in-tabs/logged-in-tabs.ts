@@ -5,6 +5,8 @@ import { AccountsPage } from '../accounts/accounts';
 import { MonthOverviewPage } from '../month-overview/month-overview';
 import { HomePage } from '../home/home';
 import { AccountsOverviewPage } from '../accounts-overview/accounts-overview';
+import { ChartOverviewPage } from '../chart-overview/chart-overview';
+import { SettingsPage } from '../settings/settings';
 
 /**
  * Generated class for the LoggedInTabsPage page.
@@ -25,6 +27,8 @@ export class LoggedInTabsPage {
   public monthOverview = MonthOverviewPage;
   public home = HomePage;
   public accountsOverview = AccountsOverviewPage;
+  public chartOverview = ChartOverviewPage;
+  public settings = SettingsPage;
 
   public tabsPlacement: string;
   public tabsLayout: string;

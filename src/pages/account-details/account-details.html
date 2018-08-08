@@ -21,7 +21,7 @@
   <ion-scroll style="height:40vh" padding>
     <ion-list>
 
-      <button ion-item *ngFor="let expense of expenses">
+      <button ion-item *ngFor="let expense of expenses" (click)="detailExpenseModal(expense, false)">
 
         <ion-grid>
 

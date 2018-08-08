@@ -114,7 +114,10 @@ export class MonthOverviewPage {
   } 
   accountsDetailPage(account: Account) {
     
-    this.navCtrl.push(AccountDetailsPage, {account: account, expenses: this.monthOverviewObject.getExpensesByAccountName(account.accountName)});
+    this.navCtrl.push(AccountDetailsPage, {
+      account: account, 
+      expenses: this.monthOverviewObject.getExpensesByAccountName(account.accountName),
+      categories: this.categories});
   }
 
   

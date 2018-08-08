@@ -29,6 +29,8 @@ import { ExpensesOverviewPage } from '../pages/expenses-overview/expenses-overvi
 import { BudgetOverviewPage } from '../pages/budget-overview/budget-overview';
 import { ExpenseDetailPage } from '../pages/expense-detail/expense-detail';
 import {IonTagsInputModule} from "ionic-tags-input";
+import { ChartOverviewPage } from '../pages/chart-overview/chart-overview';
+import { SettingsPage } from '../pages/settings/settings';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import {IonTagsInputModule} from "ionic-tags-input";
     CategoryDetailsPage,
     ExpensesOverviewPage,
     BudgetOverviewPage,
-    ExpenseDetailPage
+    ExpenseDetailPage,
+    ChartOverviewPage,
+    SettingsPage
   ],
   imports: [
     BrowserModule,
@@ -72,7 +76,9 @@ import {IonTagsInputModule} from "ionic-tags-input";
     CategoryDetailsPage,
     ExpensesOverviewPage,
     BudgetOverviewPage,
-    ExpenseDetailPage
+    ExpenseDetailPage,
+    ChartOverviewPage,
+    SettingsPage
   ],
   providers: [
     StatusBar,
