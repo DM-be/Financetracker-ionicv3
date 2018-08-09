@@ -17,6 +17,8 @@ import { ColorPickerPage } from '../color-picker/color-picker';
 })
 export class CategoryPage {
 
+  public categoryName: string;
+  public budgetNumber: string; 
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController) {
   }
 
