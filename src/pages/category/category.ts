@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { ColorPicker } from '../../components/color-picker/color-picker';
+import { ColorPickerPage } from '../color-picker/color-picker';
 
 /**
  * Generated class for the CategoryPage page.
@@ -15,23 +17,17 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class CategoryPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CategoryPage');
   }
 
-  setColor() {
-
+  colorPickerModal() {
+    this.modalCtrl.create(ColorPickerPage).present();
   }
 
-  colorTouchStart() {
-    
-  }
-
-  colorTouchEnd() {
-
-  }
+  
 
 }

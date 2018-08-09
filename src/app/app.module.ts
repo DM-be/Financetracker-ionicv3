@@ -34,6 +34,7 @@ import { ChartOverviewPage } from '../pages/chart-overview/chart-overview';
 import { SettingsPage } from '../pages/settings/settings';
 import { ColorPicker } from '../components/color-picker/color-picker';
 import { CategoryPage } from '../pages/category/category';
+import { ColorPickerPage } from '../pages/color-picker/color-picker';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { CategoryPage } from '../pages/category/category';
     ChartOverviewPage,
     SettingsPage,
     ColorPicker,
-    CategoryPage
+    CategoryPage,
+    ColorPickerPage
   ],
   imports: [
     BrowserModule,
@@ -84,7 +86,9 @@ import { CategoryPage } from '../pages/category/category';
     ExpenseDetailPage,
     ChartOverviewPage,
     SettingsPage,
-    CategoryPage
+    CategoryPage,
+    ColorPickerPage,
+    ColorPicker
   ],
   providers: [
     StatusBar,
