@@ -32,10 +32,13 @@
             <ion-label>Budget</ion-label>
             <ion-input text-right  type="number" [(ngModel)]="budgetNumber" name="budgetNumber"></ion-input>
           </ion-item>
-          <ion-item item-end>
-            <ion-label>Color</ion-label>
-            <button ion-button item-right icon-only (click)="colorPickerModal()"><ion-icon name="brush"></ion-icon></button>
-          </ion-item> 
+          
+            
+            <button ion-item (click)="colorPickerModal()">
+              <ion-label>Color</ion-label>
+              <ion-icon name="brush"  item-end [style.color]="getSelectedColor()"></ion-icon>
+            </button>
+         
   
         </form>
   

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, PopoverController } from 'ionic-angular';
 import { ColorPicker } from '../../components/color-picker/color-picker';
 import { ColorPickerPage } from '../color-picker/color-picker';
 
@@ -19,7 +19,8 @@ export class CategoryPage {
 
   public categoryName: string;
   public budgetNumber: string; 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController) {
+  public selectedColor: string;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public popoverCtrl: PopoverController) {
   }
 
   ionViewDidLoad() {
@@ -27,7 +28,16 @@ export class CategoryPage {
   }
 
   colorPickerModal() {
-    this.modalCtrl.create(ColorPickerPage).present();
+   // this.modalCtrl.create(ColorPickerPage).present();
+   let popover = this.popoverCtrl.create(ColorPickerPage);
+   popover.present();
+   popover.onDidDismiss(color => this.selectedColor = color);
+   
+  }
+
+  getSelectedColor()
+  {
+    return this.selectedColor || '#000000';
   }
 
   

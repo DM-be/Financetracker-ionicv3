@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
 /**
  * Generated class for the ColorPickerPage page.
@@ -16,7 +16,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 export class ColorPickerPage {
   public hexColor: string = '#FF0000';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController) {
   }
 
   ionViewDidLoad() {
@@ -39,5 +39,11 @@ export class ColorPickerPage {
   colorTouchEnd() {
 
   }
+
+  dismiss() {
+    this.viewCtrl.dismiss(this.hexColor);
+  }
+
+  
 
 }

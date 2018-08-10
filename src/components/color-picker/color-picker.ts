@@ -96,7 +96,7 @@ export class ColorPicker {
 
     console.log(pixelRatio);
 
-    var width = currentWidth * 90/100;
+    var width = currentWidth * 79/100;
     var height = width * 0.5;
 
     this.ctxPalette.canvas.width  = width * pixelRatio;
@@ -162,7 +162,7 @@ export class ColorPicker {
 
     var pixelRatio = this.getPixelRatio(ctx);
 
-    var width = currentWidth * 90/100;
+    var width = currentWidth * 79/100;
     var height = width * 0.05;
 
     ctx.canvas.width  = width * pixelRatio;

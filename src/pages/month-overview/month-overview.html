@@ -9,17 +9,17 @@
   <ion-grid fixed>
 
 
-      <ion-card>
-          <ion-item>
-              <ion-card-header>Accounts</ion-card-header>
-              <button ion-button icon-only item-end large  > 
-                  <ion-icon name="add"></ion-icon>
-                </button>
-            </ion-item>
-        <ion-scroll style="height:30vh" padding>
-          <ion-list>
-              <ion-item-sliding *ngFor="let account of accounts">
-            <button ion-item  (click)="accountsDetailPage(account)">
+    <ion-card>
+      <ion-item>
+        <ion-card-header>Accounts</ion-card-header>
+        <button ion-button icon-only item-end large>
+          <ion-icon name="add"></ion-icon>
+        </button>
+      </ion-item>
+      <ion-scroll style="height:30vh" padding>
+        <ion-list>
+          <ion-item-sliding *ngFor="let account of accounts">
+            <button ion-item (click)="accountsDetailPage(account)">
               <ion-icon name="cafe" item-start></ion-icon>
               {{account.accountName}}
 
@@ -28,28 +28,28 @@
             </button>
 
             <ion-item-options side="right">
-                <button ion-button >delete</button>
-              </ion-item-options>
-            
-            </ion-item-sliding>
-          </ion-list>
+              <button ion-button>delete</button>
+            </ion-item-options>
 
-        </ion-scroll>
+          </ion-item-sliding>
+        </ion-list>
 
-      </ion-card>
+      </ion-scroll>
+
+    </ion-card>
 
 
-   
-    
+
+
 
 
 
     <ion-card>
       <ion-item>
         <ion-card-header>Categories</ion-card-header>
-        <button ion-button icon-only item-end large (click)="addCategoryModal()"> 
-            <ion-icon name="add"></ion-icon>
-          </button>
+        <button ion-button icon-only item-end large (click)="addCategoryModal()">
+          <ion-icon name="add"></ion-icon>
+        </button>
       </ion-item>
 
       <ion-list>
@@ -72,20 +72,20 @@
         </div>
 
       </ion-list>
-      </ion-card>
+    </ion-card>
 
 
-      <ion-card>
-          <ion-item>
-              <ion-card-header>Expenses</ion-card-header>
-              <button ion-button icon-only item-end large (click)="addExpenseModal()" > 
-                  <ion-icon name="add"></ion-icon>
-                </button>
-            </ion-item>
-        <ion-scroll style="height:30vh" padding>
-          <ion-list>
-              <ion-item-sliding *ngFor="let expense of expenses">
-            <button ion-item  (click)="detailExpenseModal(expense, false)">
+    <ion-card>
+      <ion-item>
+        <ion-card-header>Expenses</ion-card-header>
+        <button ion-button icon-only item-end large (click)="addExpenseModal()">
+          <ion-icon name="add"></ion-icon>
+        </button>
+      </ion-item>
+      <ion-scroll style="height:30vh" padding>
+        <ion-list>
+          <ion-item-sliding *ngFor="let expense of expenses">
+            <button ion-item (click)="detailExpenseModal(expense, false)">
               <ion-icon name="cafe" item-start></ion-icon>
               {{expense.getDescription()}}
 
@@ -93,15 +93,15 @@
             </button>
 
             <ion-item-options side="right">
-                <button ion-button (click)="detailExpenseModal(expense, true)">edit</button>
-              </ion-item-options>
-            
-            </ion-item-sliding>
-          </ion-list>
+              <button ion-button (click)="detailExpenseModal(expense, true)">edit</button>
+            </ion-item-options>
 
-        </ion-scroll>
+          </ion-item-sliding>
+        </ion-list>
 
-      </ion-card>
+      </ion-scroll>
+
+    </ion-card>
 
   </ion-grid>
 
