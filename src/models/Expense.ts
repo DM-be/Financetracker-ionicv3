@@ -9,6 +9,7 @@ export class Expense {
     public usedAccountName: string; 
     public tags: Tag []; 
     public categoryName: string; 
+    public iconName: string; 
     
     
 

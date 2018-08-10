@@ -6,10 +6,13 @@ export class Account {
     public initialBalance: number;
     public finalBalance: number;
     public transactions: Transaction [];
+    public iconName: string; 
     
     /**
      *
      */
+
+     // todo fix constructor with iconname 
     constructor(owner: string, accountName: string,initialBalance: number, finalBalance?: number, transactions?: Transaction []) {
         this.owner = owner;
         this.accountName = accountName;

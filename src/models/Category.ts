@@ -8,6 +8,7 @@ export class Category {
     public budget: Budget;
     public createdDate: string; // added hobby at 07 2018 --> get docs starting from 07 to ... 
     public chartColor: string;
+    public iconName: string; 
 
 
     /**
