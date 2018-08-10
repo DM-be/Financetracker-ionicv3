@@ -36,9 +36,12 @@
             
             <button ion-item (click)="colorPickerModal()">
               <ion-label>Color</ion-label>
-              <ion-icon name="brush"  item-end [style.color]="getSelectedColor()"></ion-icon>
+              <ion-icon name="color-palette"  item-end [style.color]="getSelectedColor()"></ion-icon>
             </button>
-         
+            <button ion-item (click)="iconsPopover()">
+                <ion-label>Icon</ion-label>
+                <ion-icon [name]="getSelectedIcon()"  item-end  ></ion-icon>
+              </button>
   
         </form>
   

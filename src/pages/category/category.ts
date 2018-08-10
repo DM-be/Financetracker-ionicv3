@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, PopoverController } from 'ionic-angular';
 import { ColorPicker } from '../../components/color-picker/color-picker';
 import { ColorPickerPage } from '../color-picker/color-picker';
+import { IconsPage } from '../icons/icons';
 
 /**
  * Generated class for the CategoryPage page.
@@ -20,6 +21,7 @@ export class CategoryPage {
   public categoryName: string;
   public budgetNumber: string; 
   public selectedColor: string;
+  public selectedIcon: string;
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public popoverCtrl: PopoverController) {
   }
 
@@ -31,7 +33,17 @@ export class CategoryPage {
    // this.modalCtrl.create(ColorPickerPage).present();
    let popover = this.popoverCtrl.create(ColorPickerPage);
    popover.present();
-   popover.onDidDismiss(color => this.selectedColor = color);
+   popover.onDidDismiss(color => 
+    {
+      if(color !== undefined)
+      {
+        this.selectedColor = color
+      }
+      else {
+        this.selectedColor = '#000000';
+      }
+      
+    });
    
   }
 
@@ -40,6 +52,25 @@ export class CategoryPage {
     return this.selectedColor || '#000000';
   }
 
+  iconsPopover() {
+    let popover = this.popoverCtrl.create(IconsPage);
+    popover.present();
+    popover.onDidDismiss(icon => 
+      {
+        if(icon !== undefined)
+        {
+          this.selectedIcon = icon
+        }
+        else {
+          this.selectedIcon = "add-circle"
+        }
+      });
+   
+  }
+
+  getSelectedIcon() {
+    return this.selectedIcon|| 'add-circle';
+  }
   
 
 }

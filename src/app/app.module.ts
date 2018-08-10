@@ -35,6 +35,7 @@ import { SettingsPage } from '../pages/settings/settings';
 import { ColorPicker } from '../components/color-picker/color-picker';
 import { CategoryPage } from '../pages/category/category';
 import { ColorPickerPage } from '../pages/color-picker/color-picker';
+import { IconsPage } from '../pages/icons/icons';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { ColorPickerPage } from '../pages/color-picker/color-picker';
     SettingsPage,
     ColorPicker,
     CategoryPage,
-    ColorPickerPage
+    ColorPickerPage,
+    IconsPage
   ],
   imports: [
     BrowserModule,
@@ -88,7 +90,8 @@ import { ColorPickerPage } from '../pages/color-picker/color-picker';
     SettingsPage,
     CategoryPage,
     ColorPickerPage,
-    ColorPicker
+    ColorPicker,
+    IconsPage
   ],
   providers: [
     StatusBar,
