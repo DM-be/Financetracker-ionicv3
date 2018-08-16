@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { SettingsProvider } from '../../providers/settings/settings';
 
 /**
  * Generated class for the SettingsPage page.
@@ -8,14 +9,19 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
 @Component({
   selector: 'page-settings',
   templateUrl: 'settings.html',
 })
 export class SettingsPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  public showExpensesFromOtherUsers: boolean;
+  public showAccountsFromOtherUsers: boolean;
+
+  // add reminders with onesignal here
+
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public settingsProvider: SettingsProvider) {
   }
 
   ionViewDidLoad() {

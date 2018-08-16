@@ -14,7 +14,7 @@ export class SettingsProvider {
 
   private userOverview: UserOverview;
 
-  constructor(public http: HttpClient, public dbProvider: DbProvider) {
+  constructor(public dbProvider: DbProvider) {
     this.initialize();
     
     

@@ -4,6 +4,8 @@ import { Account } from '../../models/Account';
 import { DbProvider } from '../../providers/db/db';
 import { TabsPage } from '../tabs/tabs';
 import { IconsPage } from '../icons/icons';
+import { SettingsProvider } from '../../providers/settings/settings';
+import { LoggedInTabsPage } from '../logged-in-tabs/logged-in-tabs';
 
 /**
  * Generated class for the AccountsPage page.
@@ -18,43 +20,38 @@ import { IconsPage } from '../icons/icons';
   templateUrl: 'accounts.html',
 })
 export class AccountsPage {
-
-  private accounts = [];
-  public owner: string; // name of the owner of the account
   public accountName: string;
   public balance: string;
   public selectedIcon: string;
     
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public appCtrl: App, public popoverCtrl: PopoverController ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public appCtrl: App, public popoverCtrl: PopoverController, public settingsProvider: SettingsProvider ) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad AccountsPage');
+    
   }
 
   dismiss() {
     this.navCtrl.pop();
   }
 
-  finishAccounts() {
+  addAccount() {
    // this.dbProvider.setupUserOverview(this.accounts);
-    this.dbProvider.setupFirstMonthOverview(this.accounts);
-    this.appCtrl.getRootNav().setRoot(TabsPage);
+   // this.dbProvider.setupFirstMonthOverview(this.accounts);
+   // ---> check if a monthoverview exists, if not do setupfirstmonthoverview
+  let account = new Account(this.settingsProvider.getUserName(), this.accountName, parseInt(this.balance));
+  if(true)
+  {
+    this.dbProvider.setupFirstMonthOverview([account]);
+    this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
+  } 
   }
 
-  addAccount() {
-    let account = new Account(this.owner, this.accountName, parseInt(this.balance));
-    this.owner = "";
-    this.accountName = "";
-    this.accounts.push(account);
-  }
 
   getSelectedIcon() {
     return this.selectedIcon || "add-circle";
   }
-
-
 
   iconsPopover() {
     let popover = this.popoverCtrl.create(IconsPage);
