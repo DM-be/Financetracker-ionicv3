@@ -2,52 +2,26 @@ import { Account } from "./Account";
 
 export class UserOverview {
     /**
-     * private overview with settings etc
+     * contains all personal user settings, is stored in a user per user database
+     * actual monthoverviews are shared in a shared database
      */
-    private _id: string; // 
-    private _rev: string;
-    private defaultUser;
-    private allUsers: string [];
 
-    constructor(_id: string, _rev?: string, defaultUser?: string, allUsers?: string [] ) {
+    
+    private _id: string; // username 
+    private _rev: string;
+    // reminders, filtering options, etc etc
+
+    constructor(_id: string, _rev?: string ) {
         this._id = _id;
         if(_rev) 
         {
             this._rev = _rev;
         }
-        if(defaultUser) 
-        {
-            this.defaultUser = defaultUser;
-        }
-        else {
-            this.defaultUser = _id;
-        }
-        if(allUsers)
-        {
-            this.allUsers = allUsers;
-        }
-        else {
-            this.allUsers = [];
-        }
     }
 
-    addUser(user: string)
-    {
-        this.allUsers.push(user);
+    getUserName(): string {
+        return this._id;
     }
-
-    getUsers() {
-        return this.allUsers;
-    }
-
-    setDefaultUser(newDefaultUser: string): void {
-        this.defaultUser = newDefaultUser;
-    }
-
-    getDefaultUser(): string {
-        return this.defaultUser;
-    }
-
 
 
 

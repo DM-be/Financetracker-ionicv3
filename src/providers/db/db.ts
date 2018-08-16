@@ -64,7 +64,7 @@ export class DbProvider {
 
   async getUserOverview() {
     let doc = await this.db.get(this.registeredUsername);
-    return new UserOverview(doc._id, doc._rev, doc.defaultUser, doc.allUsers);
+    return new UserOverview(doc._id);
   } 
 
 
