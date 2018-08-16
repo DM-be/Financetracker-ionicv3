@@ -50,6 +50,10 @@ export class ExpenseDetailPage {
 
   }
 
+  updateExpense() {
+      
+  }
+
   
   /* 
 
