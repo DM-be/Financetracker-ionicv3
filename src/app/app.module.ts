@@ -36,6 +36,7 @@ import { ColorPicker } from '../components/color-picker/color-picker';
 import { CategoryPage } from '../pages/category/category';
 import { ColorPickerPage } from '../pages/color-picker/color-picker';
 import { IconsPage } from '../pages/icons/icons';
+import { SettingsProvider } from '../providers/settings/settings';
 
 @NgModule({
   declarations: [
@@ -102,7 +103,8 @@ import { IconsPage } from '../pages/icons/icons';
       useClass: MyHammerConfig 
     },
     DbProvider,
-    ChartProvider
+    ChartProvider,
+    SettingsProvider
   ]
 })
 export class AppModule {}

@@ -17,6 +17,7 @@ import {
 } from '../../models/Expense';
 import { Account } from '../../models/Account';
 import { Transaction } from '../../models/Transaction';
+import { UserOverview } from '../../models/UserOverview';
 
 
 
@@ -31,7 +32,7 @@ export class DbProvider {
   private db: PouchDB;
   private _id_now; // moment object
   private remote: any;
-  private username: string
+  private registeredUsername: string
 
 
   constructor() {
@@ -40,9 +41,9 @@ export class DbProvider {
     //PouchDB.plugin(pouchdbUpsert);
   }
 
-  initSignIn(details): void {
+  initSignIn(details, signUp?: boolean): void {
     this.remote = details.userDBs.supertest;
-    this.username = details.user_id;
+    this.registeredUsername = details.user_id;
     this.db = new PouchDB('finance');
     this.db.sync(this.remote).on('complete', () => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
       this.db.sync(this.remote, {
@@ -51,11 +52,21 @@ export class DbProvider {
         continuous: true
       });
     })
+    if(signUp)
+    {
+      this.db.put(new UserOverview(this.registeredUsername));
+    }
   }
 
   initSignUp(details) {
-    this.initSignIn(details);
+    this.initSignIn(details, true);
   }
+
+  async getUserOverview() {
+    let doc = await this.db.get(this.registeredUsername);
+    return new UserOverview(doc._id, doc._rev, doc.defaultUser, doc.allUsers);
+  } 
+
 
   public async setupFirstMonthOverview(accounts: Account[]) {
     try {
