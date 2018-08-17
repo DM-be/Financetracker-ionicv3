@@ -118,7 +118,7 @@ export class DbProvider {
   private async getMonthOverviewObject(_id_month: string): Promise<MonthOverView> {
 
     let doc = await this.db.get(_id_month);
-    return new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
+    return new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags, doc.externalAccounts);
   }
 
   // REFACTOR 
@@ -180,6 +180,10 @@ export class DbProvider {
     recievingAccount.updateFinalBalance('increase',amount);
   }
 
+  private updateFinalBalanceSendingAccount(sendingAccount: Account, amount: number)
+  {
+    sendingAccount.updateFinalBalance('decrease',amount);
+  }
 
   private async transferFromExternalAccount(_id_month: string, accountHolderName: string, recievingAccountName: string, amount: number, transactionDate?: string)
   {
@@ -193,6 +197,21 @@ export class DbProvider {
     console.log('error in transferring funds between accounts',error);
    }
   }
+
+  private async transferToExternalAccount(_id_month: string, accountHolderName: string, sendingAccountName: string, amount: number, transactionDate?: string)
+  {
+   try {
+    let monthOverview = await this.getMonthOverviewObject(_id_month);
+    let sendingAccount = monthOverview.getAccByName(sendingAccountName);
+    this.updateFinalBalanceSendingAccount(sendingAccount, amount);
+    sendingAccount.addTransaction(new Transaction(amount, accountHolderName, sendingAccount.getAccountName(), 'decrease', transactionDate));
+    await this.db.put(monthOverview);
+   } catch (error) {
+    console.log('error in transferring funds between accounts',error);
+   }
+  }
+
+
 
 
 
@@ -322,6 +341,7 @@ export class DbProvider {
         console.log('updating balances in following months after a transfer');
       }
     } catch (error) {
+      console.log(error);
       
     }
   }

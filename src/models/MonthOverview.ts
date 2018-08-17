@@ -51,6 +51,11 @@ export class MonthOverView {
         return this.accounts;
     }
 
+    public getExternalAccounts(): ExternalAccount []
+    {
+        return this.externalAccounts;
+    }
+
     public getAccByName(accountName: string): Account
     {
         return this.accounts.find(account => account.getAccountName() === accountName);

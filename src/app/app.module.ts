@@ -37,6 +37,7 @@ import { CategoryPage } from '../pages/category/category';
 import { ColorPickerPage } from '../pages/color-picker/color-picker';
 import { IconsPage } from '../pages/icons/icons';
 import { SettingsProvider } from '../providers/settings/settings';
+import { AccountProvider } from '../providers/account/account';
 
 @NgModule({
   declarations: [
@@ -104,7 +105,8 @@ import { SettingsProvider } from '../providers/settings/settings';
     },
     DbProvider,
     ChartProvider,
-    SettingsProvider
+    SettingsProvider,
+    AccountProvider
   ]
 })
 export class AppModule {}
