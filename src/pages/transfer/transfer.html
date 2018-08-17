@@ -26,36 +26,25 @@
       <form>
         <ion-item>
           <ion-label>Sender</ion-label>
-          <ion-select [(ngModel)]="expense.categoryName" name="categoryName">
-            <ion-option *ngFor="let category of categories" [value]="category.getCategoryName()">{{category.getCategoryName()}}</ion-option>
+          <ion-select [(ngModel)]="sendingAccountName" name="sendingAccountName" (ionChange)="onChange($event)">
+            <ion-option *ngFor="let sendingAccount of sendingAccounts" [value]="sendingAccount.getAccountName()">{{sendingAccount.getAccountName()}}</ion-option>
           </ion-select>
         </ion-item>
         <ion-item item-end>
           <ion-label>Reciever</ion-label>
-          <ion-select [(ngModel)]="expense.categoryName" name="categoryName">
-            <ion-option *ngFor="let category of categories" [value]="category.getCategoryName()">{{category.getCategoryName()}}</ion-option>
+          <ion-select [(ngModel)]="recievingAccountName" name="recievingAccountName" (ionChange)="onChange($event)">
+            <ion-option *ngFor="let recievingAccount of recievingAccounts" [value]="recievingAccount.getAccountName()">{{recievingAccount.getAccountName()}}</ion-option>
           </ion-select>
         </ion-item>
         <ion-item item-end>
           <ion-label>Date</ion-label>
-          <ion-datetime disabled="{{!editMode}}" displayFormat="DDDD DD HH:MM" pickerFormat="DDDD MMMM" [(ngModel)]="expense.createdDate"
+          <ion-datetime  displayFormat="DDDD DD HH:MM" pickerFormat="DDDD MMMM" [(ngModel)]="currentMonthYearAndDay"
             name="date"></ion-datetime>
         </ion-item>
         <ion-item item-end>
-          <ion-label>Description</ion-label>
-          <ion-textarea text-right disabled="{{!editMode}}" [(ngModel)]="expense.description" name="description"></ion-textarea>
-        </ion-item>
-        <ion-item item-end>
           <ion-label>Amount</ion-label>
-          <ion-input text-right disabled="{{!editMode}}" type="number" [(ngModel)]="expense.cost" name="cost"></ion-input>
+          <ion-input text-right type="number" [(ngModel)]="amount" name="amount"></ion-input>
         </ion-item>
-
-        
-           <ion-tags-input name="tags" [(ngModel)]="tags" [separatorStr]="','"  [readonly]=!editMode  [hideRemove]='!editMode'  [canBackspaceRemove]="!editMode" [verifyMethod]="verifyTag" [once]="'true'"></ion-tags-input>
-      
-
-
-        <button ion-button hidden="{{!editMode}}" (click)="updateExpense()" block>update expense</button>
       </form>
 
 

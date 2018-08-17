@@ -13,6 +13,7 @@ import { ExpenseDetailPage } from '../expense-detail/expense-detail';
 import { AccountDetailsPage } from '../account-details/account-details';
 import { CategoryPage } from '../category/category';
 import { AccountsPage } from '../accounts/accounts';
+import { TransferPage } from '../transfer/transfer';
 
 /**
  * Generated class for the MonthOverviewPage page.
@@ -129,6 +130,10 @@ export class MonthOverviewPage {
   addCategoryModal() {
     let categoryModal = this.modalCtrl.create(CategoryPage);
     categoryModal.present();
+  }
+
+  transferAccountsModal() {
+    this.modalCtrl.create(TransferPage).present();
   }
 
   

@@ -194,7 +194,7 @@ export class DbProvider {
     recievingAccount.addTransaction(new Transaction(amount, accountHolderName, recievingAccount.getAccountName(), 'increase', transactionDate));
     await this.db.put(monthOverview);
    } catch (error) {
-    console.log('error in transferring funds between accounts',error);
+    console.log('error in transferring funds between external accounts',error);
    }
   }
 
@@ -207,7 +207,7 @@ export class DbProvider {
     sendingAccount.addTransaction(new Transaction(amount, accountHolderName, sendingAccount.getAccountName(), 'decrease', transactionDate));
     await this.db.put(monthOverview);
    } catch (error) {
-    console.log('error in transferring funds between accounts',error);
+    console.log('error in transferring funds between external accounts',error);
    }
   }
 

@@ -38,6 +38,8 @@ import { ColorPickerPage } from '../pages/color-picker/color-picker';
 import { IconsPage } from '../pages/icons/icons';
 import { SettingsProvider } from '../providers/settings/settings';
 import { AccountProvider } from '../providers/account/account';
+import { MomentProvider } from '../providers/moment/moment';
+import { TransferPage } from '../pages/transfer/transfer';
 
 @NgModule({
   declarations: [
@@ -62,7 +64,8 @@ import { AccountProvider } from '../providers/account/account';
     ColorPicker,
     CategoryPage,
     ColorPickerPage,
-    IconsPage
+    IconsPage,
+    TransferPage
   ],
   imports: [
     BrowserModule,
@@ -93,7 +96,8 @@ import { AccountProvider } from '../providers/account/account';
     CategoryPage,
     ColorPickerPage,
     ColorPicker,
-    IconsPage
+    IconsPage,
+    TransferPage
   ],
   providers: [
     StatusBar,
@@ -106,7 +110,8 @@ import { AccountProvider } from '../providers/account/account';
     DbProvider,
     ChartProvider,
     SettingsProvider,
-    AccountProvider
+    AccountProvider,
+    MomentProvider
   ]
 })
 export class AppModule {}
