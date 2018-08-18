@@ -37,13 +37,20 @@ export class TransferPage {
 
   ionViewDidLoad() {
 
-   this.recievingAccount = new Account('', '', 0, 0, []);
-    this.sendingAccount = new Account('', '', 0, 0, []);
   }
 
   onChange(ev) {
     console.log(ev);
   }
+
+  recievingAccountChanged(recievingAccountName: string): void {
+    this.sendingAccounts = this.accounts.filter(acc => acc.accountName !== recievingAccountName);
+  }
+
+  sendingAccountChanged(sendingAccountName: string): void {
+    this.recievingAccounts = this.accounts.filter(acc => acc.accountName !== sendingAccountName);
+  }
+
 
   async initialize() {
     this.accounts = await this.accountProvider.getAccounts(this.momentProvider.getCurrentMonthAndYear());
@@ -51,6 +58,10 @@ export class TransferPage {
     this.recievingAccounts = this.accounts;
     this.currentMonthYearAndDay = this.momentProvider.getCurrentMonthYearAndDay();
     
+  }
+
+  dismiss() {
+    this.navCtrl.pop();
   }
 
 }

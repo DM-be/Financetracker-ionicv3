@@ -170,10 +170,7 @@ export class DbProvider {
     accountB.updateFinalBalance(operationB, amount);
   }
 
-  private addIncomeFromEmployer(employerName: string, recievingAccount: Account, amount: number)
-  {
-    
-  }
+  
 
   private updateFinalBalanceRecievingAccount(recievingAccount: Account, amount: number)
   {

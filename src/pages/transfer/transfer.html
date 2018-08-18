@@ -7,7 +7,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Transfer
+      Transfer External 
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismiss()">
@@ -26,13 +26,13 @@
       <form>
         <ion-item>
           <ion-label>Sender</ion-label>
-          <ion-select [(ngModel)]="sendingAccountName" name="sendingAccountName" (ionChange)="onChange($event)">
+          <ion-select [(ngModel)]="sendingAccountName" name="sendingAccountName" (ionChange)="sendingAccountChanged($event)">
             <ion-option *ngFor="let sendingAccount of sendingAccounts" [value]="sendingAccount.getAccountName()">{{sendingAccount.getAccountName()}}</ion-option>
           </ion-select>
         </ion-item>
         <ion-item item-end>
           <ion-label>Reciever</ion-label>
-          <ion-select [(ngModel)]="recievingAccountName" name="recievingAccountName" (ionChange)="onChange($event)">
+          <ion-select [(ngModel)]="recievingAccountName" name="recievingAccountName" (ionChange)="recievingAccountChanged($event)">
             <ion-option *ngFor="let recievingAccount of recievingAccounts" [value]="recievingAccount.getAccountName()">{{recievingAccount.getAccountName()}}</ion-option>
           </ion-select>
         </ion-item>
