@@ -64,17 +64,17 @@ export class DbProvider {
 
   async getUserOverview() {
     let doc = await this.db.get(this.registeredUsername);
-    return new UserOverview(doc._id);
+    return new UserOverview(doc._id, doc._rev,doc.externalAccounts );
   } 
-
-  async getExternalAccounts() {
-    let monthOverViewObject = await this.getMonthOverviewObject(this.momentProvider.getCurrentMonthAndYear())
-    return monthOverViewObject.getExternalAccounts();
-  }
 
   async saveMonthOverview(monthOverview: MonthOverView)
   {
     await this.db.put(monthOverview);
+  }
+
+  async saveUserOverview(userOverview: UserOverview) 
+  {
+    await this.db.put(userOverview);
   }
 
 
@@ -99,7 +99,7 @@ export class DbProvider {
       });
       // a get without a put --> dont need to make a copy, just dont put it back in.
       //let newMonthOverview = new MonthOverView(this._id_now, doc.accounts);
-      let newMonthOverview = new MonthOverView(_id_month, doc.accounts, doc.categories, undefined, doc.usedTags, doc.externalAccounts);
+      let newMonthOverview = new MonthOverView(_id_month, doc.accounts, doc.categories, undefined, doc.usedTags);
       newMonthOverview.clearExpensesFromCategories();
       newMonthOverview.clearTransactionsFromAccounts();
       newMonthOverview.clearCurrentAmountSpentInBudget();
@@ -128,7 +128,7 @@ export class DbProvider {
   private async getMonthOverviewObject(_id_month: string): Promise<MonthOverView> {
 
     let doc = await this.db.get(_id_month);
-    return new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags, doc.externalAccounts);
+    return new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
   }
 
   // REFACTOR 

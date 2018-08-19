@@ -47,6 +47,8 @@ export class TransferExternalPage {
       this.externalAccountProvider.addExternalAccount(new ExternalAccount(this.searchbar.getValue(), this.currentMonthYearAndDay));
     }
     
+    
+    
   }
 
   isInExternalAccounts(accountHolderName:string): boolean {

@@ -45,6 +45,7 @@ import { AutoCompleteModule } from 'ionic2-auto-complete';
 import { ExternalAccountProvider } from '../providers/external-account/external-account';
 import { TransferExternalPage } from '../pages/transfer-external/transfer-external';
 import { MonthOverviewProvider } from '../providers/month-overview/month-overview';
+import { UserOverviewProvider } from '../providers/user-overview/user-overview';
 
 @NgModule({
   declarations: [
@@ -121,7 +122,8 @@ import { MonthOverviewProvider } from '../providers/month-overview/month-overvie
     AccountProvider,
     MomentProvider,
     ExternalAccountProvider,
-    MonthOverviewProvider
+    MonthOverviewProvider,
+    UserOverviewProvider
   ]
 })
 export class AppModule {}

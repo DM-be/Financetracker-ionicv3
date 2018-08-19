@@ -7,22 +7,25 @@ import { ExternalAccount } from "./ExternalAccount";
 
 export class MonthOverView {
 
+    /*
+    shared in a public database, personal settings are shared in userOverview object
+    */
+
     private _id: string;
     private _rev: string;
     private categories: Category [];
     private accounts: Account []; 
-    private usedTags: Tag []; // keeps track of all tags (for use in auto completion instead of looping over every expense)
-    private externalAccounts: ExternalAccount [];
+    private usedTags: Tag []; // keeps track of all tags, includes creation date, for use in filtering
 
     // todo: 
-    constructor(_id: string, accounts: Account [], categories?: Category [] , _rev?: string, usedTags?: Tag [], externalAccounts?: ExternalAccount []) {
+    constructor(_id: string, accounts: Account [], categories?: Category [] , _rev?: string, usedTags?: Tag []) {
         this._id = _id;
         this._rev = _rev;// to do if else or always start with empty arr? be consistent
 
         this.categories = [];
         this.accounts = [];
         this.usedTags = [];
-        this.externalAccounts = [];
+        
         if(!(accounts instanceof Account))
         {
             this.accounts = accounts.map(a => new Account(a.owner, a.accountName, a.initialBalance, a.finalBalance, a.transactions));
@@ -38,10 +41,7 @@ export class MonthOverView {
         {
             this.usedTags = usedTags.map(t => new Tag(t.tagName, t.createdDate));
         }
-        if(externalAccounts)
-        {
-            this.externalAccounts = externalAccounts.map(acc => new ExternalAccount(acc.accountHolderName, acc.dateCreated));
-        }
+        
 
       
     }
@@ -51,10 +51,7 @@ export class MonthOverView {
         return this.accounts;
     }
 
-    public getExternalAccounts(): ExternalAccount []
-    {
-        return this.externalAccounts;
-    }
+   
 
     public getAccByName(accountName: string): Account
     {
@@ -95,13 +92,7 @@ export class MonthOverView {
        });
     }
 
-    public addExternalAccount(externalAccount: ExternalAccount)
-    {
-        if((this.externalAccounts.findIndex(acc => acc.getAccountHolderName() === externalAccount.getAccountHolderName()) === -1))
-        {
-            this.externalAccounts.push(externalAccount);
-        }
-    }
+    
 
     private addTagToUsedTags(tag: Tag)
     {

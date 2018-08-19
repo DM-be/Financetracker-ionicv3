@@ -24,18 +24,11 @@ export class AccountProvider {
     return monthOverview.getAllAccounts();
   }
   
-  async getExternalAccounts(_id: string)
-  {
-    let monthOverview: MonthOverView = await this.dbProvider.getMonthOverview(_id);
-    return monthOverview.getExternalAccounts();
-  }
-
   async updateBalanceBetweenAccounts(sender: Account, reciever: Account, amount: number, date: string) {
     
     let _id = date; // sanitized date --> month id
     this.dbProvider.addTransfer(_id, sender.getAccountName(), reciever.getAccountName(), amount, date); 
     // todo: transactiondate: also in the past (if in past) or always time of transaction?
-      
   }
 
   // todo: superclass account and rename account? depends on how much needed

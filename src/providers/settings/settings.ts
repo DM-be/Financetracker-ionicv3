@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserOverview } from '../../models/UserOverview';
 import { DbProvider } from '../db/db';
+import { UserOverviewProvider } from '../user-overview/user-overview';
 
 /*
   Generated class for the SettingsProvider provider.
@@ -12,21 +13,8 @@ import { DbProvider } from '../db/db';
 @Injectable()
 export class SettingsProvider {
 
-  private userOverview: UserOverview;
-
-  constructor(public dbProvider: DbProvider) {
-    this.initialize();
-    
-    
-  }
-  async initialize() {
-    this.userOverview = await this.dbProvider.getUserOverview();
-  }
-
-  getUserName(): string {
-    return this.userOverview.getUserName();
-  }
-  
+  constructor(public userOverviewProvider: UserOverviewProvider) {}
+ 
 
 
 
