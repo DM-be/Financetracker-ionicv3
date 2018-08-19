@@ -1,9 +1,12 @@
 import { ExternalAccountProvider } from './../../providers/external-account/external-account';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { MomentProvider } from '../../providers/moment/moment';
 import { AccountProvider } from '../../providers/account/account';
 import { Account } from '../../models/Account';
+import { AutoCompleteComponent } from 'ionic2-auto-complete';
+import { DbProvider } from '../../providers/db/db';
+import { ExternalAccount } from '../../models/ExternalAccount';
 
 /**
  * Generated class for the TransferExternalPage page.
@@ -21,9 +24,12 @@ export class TransferExternalPage {
 
 
   public recievingAccounts: Account []; 
+  public externalAccounts: ExternalAccount [];
   public currentMonthYearAndDay: string;
-  public accountName: string;
+  public accountHolderName: string;
   public recievingAccountName: string;
+  public amount: string;
+  @ViewChild('searchbar') searchbar: AutoCompleteComponent;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public externalAccountProvider: ExternalAccountProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider) {
     this.initialize();
@@ -32,15 +38,28 @@ export class TransferExternalPage {
   async initialize() {
     this.recievingAccounts = await this.accountProvider.getAccounts(this.momentProvider.getCurrentMonthAndYear());
     this.currentMonthYearAndDay = this.momentProvider.getCurrentMonthYearAndDay();
+    this.externalAccounts = await this.externalAccountProvider.getExternalAccounts();
   }
 
-  test() {
-    console.log(this.accountName);
+  transferFromExternalAccount() {
+    if(!this.isInExternalAccounts(this.searchbar.getValue()))
+    {
+      this.externalAccountProvider.addExternalAccount(new ExternalAccount(this.searchbar.getValue(), this.currentMonthYearAndDay));
+    }
+    
   }
 
-  recievingAccountChanged() {
-
+  isInExternalAccounts(accountHolderName:string): boolean {
+    return (this.externalAccounts.findIndex(extAcc => extAcc.accountHolderName === accountHolderName) !== -1);
   }
+
+  dismiss() {
+    this.navCtrl.pop();
+  }
+
+  
+
+
 
 
 

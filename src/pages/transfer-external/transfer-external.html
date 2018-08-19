@@ -24,9 +24,11 @@
   <ion-grid fixed>
 
     <form>
-      <ion-item no-lines>
-        <ion-auto-complete item-content [dataProvider]="externalAccountProvider" [options]="{ placeholder : 'Sender' }"></ion-auto-complete>
-      </ion-item>
+      
+         <ion-auto-complete (autoBlur)="completeBlurred($event)" #searchbar [dataProvider]="externalAccountProvider" [options]="{ placeholder : 'Sender' }"></ion-auto-complete>
+      
+       
+      
       <ion-item item-end>
         <ion-label>Reciever</ion-label>
         <ion-select [(ngModel)]="recievingAccountName" name="recievingAccountName">

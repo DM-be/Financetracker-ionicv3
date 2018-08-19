@@ -15,6 +15,7 @@ import { CategoryPage } from '../category/category';
 import { AccountsPage } from '../accounts/accounts';
 import { TransferPage } from '../transfer/transfer';
 import { TransferExternalPage } from '../transfer-external/transfer-external';
+import { MonthOverviewProvider } from '../../providers/month-overview/month-overview';
 
 /**
  * Generated class for the MonthOverviewPage page.
@@ -37,7 +38,7 @@ export class MonthOverviewPage {
   public monthOverviewObject: MonthOverView;
 
 
-  constructor(public navCtrl: NavController, public modalCtrl: ModalController,  public dbProvider: DbProvider) {
+  constructor(public navCtrl: NavController, public modalCtrl: ModalController,  public dbProvider: DbProvider, public monthOverviewProvider: MonthOverviewProvider) {
     this.selectedDate = moment().format('YYYY-MM');    
   }
 
@@ -47,7 +48,7 @@ export class MonthOverviewPage {
   }
 
   async ionViewWillEnter() {
-    this.monthOverviewObject = await this.dbProvider.getMonthOverview(this.selectedDate);
+    this.monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(this.selectedDate);
     let monthOverviewObject =this.monthOverviewObject;
     this.categories = monthOverviewObject.getCategories();
     this.expenses = monthOverviewObject.getAllExpenses();

@@ -44,6 +44,7 @@ import { TransferPage } from '../pages/transfer/transfer';
 import { AutoCompleteModule } from 'ionic2-auto-complete';
 import { ExternalAccountProvider } from '../providers/external-account/external-account';
 import { TransferExternalPage } from '../pages/transfer-external/transfer-external';
+import { MonthOverviewProvider } from '../providers/month-overview/month-overview';
 
 @NgModule({
   declarations: [
@@ -119,7 +120,8 @@ import { TransferExternalPage } from '../pages/transfer-external/transfer-extern
     SettingsProvider,
     AccountProvider,
     MomentProvider,
-    ExternalAccountProvider
+    ExternalAccountProvider,
+    MonthOverviewProvider
   ]
 })
 export class AppModule {}

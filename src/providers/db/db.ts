@@ -1,3 +1,4 @@
+import { MonthOverView } from './../../models/MonthOverview';
 
 import { Category } from './../../models/Category';
 import {
@@ -9,9 +10,7 @@ import {
   Injectable
 } from '@angular/core';
 import PouchDB from 'pouchdb';
-import {
-  MonthOverView
-} from '../../models/monthOverview';
+
 import {
   Expense
 } from '../../models/Expense';
@@ -71,6 +70,11 @@ export class DbProvider {
   async getExternalAccounts() {
     let monthOverViewObject = await this.getMonthOverviewObject(this.momentProvider.getCurrentMonthAndYear())
     return monthOverViewObject.getExternalAccounts();
+  }
+
+  async saveMonthOverview(monthOverview: MonthOverView)
+  {
+    await this.db.put(monthOverview);
   }
 
 

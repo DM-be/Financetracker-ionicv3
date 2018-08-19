@@ -5,6 +5,8 @@ import {
   DbProvider
 } from '../db/db';
 import { AutoCompleteService } from 'ionic2-auto-complete';
+import { ExternalAccount } from '../../models/ExternalAccount';
+import { MonthOverviewProvider } from '../month-overview/month-overview';
 
 /*
   Generated class for the ExternalAccountProvider provider.
@@ -16,17 +18,23 @@ import { AutoCompleteService } from 'ionic2-auto-complete';
 export class ExternalAccountProvider implements AutoCompleteService{
 
   labelAttribute = "accountHolderName"
-  constructor(public dbProvider: DbProvider) {
+  constructor(public dbProvider: DbProvider, public monthOverviewProvider: MonthOverviewProvider) {
   }
 
-  async getExternalAccounts() {
+  getExternalAccounts(): Promise<ExternalAccount []> {
     return this.dbProvider.getExternalAccounts();
   }
 
-  async getResults(keyword: string) {
+  async addExternalAccount(externalAccount: ExternalAccount): void
+  {
+    await this.monthOverviewProvider.addExternalAccountToMonthOverview(externalAccount);
+    
+  }
 
-    let externalAccounts = await this.getExternalAccounts();
-    externalAccounts.filter((result) => {
+  async getResults(keyword: string): Promise<ExternalAccount []> {
+
+    let externalAccounts = await this.dbProvider.getExternalAccounts();
+    return externalAccounts.filter((result) => {
       return result.accountHolderName.toLowerCase().startsWith(keyword.toLowerCase())
     })
   }
