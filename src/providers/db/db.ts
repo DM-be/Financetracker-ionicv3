@@ -18,6 +18,7 @@ import {
 import { Account } from '../../models/Account';
 import { Transaction } from '../../models/Transaction';
 import { UserOverview } from '../../models/UserOverview';
+import { MomentProvider } from '../moment/moment';
 
 
 
@@ -35,7 +36,7 @@ export class DbProvider {
   private registeredUsername: string
 
 
-  constructor() {
+  constructor(public momentProvider: MomentProvider) {
     console.log('Hello DbProvider Provider');
     this._id_now = moment().format('YYYY-MM');
     //PouchDB.plugin(pouchdbUpsert);
@@ -66,6 +67,11 @@ export class DbProvider {
     let doc = await this.db.get(this.registeredUsername);
     return new UserOverview(doc._id);
   } 
+
+  async getExternalAccounts() {
+    let monthOverViewObject = await this.getMonthOverviewObject(this.momentProvider.getCurrentMonthAndYear())
+    return monthOverViewObject.getExternalAccounts();
+  }
 
 
   public async setupFirstMonthOverview(accounts: Account[]) {

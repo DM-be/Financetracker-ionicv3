@@ -41,6 +41,10 @@ import { AccountProvider } from '../providers/account/account';
 import { MomentProvider } from '../providers/moment/moment';
 import { TransferPage } from '../pages/transfer/transfer';
 
+import { AutoCompleteModule } from 'ionic2-auto-complete';
+import { ExternalAccountProvider } from '../providers/external-account/external-account';
+import { TransferExternalPage } from '../pages/transfer-external/transfer-external';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -65,7 +69,8 @@ import { TransferPage } from '../pages/transfer/transfer';
     CategoryPage,
     ColorPickerPage,
     IconsPage,
-    TransferPage
+    TransferPage,
+    TransferExternalPage
   ],
   imports: [
     BrowserModule,
@@ -73,6 +78,7 @@ import { TransferPage } from '../pages/transfer/transfer';
     HttpModule,
     ColorPickerModule,
     IonTagsInputModule,
+    AutoCompleteModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -97,7 +103,8 @@ import { TransferPage } from '../pages/transfer/transfer';
     ColorPickerPage,
     ColorPicker,
     IconsPage,
-    TransferPage
+    TransferPage,
+    TransferExternalPage
   ],
   providers: [
     StatusBar,
@@ -111,7 +118,8 @@ import { TransferPage } from '../pages/transfer/transfer';
     ChartProvider,
     SettingsProvider,
     AccountProvider,
-    MomentProvider
+    MomentProvider,
+    ExternalAccountProvider
   ]
 })
 export class AppModule {}

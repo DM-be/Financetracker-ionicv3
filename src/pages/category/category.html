@@ -34,7 +34,7 @@
       </ion-item>
 
 
-      <button ion-item (click)="colorPickerModal()">
+      <button ion-item (click)="colorPickerPopover($event)">
         <ion-label>Color</ion-label>
         <ion-icon name="color-palette" item-end [style.color]="getSelectedColor()"></ion-icon>
       </button>

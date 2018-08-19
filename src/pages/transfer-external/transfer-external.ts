@@ -1,5 +1,9 @@
+import { ExternalAccountProvider } from './../../providers/external-account/external-account';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { MomentProvider } from '../../providers/moment/moment';
+import { AccountProvider } from '../../providers/account/account';
+import { Account } from '../../models/Account';
 
 /**
  * Generated class for the TransferExternalPage page.
@@ -8,18 +12,36 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+
 @Component({
   selector: 'page-transfer-external',
   templateUrl: 'transfer-external.html',
 })
 export class TransferExternalPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+
+  public recievingAccounts: Account []; 
+  public currentMonthYearAndDay: string;
+  public accountName: string;
+  public recievingAccountName: string;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public externalAccountProvider: ExternalAccountProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider) {
+    this.initialize();
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad TransferExternalPage');
+  async initialize() {
+    this.recievingAccounts = await this.accountProvider.getAccounts(this.momentProvider.getCurrentMonthAndYear());
+    this.currentMonthYearAndDay = this.momentProvider.getCurrentMonthYearAndDay();
   }
+
+  test() {
+    console.log(this.accountName);
+  }
+
+  recievingAccountChanged() {
+
+  }
+
+
 
 }

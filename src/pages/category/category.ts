@@ -38,10 +38,12 @@ export class CategoryPage {
   public selectedIcon: string;
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public popoverCtrl: PopoverController) {}
 
-  colorPickerModal() {
+  colorPickerPopover(ev) {
     // this.modalCtrl.create(ColorPickerPage).present();
     let popover = this.popoverCtrl.create(ColorPickerPage);
-    popover.present();
+    popover.present({
+      ev: ev
+    });
     popover.onDidDismiss(color => {
       if (color !== undefined) {
         this.selectedColor = color
