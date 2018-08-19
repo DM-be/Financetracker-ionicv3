@@ -205,22 +205,6 @@ export class DbProvider {
    }
   }
 
-  private async transferToExternalAccount(_id_month: string, accountHolderName: string, sendingAccountName: string, amount: number, transactionDate?: string)
-  {
-   try {
-    let monthOverview = await this.getMonthOverviewObject(_id_month);
-    let sendingAccount = monthOverview.getAccByName(sendingAccountName);
-    this.updateFinalBalanceSendingAccount(sendingAccount, amount);
-    sendingAccount.addTransaction(new Transaction(amount, accountHolderName, sendingAccount.getAccountName(), 'decrease', transactionDate));
-    await this.db.put(monthOverview);
-   } catch (error) {
-    console.log('error in transferring funds between external accounts',error);
-   }
-  }
-
-
-
-
 
   public async transferBetweenOwnAccounts(_id_month: string, accountNameA: string, accountNameB: string, amount: number, transactionDate?: string)
   {
@@ -356,7 +340,7 @@ export class DbProvider {
   public async addTransferFromExternalAccount(_id_month: string, accountHolderName: string, recievingAccountName: string, amount: number, transactionDate: string)
   {
     try {
-      this.transferFromExternalAccount(_id_month, accountHolderName ,recievingAccountName, amount, transactionDate);
+      await this.transferFromExternalAccount(_id_month, accountHolderName ,recievingAccountName, amount, transactionDate);
       if(_id_month !== this._id_now)
       {
         this.updateBalanceInFollowingMonthsAfterExternalTransfer(_id_month, accountHolderName ,recievingAccountName, amount);

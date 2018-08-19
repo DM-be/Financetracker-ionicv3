@@ -1,3 +1,4 @@
+import { UserOverviewProvider } from './../../providers/user-overview/user-overview';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, App, PopoverController } from 'ionic-angular';
 import { Account } from '../../models/Account';
@@ -24,7 +25,7 @@ export class AccountsPage {
   public balance: string;
   public selectedIcon: string;
     
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public appCtrl: App, public popoverCtrl: PopoverController, public settingsProvider: SettingsProvider ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public appCtrl: App, public popoverCtrl: PopoverController, public userOverviewProvider: UserOverviewProvider ) {
   }
 
   ionViewDidLoad() {
@@ -40,10 +41,10 @@ export class AccountsPage {
    // this.dbProvider.setupUserOverview(this.accounts);
    // this.dbProvider.setupFirstMonthOverview(this.accounts);
    // ---> check if a monthoverview exists, if not do setupfirstmonthoverview
-  let account = new Account(this.settingsProvider.getUserName(), this.accountName, parseInt(this.balance));
+  //let account = new Account(this.userOverviewProvider.getUserOverview, this.accountName, parseInt(this.balance));
   if(true)
   {
-    this.dbProvider.setupFirstMonthOverview([account]);
+   // this.dbProvider.setupFirstMonthOverview([account]);
     this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
   } 
   }

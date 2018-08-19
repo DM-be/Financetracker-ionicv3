@@ -37,15 +37,16 @@
       </ion-item>
       <ion-item item-end>
         <ion-label>Date</ion-label>
-        <ion-datetime displayFormat="DDDD DD HH:MM" pickerFormat="DDDD MMMM" [(ngModel)]="currentMonthYearAndDay" name="date"></ion-datetime>
+        <ion-datetime displayFormat="DDDD MMMM" pickerFormat="DDDD MMMM" [(ngModel)]="selectedMonthYear" name="date"></ion-datetime>
       </ion-item>
       <ion-item item-end>
         <ion-label>Amount</ion-label>
         <ion-input text-right type="number" [(ngModel)]="amount" name="amount"></ion-input>
       </ion-item>
-    </form>
-    <button (click)="test()">test</button>
 
+      <button ion-button (click)="transferFromExternalAccount()" block>Transfer </button>
+    </form>
+    
 
 
   </ion-grid>

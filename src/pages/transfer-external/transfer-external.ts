@@ -1,12 +1,33 @@
-import { ExternalAccountProvider } from './../../providers/external-account/external-account';
-import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { MomentProvider } from '../../providers/moment/moment';
-import { AccountProvider } from '../../providers/account/account';
-import { Account } from '../../models/Account';
-import { AutoCompleteComponent } from 'ionic2-auto-complete';
-import { DbProvider } from '../../providers/db/db';
-import { ExternalAccount } from '../../models/ExternalAccount';
+import {
+  ExternalAccountProvider
+} from './../../providers/external-account/external-account';
+import {
+  Component,
+  ViewChild
+} from '@angular/core';
+import {
+  IonicPage,
+  NavController,
+  NavParams
+} from 'ionic-angular';
+import {
+  MomentProvider
+} from '../../providers/moment/moment';
+import {
+  AccountProvider
+} from '../../providers/account/account';
+import {
+  Account
+} from '../../models/Account';
+import {
+  AutoCompleteComponent
+} from 'ionic2-auto-complete';
+import {
+  DbProvider
+} from '../../providers/db/db';
+import {
+  ExternalAccount
+} from '../../models/ExternalAccount';
 
 /**
  * Generated class for the TransferExternalPage page.
@@ -23,9 +44,9 @@ import { ExternalAccount } from '../../models/ExternalAccount';
 export class TransferExternalPage {
 
 
-  public recievingAccounts: Account []; 
-  public externalAccounts: ExternalAccount [];
-  public currentMonthYearAndDay: string;
+  public recievingAccounts: Account[];
+  public externalAccounts: ExternalAccount[];
+  public selectedMonthYear: string; // defaults at this month/year --> can be updated 
   public accountHolderName: string;
   public recievingAccountName: string;
   public amount: string;
@@ -37,21 +58,18 @@ export class TransferExternalPage {
 
   async initialize() {
     this.recievingAccounts = await this.accountProvider.getAccounts(this.momentProvider.getCurrentMonthAndYear());
-    this.currentMonthYearAndDay = this.momentProvider.getCurrentMonthYearAndDay();
+    this.selectedMonthYear = this.momentProvider.getCurrentMonthYearAndDay();
     this.externalAccounts = await this.externalAccountProvider.getExternalAccounts();
   }
 
   transferFromExternalAccount() {
-    if(!this.isInExternalAccounts(this.searchbar.getValue()))
-    {
-      this.externalAccountProvider.addExternalAccount(new ExternalAccount(this.searchbar.getValue(), this.currentMonthYearAndDay));
+    if (!this.isInExternalAccounts(this.searchbar.getValue())) {
+      this.externalAccountProvider.addExternalAccount(new ExternalAccount(this.searchbar.getValue(), this.selectedMonthYear));
     }
-    
-    
-    
+    this.externalAccountProvider.transferFromExternalAccount(this.selectedMonthYear, this.searchbar.getValue(), this.recievingAccountName, parseInt(this.amount), this.momentProvider.getCurrentExactDate());
   }
 
-  isInExternalAccounts(accountHolderName:string): boolean {
+  isInExternalAccounts(accountHolderName: string): boolean {
     return (this.externalAccounts.findIndex(extAcc => extAcc.accountHolderName === accountHolderName) !== -1);
   }
 
@@ -59,7 +77,7 @@ export class TransferExternalPage {
     this.navCtrl.pop();
   }
 
-  
+
 
 
 

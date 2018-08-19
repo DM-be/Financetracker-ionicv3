@@ -21,4 +21,8 @@ export class MomentProvider {
     return moment().format('YYYY-MM-DD');
   }
 
+  getCurrentExactDate() {
+    return moment().format();
+  }
+
 }

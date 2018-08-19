@@ -1,3 +1,4 @@
+import { MomentProvider } from './../moment/moment';
 import {
   Injectable
 } from '@angular/core';
@@ -19,7 +20,7 @@ import { UserOverviewProvider } from '../user-overview/user-overview';
 export class ExternalAccountProvider implements AutoCompleteService{
 
   labelAttribute = "accountHolderName"
-  constructor(public userOverviewProvider: UserOverviewProvider) {
+  constructor(public userOverviewProvider: UserOverviewProvider, public dbProvider: DbProvider, public momentProvider: MomentProvider) {
   }
 
   async getExternalAccounts(): Promise<ExternalAccount []> {
@@ -33,6 +34,13 @@ export class ExternalAccountProvider implements AutoCompleteService{
     await this.userOverviewProvider.saveUserOverview(userOverview);
   }
 
+  async transferFromExternalAccount(_id: string, accountHolderName: string, accountName: string, amount: number, transactionDate: string) {
+    // _id_month: string, accountHolderName: string, recievingAccountName: string, amount: number, transactionDate: string
+    await this.dbProvider.addTransferFromExternalAccount(_id, accountHolderName, accountName, amount, this.momentProvider.getCurrentExactDate());
+  } 
+  
+
+  
   async getResults(keyword: string): Promise<ExternalAccount []> {
 
     let externalAccounts = await this.getExternalAccounts();
