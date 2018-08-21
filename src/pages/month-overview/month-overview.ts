@@ -45,7 +45,7 @@ export class MonthOverviewPage {
     this.selectedDate = moment().format('YYYY-MM');    
   }
 
-  //forwardref--> injecting undefined providers https://stackoverflow.com/questions/37997824/angular-di-error-exception-cant-resolve-all-parameters
+  
 
   async updateDate() {
     await this.dbProvider.getMonthOverview(this.selectedDate);
@@ -111,6 +111,7 @@ export class MonthOverviewPage {
     popover.present({
       ev: myEvent
     });
+    
     
   }
 

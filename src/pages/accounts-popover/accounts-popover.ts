@@ -1,7 +1,7 @@
 import { AccountsPage } from './../accounts/accounts';
 import { ModalController, ViewController } from 'ionic-angular';
 import { ModalProvider } from './../../providers/modal/modal';
-import { Component } from '@angular/core';
+import { Component, Inject, forwardRef } from '@angular/core';
 
 
 /**
@@ -24,8 +24,11 @@ import { Component } from '@angular/core';
 })
 export class AccountsPopoverPage {
 
-  constructor(public modalCtrl: ModalController, public viewCtrl: ViewController) {
+  constructor(public modalCtrl: ModalController, @Inject(forwardRef(() => ViewController)) public viewCtrl: ViewController) {
   }
+
+  //forwardref--> injecting undefined providers https://stackoverflow.com/questions/37997824/angular-di-error-exception-cant-resolve-all-parameters
+  
 
   addNewAccount() {
     this.viewCtrl.dismiss(); // dismiss the popover first
