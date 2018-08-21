@@ -25,7 +25,7 @@
 
     <form>
       
-         <ion-auto-complete (autoBlur)="completeBlurred($event)" #searchbar [dataProvider]="externalAccountProvider" [options]="{ placeholder : 'Sender' }"></ion-auto-complete>
+         <ion-auto-complete #searchbar [dataProvider]="externalAccountProvider" [options]="{ placeholder : 'Sender' }"></ion-auto-complete>
       
        
       

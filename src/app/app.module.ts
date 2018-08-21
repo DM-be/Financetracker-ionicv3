@@ -1,4 +1,6 @@
 
+import { AccountsPopoverPage } from './../pages/accounts-popover/accounts-popover';
+
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
@@ -46,6 +48,7 @@ import { ExternalAccountProvider } from '../providers/external-account/external-
 import { TransferExternalPage } from '../pages/transfer-external/transfer-external';
 import { MonthOverviewProvider } from '../providers/month-overview/month-overview';
 import { UserOverviewProvider } from '../providers/user-overview/user-overview';
+import { ModalProvider } from '../providers/modal/modal';
 
 @NgModule({
   declarations: [
@@ -72,7 +75,8 @@ import { UserOverviewProvider } from '../providers/user-overview/user-overview';
     ColorPickerPage,
     IconsPage,
     TransferPage,
-    TransferExternalPage
+    TransferExternalPage,
+    AccountsPopoverPage
   ],
   imports: [
     BrowserModule,
@@ -106,7 +110,8 @@ import { UserOverviewProvider } from '../providers/user-overview/user-overview';
     ColorPicker,
     IconsPage,
     TransferPage,
-    TransferExternalPage
+    TransferExternalPage,
+    AccountsPopoverPage
   ],
   providers: [
     StatusBar,
@@ -123,7 +128,8 @@ import { UserOverviewProvider } from '../providers/user-overview/user-overview';
     MomentProvider,
     ExternalAccountProvider,
     MonthOverviewProvider,
-    UserOverviewProvider
+    UserOverviewProvider,
+    ModalProvider
   ]
 })
 export class AppModule {}

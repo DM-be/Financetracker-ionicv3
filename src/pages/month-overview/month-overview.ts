@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { ModalProvider } from '../../providers/modal/modal';
+import { AccountsPopoverPage } from './../accounts-popover/accounts-popover';
+import { Component, Inject, forwardRef } from '@angular/core';
+import {NavController, ModalController, PopoverController } from 'ionic-angular';
 import * as moment from 'moment';
 import { DbProvider } from '../../providers/db/db';
 import { Category } from '../../models/Category';
@@ -12,10 +14,10 @@ import { CategoryDetailsPage } from '../category-details/category-details';
 import { ExpenseDetailPage } from '../expense-detail/expense-detail';
 import { AccountDetailsPage } from '../account-details/account-details';
 import { CategoryPage } from '../category/category';
-import { AccountsPage } from '../accounts/accounts';
 import { TransferPage } from '../transfer/transfer';
 import { TransferExternalPage } from '../transfer-external/transfer-external';
 import { MonthOverviewProvider } from '../../providers/month-overview/month-overview';
+
 
 /**
  * Generated class for the MonthOverviewPage page.
@@ -38,9 +40,12 @@ export class MonthOverviewPage {
   public monthOverviewObject: MonthOverView;
 
 
-  constructor(public navCtrl: NavController, public modalCtrl: ModalController,  public dbProvider: DbProvider, public monthOverviewProvider: MonthOverviewProvider) {
+  constructor(public navCtrl: NavController, public dbProvider: DbProvider, public monthOverviewProvider: MonthOverviewProvider, public modalCtrl: ModalController,
+  public popoverCtrl: PopoverController) {
     this.selectedDate = moment().format('YYYY-MM');    
   }
+
+  //forwardref--> injecting undefined providers https://stackoverflow.com/questions/37997824/angular-di-error-exception-cant-resolve-all-parameters
 
   async updateDate() {
     await this.dbProvider.getMonthOverview(this.selectedDate);
@@ -100,6 +105,14 @@ export class MonthOverviewPage {
     });
     
   } 
+  presentPopover(myEvent) {
+    let popover = this.popoverCtrl.create(AccountsPopoverPage);
+    console.log(myEvent);
+    popover.present({
+      ev: myEvent
+    });
+    
+  }
 
 
   addExpenseModal() {
@@ -110,16 +123,16 @@ export class MonthOverviewPage {
   }
 
   addAccountModal() {
-    this.modalCtrl.create(AccountsPage).present();
+    this.modalProvider.displayAddAccountModal();
   }
 
   detailExpenseModal(expense: Expense, editMode?: any) {
-    let detailExpenseModal = this.modalCtrl.create(ExpenseDetailPage, {
+    let detailExpenseModal = this.navCtrl.push(ExpenseDetailPage, {
       expense: expense,
       categories: this.categories,
       editMode: editMode
     })
-    detailExpenseModal.present();
+  //  detailExpenseModal.present();
   } 
   accountsDetailPage(account: Account) {
     

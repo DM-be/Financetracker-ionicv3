@@ -37,7 +37,7 @@ export class DbProvider {
 
   constructor(public momentProvider: MomentProvider) {
     console.log('Hello DbProvider Provider');
-    this._id_now = moment().format('YYYY-MM');
+    this._id_now = this.momentProvider.getCurrentMonthAndYear();
     //PouchDB.plugin(pouchdbUpsert);
   }
 

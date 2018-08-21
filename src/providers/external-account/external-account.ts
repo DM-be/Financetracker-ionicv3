@@ -7,7 +7,6 @@ import {
 } from '../db/db';
 import { AutoCompleteService } from 'ionic2-auto-complete';
 import { ExternalAccount } from '../../models/ExternalAccount';
-import { MonthOverviewProvider } from '../month-overview/month-overview';
 import { UserOverviewProvider } from '../user-overview/user-overview';
 
 /*
@@ -38,11 +37,8 @@ export class ExternalAccountProvider implements AutoCompleteService{
     // _id_month: string, accountHolderName: string, recievingAccountName: string, amount: number, transactionDate: string
     await this.dbProvider.addTransferFromExternalAccount(_id, accountHolderName, accountName, amount, this.momentProvider.getCurrentExactDate());
   } 
-  
 
-  
   async getResults(keyword: string): Promise<ExternalAccount []> {
-
     let externalAccounts = await this.getExternalAccounts();
     return externalAccounts.filter((result) => {
       return result.accountHolderName.toLowerCase().startsWith(keyword.toLowerCase())
