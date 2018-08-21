@@ -124,7 +124,7 @@ export class MonthOverviewPage {
   }
 
   addAccountModal() {
-    this.modalProvider.displayAddAccountModal();
+    //this.modalProvider.displayAddAccountModal();
   }
 
   detailExpenseModal(expense: Expense, editMode?: any) {
