@@ -49,6 +49,7 @@ import { TransferExternalPage } from '../pages/transfer-external/transfer-extern
 import { MonthOverviewProvider } from '../providers/month-overview/month-overview';
 import { UserOverviewProvider } from '../providers/user-overview/user-overview';
 import { ModalProvider } from '../providers/modal/modal';
+import { BudgetProvider } from '../providers/budget/budget';
 
 @NgModule({
   declarations: [
@@ -129,7 +130,8 @@ import { ModalProvider } from '../providers/modal/modal';
     ExternalAccountProvider,
     MonthOverviewProvider,
     UserOverviewProvider,
-    ModalProvider
+    ModalProvider,
+    BudgetProvider
   ]
 })
 export class AppModule {}

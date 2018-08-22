@@ -101,7 +101,8 @@ export class MonthOverviewPage {
   showCategoryDetails(category: Category)
   {
     this.navCtrl.push(CategoryDetailsPage, {
-      category: category
+      category: category,
+      selectedDate: this.selectedDate
     });
     
   } 

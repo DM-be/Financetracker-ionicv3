@@ -1,7 +1,6 @@
 <ion-header>
-  <ion-item>
-    <ion-label>Date</ion-label>
-    <ion-datetime displayFormat="MM/YYYY" pickerFormat="MMMM YYYY" [(ngModel)]="selectedDate" (ionChange)="updateDate()"></ion-datetime>
+  <ion-item color="tertiary">
+    <ion-datetime displayFormat="MMMM YYYY" pickerFormat="MMMM YYYY" [(ngModel)]="selectedDate" (ionChange)="updateDate()"></ion-datetime>
   </ion-item>
 </ion-header>
 
@@ -104,18 +103,18 @@
 
   </ion-grid>
 
-  <ion-fab bottom right>
-    <button ion-fab>
+  <ion-fab bottom right >
+    <button color="tertiary" ion-fab>
       <ion-icon name="add"></ion-icon>
     </button>
     <ion-fab-list side="left">
-      <button ion-fab icon-only>
+      <button (click)="transferAccountsModal()" ion-fab icon-only>
         <ion-icon name="swap"></ion-icon>
       </button>
-      <button ion-fab icon-only>
+      <button (click)="transferExternalAccountsModal() "ion-fab icon-only>
         <ion-icon name="gift"></ion-icon>
       </button>
-      <button ion-fab icon-only>
+      <button (click)="addExpenseModal()" ion-fab icon-only>
         <ion-icon name="card"></ion-icon>
       </button>
     </ion-fab-list>

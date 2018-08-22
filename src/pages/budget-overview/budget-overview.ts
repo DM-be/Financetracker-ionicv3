@@ -1,3 +1,5 @@
+import { Budget } from './../../models/Budget';
+import { Category } from './../../models/Category';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
@@ -15,11 +17,21 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class BudgetOverviewPage {
 
+  public category: Category;
+  public budget: Budget;
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+    this.category = this.navParams.data;
+    this.budget = this.category.getBudget();
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad BudgetOverviewPage');
+  ionViewWillEnter() {
+    console.log(this.category)
+    console.log(this.navParams);
+  }
+
+  updateLimitAmount() {
+    
   }
 
 }

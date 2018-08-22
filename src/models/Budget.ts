@@ -1,7 +1,7 @@
 export class Budget {
 
-    public limitAmount: number; // limit amount
-    public currentAmountSpent: number; // current amount spent
+    public limitAmount: number;
+    public currentAmountSpent: number; 
 
     constructor(limitAmount?: number, currentAmountSpent?: number) {
         if(limitAmount)
@@ -29,8 +29,6 @@ export class Budget {
         this.currentAmountSpent += amount;
     }
     
-
-    // for gui classes
     public aboveBudget(): boolean {
         return this.currentAmountSpent > this.limitAmount;
     }
@@ -41,6 +39,14 @@ export class Budget {
 
     public getRemainingAmount() {
         return this.limitAmount - this.currentAmountSpent;
+    }
+
+    public getLimitAmount(): number {
+        return this.limitAmount;
+    }
+
+    public getCurrentAmountSpent(): number {
+        return this.currentAmountSpent;
     }
 
 

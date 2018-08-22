@@ -64,6 +64,10 @@ export class Category {
         this.budget.currentAmountSpent = 0;
     }
 
+    replaceBudget(newBudget: Budget) {
+        this.budget = newBudget;
+    }
+
     
 
     

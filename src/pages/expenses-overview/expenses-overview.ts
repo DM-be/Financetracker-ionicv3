@@ -27,8 +27,7 @@ export class ExpensesOverviewPage {
   }
 
   ionViewWillEnter() {
-    console.log(this.category)
-    console.log(this.navParams);
+    
   }
 
 }
