@@ -9,7 +9,7 @@
 <ion-header>
 
     <ion-navbar>
-      <ion-title>{{category.getCategoryName()}}</ion-title>
+      <ion-title>{{customData.category.categoryName}}</ion-title>
     </ion-navbar>
   
   </ion-header>
@@ -18,7 +18,7 @@
 
 <ion-content padding>
     <ion-tabs [tabsPlacement]="'bottom'" [tabsHighlight]="true">
-        <ion-tab  [root]="expensesOverview" tabTitle="expenses"  [rootParams]="category" ></ion-tab>
-        <ion-tab  [root]="budgetOverview" tabTitle="budget" [rootParams]="category" ></ion-tab>
+        <ion-tab  [root]="expensesOverview" tabTitle="expenses"  [rootParams]="customData" ></ion-tab>
+        <ion-tab  [root]="budgetOverview" tabTitle="budget" [rootParams]="customData" ></ion-tab>
       </ion-tabs>
 </ion-content>

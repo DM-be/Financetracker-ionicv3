@@ -20,11 +20,11 @@ export class CategoryDetailsPage {
 
   public expensesOverview = ExpensesOverviewPage;
   public budgetOverview = BudgetOverviewPage;
-  public category: Category;
+  public customData: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.category = this.navParams.get("category");
-    console.log(this.category)
+    this.customData = this.navParams.get("customData");
+    console.log(this.customData)
 
   }
 

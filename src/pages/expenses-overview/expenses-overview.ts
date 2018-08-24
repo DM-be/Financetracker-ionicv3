@@ -20,8 +20,9 @@ export class ExpensesOverviewPage {
   public expenses: Expense [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.category = this.navParams.data;
-    this.expenses = this.category.getExpenses();
+  this.category = this.navParams.data.category
+  this.expenses = this.category.getExpenses();
+  console.log(this.navParams.data)
     
 
   }

@@ -21,7 +21,7 @@ export class BudgetOverviewPage {
   public budget: Budget;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.category = this.navParams.data;
+    this.category = this.navParams.data.category;
     this.budget = this.category.getBudget();
   }
 
