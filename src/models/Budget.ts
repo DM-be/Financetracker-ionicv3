@@ -9,21 +9,25 @@ export class Budget {
             this.limitAmount = limitAmount;
         }
         else {
-            this.limitAmount = 0;
+            this.limitAmount = undefined;
         }
         if(currentAmountSpent)
         {
             this.currentAmountSpent = currentAmountSpent;
         }
         else {
-            this.currentAmountSpent = 0;
+            this.currentAmountSpent = undefined;
         }
     }
 
     public isBeingTracked(): boolean {
-        //return this.limitAmount !== 0;
-        return true;
+        return this.limitAmount >= 0;
     }
+
+   
+
+
+
     public addToAmountSpentInBudget(amount: number)
     {
         this.currentAmountSpent += amount;

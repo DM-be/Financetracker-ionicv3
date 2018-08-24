@@ -25,13 +25,11 @@ export class BudgetOverviewPage {
     this.budget = this.category.getBudget();
   }
 
-  ionViewWillEnter() {
-    console.log(this.category)
-    console.log(this.navParams);
+  updateLimitAmount() {
   }
 
-  updateLimitAmount() {
-    
+  addNewBudget() {
+  this.budget.limitAmount = 0;
   }
 
 }
