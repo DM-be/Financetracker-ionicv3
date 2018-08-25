@@ -1,3 +1,4 @@
+import { CategoryOptionsPage } from './../category-options/category-options';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ExpensesOverviewPage } from '../expenses-overview/expenses-overview';
@@ -19,7 +20,7 @@ import { Category } from '../../models/Category';
 export class CategoryDetailsPage {
 
   public expensesOverview = ExpensesOverviewPage;
-  public budgetOverview = BudgetOverviewPage;
+  public categoryOptions = CategoryOptionsPage;
   public customData: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {

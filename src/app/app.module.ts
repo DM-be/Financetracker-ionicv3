@@ -50,6 +50,7 @@ import { MonthOverviewProvider } from '../providers/month-overview/month-overvie
 import { UserOverviewProvider } from '../providers/user-overview/user-overview';
 import { ModalProvider } from '../providers/modal/modal';
 import { BudgetProvider } from '../providers/budget/budget';
+import { CategoryOptionsPage } from '../pages/category-options/category-options';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { BudgetProvider } from '../providers/budget/budget';
     IconsPage,
     TransferPage,
     TransferExternalPage,
-    AccountsPopoverPage
+    AccountsPopoverPage,
+    CategoryOptionsPage
   ],
   imports: [
     BrowserModule,
@@ -112,7 +114,8 @@ import { BudgetProvider } from '../providers/budget/budget';
     IconsPage,
     TransferPage,
     TransferExternalPage,
-    AccountsPopoverPage
+    AccountsPopoverPage,
+    CategoryOptionsPage
   ],
   providers: [
     StatusBar,

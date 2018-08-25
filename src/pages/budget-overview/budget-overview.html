@@ -7,11 +7,13 @@
 
 <ion-content padding>
 
-  <div *ngIf="budget.isBeingTracked()">
+
+
+  
     <form>
     <ion-item>
       <ion-label>Limit Amount</ion-label>
-    <ion-input type="number" (ionChange)="updateLimitAmount()" [(ngModel)]="budget.limitAmount" name="limitAmount">{{budget.getLimitAmount()}}</ion-input>
+    <ion-input type="number" [(ngModel)]="budget.limitAmount" name="limitAmount">{{budget.getLimitAmount()}}</ion-input>
     </ion-item>
     <ion-item>
       <ion-label>Current amount spent:</ion-label>
@@ -20,13 +22,8 @@
     <ion-item>
       <ion-label>Remaining amount: {{budget.getRemainingAmount()}}</ion-label>
     </ion-item>
-    <button ion-button icon-only full><ion-icon name="trash"></ion-icon></button>
+    <button ion-button full><ion-icon name="add">add budget</ion-icon></button>
   </form>
-  </div>
-
-  <div *ngIf="!budget.isBeingTracked()">
-    <button ion-button (click)="addNewBudget()">Add a budget</button>
-  </div>
 
 
   

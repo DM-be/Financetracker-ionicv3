@@ -356,7 +356,7 @@ export class DbProvider {
   public async updateCategoryAndExpensesIconName(categoryName: string, iconName: string ) {
 
     let newDocs: MonthOverView [] = [];
-    let allDocs = await this.db.allDocs({include_docs: true);
+    let allDocs = await this.db.allDocs({include_docs: true});
     allDocs.rows.forEach(mo => {
       let monthOverviewObJect = new MonthOverView(mo._id, mo.accounts, mo.categories, mo._rev, mo.usedTags );
       if(monthOverviewObJect.containsCategory(categoryName))
