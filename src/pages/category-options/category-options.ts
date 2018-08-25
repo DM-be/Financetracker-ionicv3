@@ -1,3 +1,4 @@
+import { CategoryProvider } from './../../providers/category/category';
 import { MomentProvider } from './../../providers/moment/moment';
 import { BudgetProvider } from './../../providers/budget/budget';
 import {
@@ -43,18 +44,18 @@ export class CategoryOptionsPage {
   public currentDate: string;
   public selectedDate: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public popoverCtrl: PopoverController, public budgetProvider: BudgetProvider, public momentProvider: MomentProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public popoverCtrl: PopoverController, public budgetProvider: BudgetProvider, public momentProvider: MomentProvider, public categoryProvider: CategoryProvider) {
     this.category = this.navParams.data.category;
     this.selectedDate = this.navParams.data.selectedDate;
+    this.budget = this.category.getBudget();
     this.currentDate = this.momentProvider.getCurrentMonthAndYear();
-    this.budget = this.category.getBudget() || new Budget();
     this.selectedColor = this.category.getCategoryColor();
     this.selectedIcon = this.category.getIconName();
     
   }
 
-  ionViewDidLoad() {
-    console.log(this.category);
+  async ionViewWillEnter(){
+    
   }
 
   isInThePast(){
@@ -88,9 +89,9 @@ export class CategoryOptionsPage {
     prompt.present();
   }
 
-  deleteBudget() {
-    this.budgetProvider.deleteBudget(this.category.getCategoryName(), this.budget);
-    
+  async deleteBudget() {
+    await this.budgetProvider.deleteBudget(this.category.getCategoryName(), this.budget);
+    this.budget = await this.budgetProvider.getBudget(this.selectedDate, this.category.getCategoryName());
   }
 
 
@@ -104,6 +105,7 @@ export class CategoryOptionsPage {
       if (color !== undefined) {
         this.selectedColor = color;
         this.category.setCategoryColor(color);
+
         // save to db here or wait until leaving page?
 
       } else {

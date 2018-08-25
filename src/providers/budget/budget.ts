@@ -18,8 +18,14 @@ export class BudgetProvider {
 
   async getBudget(_id: string, categoryName: string): Promise<Budget>
   {
-    let monthOverview = await this.monthOverviewProvider.getMonthOverview(_id);
-    return monthOverview.getCategoryByName(categoryName).getBudget();
+    try {
+      let monthOverview = await this.monthOverviewProvider.getMonthOverview(_id);
+      return monthOverview.getCategoryByName(categoryName).getBudget();
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
   }
 
   /* budgets can only be updated in current month --> disabled front end */
@@ -33,7 +39,7 @@ export class BudgetProvider {
 
   async deleteBudget(categoryName: string, oldBudget: Budget) {
     let monthOverview = await this.monthOverviewProvider.getMonthOverview(this.momentProvider.getCurrentMonthAndYear());
-    monthOverview.getCategoryByName(categoryName).replaceBudget(new Budget(0, oldBudget.getCurrentAmountSpent())); // --> 0 0
+    monthOverview.getCategoryByName(categoryName).getBudget().setLimitAmount(0); // --> 0 0
     await this.monthOverviewProvider.saveMonthOverview(monthOverview);
   }
 

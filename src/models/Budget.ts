@@ -9,14 +9,14 @@ export class Budget {
             this.limitAmount = limitAmount;
         }
         else {
-            this.limitAmount = undefined;
+            this.limitAmount = 0;
         }
         if(currentAmountSpent)
         {
             this.currentAmountSpent = currentAmountSpent;
         }
         else {
-            this.currentAmountSpent = undefined;
+            this.currentAmountSpent = 0;
         }
     }
 
