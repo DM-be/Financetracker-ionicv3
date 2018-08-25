@@ -7,11 +7,23 @@
 
 <ion-content padding>
 
-
-  <button *ngIf="budget.isBeingTracked()" ion-item>
-    <ion-label>TEST {{budget.limitAmount}}</ion-label>
+<ion-list *ngIf="budget.isBeingTracked()">
+  <ion-item-sliding>
+  <button  ion-item>
+    <ion-label>current limit: <ion-badge>{{budget.getLimitAmount()}}</ion-badge>{{budget.getLimitAmount()}}</ion-label>
+    <ion-label>total amount spent: <ion-badge>{{budget.getCurrentAmountSpent()}}</ion-badge></ion-label>
+    <ion-label>remaining:<ion-badge>{{budget.getRemainingAmount()}}</ion-badge> </ion-label>
+    
   </button>
-
+  
+  <ion-item-options side="right">
+      <button ion-button icon-only><ion-icon name="trash"></ion-icon></button>
+  </ion-item-options>
+  <ion-item-options side="left">
+      <button ion-button icon-only (click)="addNewBudget()"><ion-icon name="more"></ion-icon></button>
+    </ion-item-options>
+</ion-item-sliding>
+  </ion-list>
   <div *ngIf="!budget.isBeingTracked()">
     <button ion-button (click)="addNewBudget()">Add a budget</button>
   </div>

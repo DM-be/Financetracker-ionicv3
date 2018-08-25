@@ -28,10 +28,6 @@ export class Budget {
         this.limitAmount = amount;
     }
 
-   
-
-
-
     public addToAmountSpentInBudget(amount: number)
     {
         this.currentAmountSpent += amount;
