@@ -133,31 +133,25 @@ export class DbProvider {
 
   // REFACTOR 
   // seperate category and expenses? extra db call but now its a mess...
-  private async addExpenseToCategoryToMonthOverview(_id_month: string, categoryName: string, expense: Expense, chartColor: string)
+  private async addExpenseToCategoryToMonthOverview(_id_month: string, categoryName: string, expense: Expense )
   {
     let monthOverview = await this.getMonthOverviewObject(_id_month);
     let account = monthOverview.getAccByName(expense.getUsedAccountName());
     account.updateFinalBalance('decrease', expense.getCost());
-    if(monthOverview.containsCategory(categoryName))
-    {
-      let category = monthOverview.getCategoryByName(categoryName);
-      category.addExpense(expense);
-      let budget = category.getBudget();
-      budget.addToAmountSpentInBudget(expense.getCost()); // always add to amountspent --> when a user decides to add a budget to this category, it will already be tracked 
-      monthOverview.addTagsToUsedTags(expense.getTags());
-      await this.db.put(monthOverview);
-    }
-    else {
-      let category = new Category(categoryName, chartColor);
-      category.addExpense(expense);
-      let budget = category.getBudget();
-      budget.addToAmountSpentInBudget(expense.getCost());
-      monthOverview.addCategory(category);
-      monthOverview.addTagsToUsedTags(expense.getTags());
-      await this.db.put(monthOverview);
-    }
-
-  } 
+    let category = monthOverview.getCategoryByName(categoryName);
+    category.addExpense(expense);
+    let budget = category.getBudget();
+    budget.addToAmountSpentInBudget(expense.getCost()); // always add to amountspent --> when a user decides to add a budget to this category, it will already be tracked 
+    monthOverview.addTagsToUsedTags(expense.getTags());
+    await this.db.put(monthOverview);
+  }
+  
+  private async addCategoryToMonthOverview(_id_month, category: Category)
+  {
+    let monthOverview = await this.getMonthOverviewObject(_id_month);
+    monthOverview.addCategory(category);
+    await this.db.put(monthOverview);
+  }
 
   private addTransactionBetweenAccounts(accountA: Account, operationA: string, accountB: Account, operationB: string, amount: number, transactionDate?: string)
   {
@@ -307,9 +301,9 @@ export class DbProvider {
     }
   }
   
-  public async addExpenses(_id_month: string, expense: Expense, categoryName: string, chartColor: string) {
+  public async addExpenseToCategory(_id_month: string, categoryName: string, expense: Expense) {
     try {
-      this.addExpenseToCategoryToMonthOverview(_id_month, categoryName, expense, chartColor);
+      this.addExpenseToCategoryToMonthOverview(_id_month, categoryName, expense);
       if(_id_month !== this._id_now)
       {
         console.log('updating balances in following months');

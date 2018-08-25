@@ -15,16 +15,12 @@ export class Category {
      *
      */
     
-    constructor(categoryName: string, categoryColor?: string, expenses?: Expense [], budget?: Budget, createdDate?: string) {
+    constructor(categoryName: string, categoryColor: string, iconName: string, createdDate: string, expenses?: Expense [], budget?: Budget, ) {
         this.categoryName = categoryName;
         this.categoryColor = categoryColor;
-        if(createdDate)
-        {
-            this.createdDate = createdDate;
-        }
-        else {
-            this.createdDate = moment().format('YYYY-MM');
-        }
+        this.createdDate = createdDate;
+        this.iconName = iconName;
+
         if(expenses)
         {
             this.expenses = expenses.map(e => new Expense(e.cost, e.description, e.createdDate, e.usedAccountName, e.categoryName, e.tags));

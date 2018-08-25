@@ -1,3 +1,5 @@
+import { Category } from './../../models/Category';
+import { CategoryProvider } from './../../providers/category/category';
 import {
   Component
 } from '@angular/core';
@@ -36,7 +38,7 @@ export class CategoryPage {
   public budgetNumber: string;
   public selectedColor: string;
   public selectedIcon: string;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public popoverCtrl: PopoverController) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public popoverCtrl: PopoverController, public categoryProvider: CategoryProvider) {}
 
   colorPickerPopover(ev) {
     // this.modalCtrl.create(ColorPickerPage).present();
@@ -80,10 +82,11 @@ export class CategoryPage {
     this.navCtrl.pop();
   }
 
-  addNewCategory() {
+  async addNewCategory() {
     // implement checking for form validity (formbuilder instead of ngmodel?)
     // add logic for adding category
-
+    let category = new Category(this.categoryName, this.selectedColor)
+    await this.categoryProvider.addCategory()
     this.navCtrl.pop();
   }
 
