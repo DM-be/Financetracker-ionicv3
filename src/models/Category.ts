@@ -85,6 +85,11 @@ export class Category {
         return this.categoryColor;
     }
 
+    setCategoryName(newCategoryName: string)
+    {
+        this.categoryName = newCategoryName;
+    } 
+
     
     
 

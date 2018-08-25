@@ -70,6 +70,11 @@ export class MonthOverView {
         this.categories.push(category);
     }
 
+    public deleteCategory(category: Category): void {
+        let i = this.categories.findIndex(cat => cat.getCategoryName() === category.getCategoryName())
+        this.categories.splice(i, 1);
+    }
+
     public containsCategory(categoryName: string): boolean {
         // refactor
         let index = this.categories.findIndex(category => category.getCategoryName() === categoryName);

@@ -384,8 +384,22 @@ export class DbProvider {
       newDocs.push(monthOverviewObJect);
      } );
      await this.db.bulkDocs(newDocs);
-
   }
 
+  public async updateCategoryName(categoryName: string, newCategoryName: string)
+  {
+    let newDocs: MonthOverView [] = [];
+    let allDocs = await this.db.allDocs({include_docs: true});
+    allDocs.rows.forEach(mo => {
+      let monthOverviewObJect = new MonthOverView(mo._id, mo.accounts, mo.categories, mo._rev, mo.usedTags );
+      if(monthOverviewObJect.containsCategory(categoryName))
+      {
+        monthOverviewObJect.getCategoryByName(categoryName).setCategoryName(newCategoryName);
+      }
+      newDocs.push(monthOverviewObJect);
+     } );
+     await this.db.bulkDocs(newDocs);
+
+  }
 
 }

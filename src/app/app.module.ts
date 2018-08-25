@@ -51,6 +51,7 @@ import { UserOverviewProvider } from '../providers/user-overview/user-overview';
 import { ModalProvider } from '../providers/modal/modal';
 import { BudgetProvider } from '../providers/budget/budget';
 import { CategoryOptionsPage } from '../pages/category-options/category-options';
+import { CategoryProvider } from '../providers/category/category';
 
 @NgModule({
   declarations: [
@@ -134,7 +135,8 @@ import { CategoryOptionsPage } from '../pages/category-options/category-options'
     MonthOverviewProvider,
     UserOverviewProvider,
     ModalProvider,
-    BudgetProvider
+    BudgetProvider,
+    CategoryProvider
   ]
 })
 export class AppModule {}
