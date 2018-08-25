@@ -36,7 +36,7 @@ export class MonthOverView {
         }
         if(categories)
         {
-            this.categories = categories.map(c => new Category(c.categoryName,c.chartColor, c.expenses, c.budget, c.createdDate ));
+            this.categories = categories.map(c => new Category(c.categoryName,c.categoryColor, c.expenses, c.budget, c.createdDate ));
         }
         if(usedTags)
         {
@@ -157,6 +157,10 @@ export class MonthOverView {
             });
         });
         return expenses;
+    }
+
+    public getExpensesByCategoryName(categoryName: string): Expense [] {
+        return this.categories.find(cat => cat.categoryName === categoryName).getExpenses();
     }
 
     

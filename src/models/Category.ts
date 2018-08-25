@@ -7,7 +7,7 @@ export class Category {
     public expenses: Expense []
     public budget: Budget;
     public createdDate: string; // added hobby at 07 2018 --> get docs starting from 07 to ... 
-    public chartColor: string;
+    public categoryColor: string;
     public iconName: string; 
 
 
@@ -15,8 +15,9 @@ export class Category {
      *
      */
     
-    constructor(categoryName: string, chartColor?: string, expenses?: Expense [], budget?: Budget, createdDate?: string) {
+    constructor(categoryName: string, categoryColor?: string, expenses?: Expense [], budget?: Budget, createdDate?: string) {
         this.categoryName = categoryName;
+        this.categoryColor = categoryColor;
         if(createdDate)
         {
             this.createdDate = createdDate;
@@ -68,6 +69,15 @@ export class Category {
         this.budget = newBudget;
     }
 
+    setIconName(iconName: string): void {
+        this.iconName = iconName;
+    }
+
+    setCategoryColor(newColor: string): void {
+        this.categoryColor = newColor;
+    }
+
+    
     
 
     

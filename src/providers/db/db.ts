@@ -353,4 +353,39 @@ export class DbProvider {
   
 
 
+  public async updateCategoryAndExpensesIconName(categoryName: string, iconName: string ) {
+
+    let newDocs: MonthOverView [] = [];
+    let allDocs = await this.db.allDocs({include_docs: true);
+    allDocs.rows.forEach(mo => {
+      let monthOverviewObJect = new MonthOverView(mo._id, mo.accounts, mo.categories, mo._rev, mo.usedTags );
+      if(monthOverviewObJect.containsCategory(categoryName))
+      {
+        let category: Category = monthOverviewObJect.getCategoryByName(categoryName);
+        let expenses: Expense [] = category.getExpenses();
+        category.setIconName(iconName);
+        expenses.forEach(e =>  e.setIconName(iconName));
+      }
+      newDocs.push(monthOverviewObJect);
+     } );
+     await this.db.bulkDocs(newDocs);
+  }
+
+  public async updateCategoryColor(categoryName: string, newColor: string) 
+  {
+    let newDocs: MonthOverView [] = [];
+    let allDocs = await this.db.allDocs({include_docs: true});
+    allDocs.rows.forEach(mo => {
+      let monthOverviewObJect = new MonthOverView(mo._id, mo.accounts, mo.categories, mo._rev, mo.usedTags );
+      if(monthOverviewObJect.containsCategory(categoryName))
+      {
+        monthOverviewObJect.getCategoryByName(categoryName).setCategoryColor(newColor);
+      }
+      newDocs.push(monthOverviewObJect);
+     } );
+     await this.db.bulkDocs(newDocs);
+
+  }
+
+
 }
