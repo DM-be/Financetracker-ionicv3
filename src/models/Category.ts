@@ -77,6 +77,14 @@ export class Category {
         this.categoryColor = newColor;
     }
 
+    getIconName(): string {
+        return this.iconName;
+    }
+
+    getCategoryColor(): string {
+        return this.categoryColor;
+    }
+
     
     
 

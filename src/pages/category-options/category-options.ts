@@ -1,4 +1,10 @@
 import {
+  IconsPage
+} from './../icons/icons';
+import {
+  ColorPickerPage
+} from './../color-picker/color-picker';
+import {
   Budget
 } from './../../models/Budget';
 import {
@@ -11,7 +17,8 @@ import {
   IonicPage,
   NavController,
   NavParams,
-  AlertController
+  AlertController,
+  PopoverController
 } from 'ionic-angular';
 
 /**
@@ -29,10 +36,14 @@ import {
 export class CategoryOptionsPage {
   public category: Category;
   public budget: Budget;
+  public selectedColor: string;
+  public selectedIcon: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public popoverCtrl: PopoverController) {
     this.category = this.navParams.data.category;
     this.budget = this.category.getBudget() || new Budget();
+    this.selectedColor = this.category.getCategoryColor();
+    this.selectedIcon = this.category.getIconName();
   }
 
   ionViewDidLoad() {
@@ -64,6 +75,42 @@ export class CategoryOptionsPage {
       ]
     });
     prompt.present();
+  }
+
+
+
+  colorPickerPopover(ev) {
+    let popover = this.popoverCtrl.create(ColorPickerPage);
+    popover.present({
+      ev: ev
+    });
+    popover.onDidDismiss(color => {
+      if (color !== undefined) {
+        this.selectedColor = color;
+        this.category.setCategoryColor(color);
+        // save to db here or wait until leaving page?
+
+      } else {
+        this.selectedColor = this.category.getCategoryColor();
+      }
+
+    });
+
+  }
+
+  iconsPopover(ev) {
+    let popover = this.popoverCtrl.create(IconsPage);
+    popover.present({
+      ev: ev
+    });
+    popover.onDidDismiss(icon => {
+      if (icon !== undefined) {
+        this.selectedIcon = icon;
+        this.category.setIconName(icon);
+      } else {
+        this.selectedIcon = this.category.getIconName();
+      }
+    });
   }
 
 

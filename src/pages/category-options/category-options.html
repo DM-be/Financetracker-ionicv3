@@ -28,6 +28,15 @@
     <button ion-button (click)="addNewBudget()">Add a budget</button>
   </div>
 
+  <button ion-item (click)="colorPickerPopover($event)">
+      <ion-label>Color</ion-label>
+      <ion-icon name="color-palette" item-end [style.color]="selectedColor"></ion-icon>
+    </button>
+    <button ion-item (click)="iconsPopover($event)">
+      <ion-label>Icon</ion-label>
+      <ion-icon [name]="selectedIcon" item-end></ion-icon>
+    </button>
+
   
 
 </ion-content>
