@@ -1,3 +1,4 @@
+import { MomentProvider } from './../../providers/moment/moment';
 import { BudgetProvider } from './../../providers/budget/budget';
 import {
   IconsPage
@@ -39,9 +40,13 @@ export class CategoryOptionsPage {
   public budget: Budget;
   public selectedColor: string;
   public selectedIcon: string;
+  public currentDate: string;
+  public selectedDate: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public popoverCtrl: PopoverController, public budgetProvider: BudgetProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public popoverCtrl: PopoverController, public budgetProvider: BudgetProvider, public momentProvider: MomentProvider) {
     this.category = this.navParams.data.category;
+    this.selectedDate = this.navParams.data.selectedDate;
+    this.currentDate = this.momentProvider.getCurrentMonthAndYear();
     this.budget = this.category.getBudget() || new Budget();
     this.selectedColor = this.category.getCategoryColor();
     this.selectedIcon = this.category.getIconName();
@@ -50,6 +55,10 @@ export class CategoryOptionsPage {
 
   ionViewDidLoad() {
     console.log(this.category);
+  }
+
+  isInThePast(){
+    return this.currentDate !== this.selectedDate;
   }
 
   addNewBudget() {
@@ -81,6 +90,7 @@ export class CategoryOptionsPage {
 
   deleteBudget() {
     this.budgetProvider.deleteBudget(this.category.getCategoryName(), this.budget);
+    
   }
 
 

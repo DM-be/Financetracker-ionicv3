@@ -16,6 +16,13 @@ export class BudgetProvider {
   constructor(public monthOverviewProvider: MonthOverviewProvider, public momentProvider: MomentProvider) {
   }
 
+  async getBudget(_id: string, categoryName: string): Promise<Budget>
+  {
+    let monthOverview = await this.monthOverviewProvider.getMonthOverview(_id);
+    return monthOverview.getCategoryByName(categoryName).getBudget();
+  }
+
+  /* budgets can only be updated in current month --> disabled front end */
   async updateBudget(categoryName: string, newBudget: Budget)
   {
 
