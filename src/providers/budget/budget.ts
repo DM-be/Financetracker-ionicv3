@@ -1,3 +1,4 @@
+import { MomentProvider } from './../moment/moment';
 import { Budget } from './../../models/Budget';
 import { MonthOverviewProvider } from './../month-overview/month-overview';
 
@@ -12,19 +13,20 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class BudgetProvider {
 
-  constructor(public monthOverviewProvider: MonthOverviewProvider) {
+  constructor(public monthOverviewProvider: MonthOverviewProvider, public momentProvider: MomentProvider) {
   }
 
-  async updateBudget(_id: string, categoryName: string, newBudget: Budget)
+  async updateBudget(categoryName: string, newBudget: Budget)
   {
-    let monthOverview = await this.monthOverviewProvider.getMonthOverview(_id);
+
+    let monthOverview = await this.monthOverviewProvider.getMonthOverview(this.momentProvider.getCurrentMonthAndYear());
     monthOverview.getCategoryByName(categoryName).replaceBudget(newBudget);
     await this.monthOverviewProvider.saveMonthOverview(monthOverview);
   } 
 
-  async deleteBudget(_id: string, categoryName: string) {
-    let monthOverview = await this.monthOverviewProvider.getMonthOverview(_id);
-    monthOverview.getCategoryByName(categoryName).replaceBudget(new Budget()); // --> 0 0
+  async deleteBudget(categoryName: string, oldBudget: Budget) {
+    let monthOverview = await this.monthOverviewProvider.getMonthOverview(this.momentProvider.getCurrentMonthAndYear());
+    monthOverview.getCategoryByName(categoryName).replaceBudget(new Budget(0, oldBudget.getCurrentAmountSpent())); // --> 0 0
     await this.monthOverviewProvider.saveMonthOverview(monthOverview);
   }
 

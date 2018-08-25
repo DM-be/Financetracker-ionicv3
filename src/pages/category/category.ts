@@ -1,3 +1,4 @@
+import { MomentProvider } from './../../providers/moment/moment';
 import { Category } from './../../models/Category';
 import { CategoryProvider } from './../../providers/category/category';
 import {
@@ -35,10 +36,9 @@ import {
 export class CategoryPage {
 
   public categoryName: string;
-  public budgetNumber: string;
   public selectedColor: string;
   public selectedIcon: string;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public popoverCtrl: PopoverController, public categoryProvider: CategoryProvider) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public popoverCtrl: PopoverController, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider) {}
 
   colorPickerPopover(ev) {
     // this.modalCtrl.create(ColorPickerPage).present();
@@ -52,9 +52,7 @@ export class CategoryPage {
       } else {
         this.selectedColor = '#000000';
       }
-
     });
-
   }
 
   getSelectedColor() {
@@ -71,7 +69,6 @@ export class CategoryPage {
         this.selectedIcon = "add-circle"
       }
     });
-
   }
 
   getSelectedIcon() {
@@ -84,9 +81,9 @@ export class CategoryPage {
 
   async addNewCategory() {
     // implement checking for form validity (formbuilder instead of ngmodel?)
-    // add logic for adding category
-    let category = new Category(this.categoryName, this.selectedColor)
-    await this.categoryProvider.addCategory()
+    
+    let category = new Category(this.categoryName, this.selectedColor, this.selectedIcon, this.momentProvider.getCurrentMonthAndYear())
+    await this.categoryProvider.addCategory(category);
     this.navCtrl.pop();
   }
 

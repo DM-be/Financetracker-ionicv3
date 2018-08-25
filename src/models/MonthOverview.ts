@@ -36,7 +36,7 @@ export class MonthOverView {
         }
         if(categories)
         {
-            this.categories = categories.map(c => new Category(c.categoryName,c.categoryColor,c.createdDate, c.iconName, c.expenses, c.budget,  ));
+            this.categories = categories.map(c => new Category(c.categoryName,c.categoryColor,c.iconName, c.createdDate, c.expenses, c.budget,  ));
         }
         if(usedTags)
         {

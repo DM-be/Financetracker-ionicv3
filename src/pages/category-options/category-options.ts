@@ -1,3 +1,4 @@
+import { BudgetProvider } from './../../providers/budget/budget';
 import {
   IconsPage
 } from './../icons/icons';
@@ -39,15 +40,16 @@ export class CategoryOptionsPage {
   public selectedColor: string;
   public selectedIcon: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public popoverCtrl: PopoverController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public popoverCtrl: PopoverController, public budgetProvider: BudgetProvider) {
     this.category = this.navParams.data.category;
     this.budget = this.category.getBudget() || new Budget();
     this.selectedColor = this.category.getCategoryColor();
     this.selectedIcon = this.category.getIconName();
+    
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CategoryOptionsPage');
+    console.log(this.category);
   }
 
   addNewBudget() {
@@ -67,14 +69,18 @@ export class CategoryOptionsPage {
         },
         {
           text: 'Save',
-          handler: data => {
+          handler: async data => {
             this.budget.setLimitAmount(data.limitAmount);
-            // save to db here 
+            await this.budgetProvider.updateBudget(this.category.getCategoryName(), this.budget);
           }
         }
       ]
     });
     prompt.present();
+  }
+
+  deleteBudget() {
+    this.budgetProvider.deleteBudget(this.category.getCategoryName(), this.budget);
   }
 
 

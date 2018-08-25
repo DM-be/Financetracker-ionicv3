@@ -146,13 +146,6 @@ export class DbProvider {
     await this.db.put(monthOverview);
   }
   
-  private async addCategoryToMonthOverview(_id_month, category: Category)
-  {
-    let monthOverview = await this.getMonthOverviewObject(_id_month);
-    monthOverview.addCategory(category);
-    await this.db.put(monthOverview);
-  }
-
   private addTransactionBetweenAccounts(accountA: Account, operationA: string, accountB: Account, operationB: string, amount: number, transactionDate?: string)
   {
     accountA.addTransaction(new Transaction(amount, accountA.getAccountName(), accountB.getAccountName(), operationA, transactionDate));

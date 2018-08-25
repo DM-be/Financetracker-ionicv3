@@ -50,7 +50,8 @@
           <ion-icon name="more"></ion-icon>
         </button>
         </ion-item-divider>
-      <ion-list style="height:30vh">
+        <ion-scroll scrollY="true" style="height: 30vh">
+      <ion-list >
         <div *ngFor="let category of categories">
 
           <button ion-item (click)="showCategoryDetails(category)">
@@ -69,7 +70,7 @@
           </div>
         </div>
 
-      </ion-list>
+      </ion-list></ion-scroll>
     </ion-card>
 
 
@@ -81,7 +82,8 @@
         </button>
         </ion-item-divider>
    
-        <ion-list style="height:30vh">
+        <ion-scroll scrollY="true" style="height: 30vh">
+        <ion-list >
           <ion-item-sliding *ngFor="let expense of expenses">
             <button ion-item (click)="detailExpenseModal(expense, false)">
               <ion-icon name="cafe" item-start></ion-icon>
@@ -96,6 +98,7 @@
 
           </ion-item-sliding>
         </ion-list>
+      </ion-scroll>
 
 
 
