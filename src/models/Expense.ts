@@ -14,12 +14,13 @@ export class Expense {
     
 
 
-    constructor( cost: number, description: string, createdDate: string, usedAccount: string, categoryName: string, tags?: Tag []) {
+    constructor( cost: number, description: string, createdDate: string, usedAccount: string, categoryName: string, iconName: string, tags?: Tag []) {
         this.cost = cost;
         this.description = description;
         this.createdDate = createdDate;
         this.usedAccountName = usedAccount;
         this.categoryName = categoryName;
+        this.iconName = iconName;
         if(tags) {
             this.tags = tags.map(t => new Tag(t.tagName, t.createdDate));
         }
