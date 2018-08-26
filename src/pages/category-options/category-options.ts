@@ -45,8 +45,8 @@ export class CategoryOptionsPage {
   public selectedDate: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public popoverCtrl: PopoverController, public budgetProvider: BudgetProvider, public momentProvider: MomentProvider, public categoryProvider: CategoryProvider) {
-    this.category = this.navParams.data.category;
-    this.selectedDate = this.navParams.data.selectedDate;
+    this.category = this.navParams.get("category")
+    this.selectedDate = this.navParams.get("selectedDate")
     this.budget = this.category.getBudget();
     this.currentDate = this.momentProvider.getCurrentMonthAndYear();
     this.selectedColor = this.category.getCategoryColor();

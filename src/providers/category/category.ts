@@ -38,7 +38,7 @@ export class CategoryProvider {
 
   public async getCategories(_id: string): Promise<Category []>
   {
-    let monthOverview = await this.momentOverviewProvider.getMonthOverview(this._id_now);
+    let monthOverview = await this.momentOverviewProvider.getMonthOverview(_id);
     return monthOverview.getCategories();
   }
 

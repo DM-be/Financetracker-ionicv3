@@ -12,23 +12,35 @@
       <ion-item-divider color="primary">
         Accounts
         <button float-right ion-button icon-only item-end no-padding clear color="white" (click)="addCategoryModal()">
+          <ion-icon name="options"></ion-icon>
+        </button>
+
+        <button float-right ion-button icon-only item-end no-padding clear color="white" (click)="addCategoryModal()">
           <ion-icon name="add-circle"></ion-icon>
         </button>
+
+
       </ion-item-divider>
       <ion-list class="customScroll">
         <ion-item-sliding *ngFor="let account of accounts">
           <button ion-item (click)="accountsDetailPage(account)">
             <ion-icon [name]="account.getIconName()" item-start></ion-icon>
             {{account.accountName}}
-
             <ion-badge item-end>{{account.getInitialBalance()}}</ion-badge>
             <ion-badge item-end>{{account.getFinalBalance()}}</ion-badge>
           </button>
-
           <ion-item-options side="right">
-            <button ion-button>delete</button>
+            <button ion-button color="dark">
+              <ion-icon name="create"></ion-icon>
+              Edit
+            </button>
           </ion-item-options>
-
+          <ion-item-options side="left">
+            <button ion-button color="danger">
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+          </ion-item-options>
         </ion-item-sliding>
       </ion-list>
 
@@ -52,24 +64,40 @@
       </ion-item-divider>
 
       <ion-list class="customScroll">
-        <div *ngFor="let category of categories">
 
+        <div *ngFor="let category of categories">
+          <ion-item-sliding >
           <button ion-item (click)="showCategoryDetails(category)">
             <ion-icon [name]="category.getIconName()" item-start></ion-icon>
             {{category.getCategoryName()}}
             <ion-badge item-end>{{category.getBudget().currentAmountSpent}}</ion-badge>
           </button>
-
+          <ion-item-options side="right">
+              <button ion-button color="dark" (click)="showCategoryOptions(category)">
+                <ion-icon name="create"></ion-icon>
+                Edit
+              </button>
+            </ion-item-options>
+            <ion-item-options side="left">
+                <button ion-button color="danger">
+                  <ion-icon name="trash"></ion-icon>
+                  Delete
+                </button>
+              </ion-item-options>
+        
+        </ion-item-sliding>
           <div *ngIf="category.getBudget().isBeingTracked()">
             <button ion-item>
               <ion-label>
-                <progress-bar [progress]="loadProgress()"></progress-bar>
+                <progress-bar [progress]="loadProgress(category.getBudget())"></progress-bar>
               </ion-label>
               <ion-badge item-end>{{category.getBudget().getRemainingAmount()}}</ion-badge>
             </button>
           </div>
-        </div>
 
+
+        
+</div>
       </ion-list>
 
     </ion-card>
@@ -94,8 +122,17 @@
           </button>
 
           <ion-item-options side="right">
-            <button ion-button (click)="detailExpenseModal(expense, true)">edit</button>
+            <button ion-button color="dark" (click)="detailExpenseModal(expense, true)">
+              <ion-icon name="create"></ion-icon>
+              Edit
+            </button>
           </ion-item-options>
+          <ion-item-options side="left">
+              <button ion-button color="danger">
+                <ion-icon name="trash"></ion-icon>
+                Delete
+              </button>
+            </ion-item-options>
 
         </ion-item-sliding>
       </ion-list>

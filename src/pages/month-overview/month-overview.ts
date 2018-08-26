@@ -1,22 +1,68 @@
-import { ModalProvider } from '../../providers/modal/modal';
-import { AccountsPopoverPage } from './../accounts-popover/accounts-popover';
-import { Component, Inject, forwardRef } from '@angular/core';
-import {NavController, ModalController, PopoverController } from 'ionic-angular';
+import { MomentProvider } from './../../providers/moment/moment';
+import { ExpensesOverviewPage } from './../expenses-overview/expenses-overview';
+import {
+  CategoryOptionsPage
+} from './../category-options/category-options';
+import {
+  Budget
+} from './../../models/Budget';
+import {
+  ModalProvider
+} from '../../providers/modal/modal';
+import {
+  AccountsPopoverPage
+} from './../accounts-popover/accounts-popover';
+import {
+  Component,
+  Inject,
+  forwardRef
+} from '@angular/core';
+import {
+  NavController,
+  ModalController,
+  PopoverController
+} from 'ionic-angular';
 import * as moment from 'moment';
-import { DbProvider } from '../../providers/db/db';
-import { Category } from '../../models/Category';
+import {
+  DbProvider
+} from '../../providers/db/db';
+import {
+  Category
+} from '../../models/Category';
 import Chart from 'chart.js';
-import { ExpensePage } from '../expense/expense';
-import { Expense } from '../../models/Expense';
-import { Account } from '../../models/Account';
-import { MonthOverView } from '../../models/monthOverview';
-import { CategoryDetailsPage } from '../category-details/category-details';
-import { ExpenseDetailPage } from '../expense-detail/expense-detail';
-import { AccountDetailsPage } from '../account-details/account-details';
-import { CategoryPage } from '../category/category';
-import { TransferPage } from '../transfer/transfer';
-import { TransferExternalPage } from '../transfer-external/transfer-external';
-import { MonthOverviewProvider } from '../../providers/month-overview/month-overview';
+import {
+  ExpensePage
+} from '../expense/expense';
+import {
+  Expense
+} from '../../models/Expense';
+import {
+  Account
+} from '../../models/Account';
+import {
+  MonthOverView
+} from '../../models/monthOverview';
+import {
+  CategoryDetailsPage
+} from '../category-details/category-details';
+import {
+  ExpenseDetailPage
+} from '../expense-detail/expense-detail';
+import {
+  AccountDetailsPage
+} from '../account-details/account-details';
+import {
+  CategoryPage
+} from '../category/category';
+import {
+  TransferPage
+} from '../transfer/transfer';
+import {
+  TransferExternalPage
+} from '../transfer-external/transfer-external';
+import {
+  MonthOverviewProvider
+} from '../../providers/month-overview/month-overview';
 
 
 /**
@@ -34,18 +80,18 @@ import { MonthOverviewProvider } from '../../providers/month-overview/month-over
 export class MonthOverviewPage {
 
   public selectedDate: string;
-  public categories: Category [];
-  public expenses: Expense [];
-  public accounts: Account [];
+  public categories: Category[];
+  public expenses: Expense[];
+  public accounts: Account[];
   public monthOverviewObject: MonthOverView;
 
 
   constructor(public navCtrl: NavController, public dbProvider: DbProvider, public monthOverviewProvider: MonthOverviewProvider, public modalCtrl: ModalController,
-  public popoverCtrl: PopoverController) {
-    this.selectedDate = moment().format('YYYY-MM');    
+    public popoverCtrl: PopoverController, public momentProvider: MomentProvider) {
+    this.selectedDate = this.momentProvider.getCurrentMonthAndYear();
   }
 
-  
+
 
   async refreshData() {
     this.monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(this.selectedDate);
@@ -53,18 +99,21 @@ export class MonthOverviewPage {
     this.expenses = this.monthOverviewObject.getAllExpenses();
     this.accounts = this.monthOverviewObject.getAllAccounts();
   }
+
+  // cleanup --> seperate date + refreshing
   async updateDate() {
     await this.refreshData();
-   // await this.dbProvider.getCategoryCosts(this.selectedDate);
+    this.momentProvider.setSelectedMonthAndYear(this.selectedDate);
+    // await this.dbProvider.getCategoryCosts(this.selectedDate);
   }
 
   async ionViewWillEnter() {
     await this.refreshData();
-   // let data  = this.buildData(this.categories);
-   // this.buildChart(data);
+    // let data  = this.buildData(this.categories);
+    // this.buildChart(data);
   }
 
-  buildData(categories: Category []) {
+  buildData(categories: Category[]) {
     let data = [];
     categories.forEach(category => {
       data.push(category.getBudget().currentAmountSpent);
@@ -74,50 +123,58 @@ export class MonthOverviewPage {
 
   buildChart(data) {
     var ctx = document.getElementById("myChart");
-    var chartData ={
+    var chartData = {
       datasets: [{
-          data: data
+        data: data
       }],
-  
+
       // These labels appear in the legend and in the tooltips when hovering different arcs
       labels: [
-          'Red',
-          'Yellow',
-          'Blue'
+        'Red',
+        'Yellow',
+        'Blue'
       ]
-  };
+    };
 
-    var myPieChart = new Chart(ctx,{
+    var myPieChart = new Chart(ctx, {
       type: 'pie',
       data: chartData,
       options: Chart.defaults.doughnut
-  });
+    });
 
-    
+
   }
 
-  loadProgress() {
-    return 30;
+  loadProgress(budget: Budget) {
+    return (budget.currentAmountSpent / budget.limitAmount) * 100;
   }
 
-  showCategoryDetails(category: Category)
-  {
-    this.navCtrl.push(CategoryDetailsPage, {
-      customData: {
+  showCategoryDetails(category: Category) {
+    this.navCtrl.push(ExpensesOverviewPage, {
         category: category,
         selectedDate: this.selectedDate
       }
-    });
-    
-  } 
+    );
+  }
+
+  showCategoryOptions(category: Category) {
+    this.navCtrl.push(CategoryOptionsPage, 
+      {
+        category: category,
+        selectedDate: this.selectedDate
+      }
+    );
+  }
+
+
   presentPopover(myEvent) {
     let popover = this.popoverCtrl.create(AccountsPopoverPage);
     console.log(myEvent);
     popover.present({
       ev: myEvent
     });
-    
-    
+
+
   }
 
 
@@ -132,20 +189,22 @@ export class MonthOverviewPage {
     //this.modalProvider.displayAddAccountModal();
   }
 
-  detailExpenseModal(expense: Expense, editMode?: any) {
+  detailExpenseModal(expense: Expense, editMode ? : any) {
     let detailExpenseModal = this.navCtrl.push(ExpenseDetailPage, {
       expense: expense,
       categories: this.categories,
-      editMode: editMode
+      editMode: editMode,
+      selectedDate: this.selectedDate
     })
-  //  detailExpenseModal.present();
-  } 
+    //  detailExpenseModal.present();
+  }
   accountsDetailPage(account: Account) {
-    
+
     this.navCtrl.push(AccountDetailsPage, {
-      account: account, 
+      account: account,
       expenses: this.monthOverviewObject.getExpensesByAccountName(account.accountName),
-      categories: this.categories});
+      categories: this.categories
+    });
   }
 
   addCategoryModal() {
@@ -161,9 +220,9 @@ export class MonthOverviewPage {
     this.modalCtrl.create(TransferExternalPage).present();
   }
 
-  
 
- 
+
+
 
   handleSwipe($e) {
     if ($e.offsetDirection == 4) {
@@ -172,19 +231,14 @@ export class MonthOverviewPage {
     } else if ($e.offsetDirection == 2) {
       // Swiped left
       this.selectedDate = moment(this.selectedDate).add(1, 'M').format('YYYY-MM');
-    }
-    else if ($e.offsetDirection == 8)
-    {
+    } else if ($e.offsetDirection == 8) {
       // swiped up
       let dateToTest = moment(this.selectedDate).add(1, 'years').format('YYYY');
       let now = moment().format('YYYY');
-      if(dateToTest <= now)
-      {
-         this.selectedDate = moment(this.selectedDate).add(1, 'years').format('YYYY-MM');
+      if (dateToTest <= now) {
+        this.selectedDate = moment(this.selectedDate).add(1, 'years').format('YYYY-MM');
       }
-    }
-    else if($e.offsetDirection == 16)
-    {
+    } else if ($e.offsetDirection == 16) {
       // swiped down
       this.selectedDate = moment(this.selectedDate).subtract(1, 'years').format('YYYY-MM');
     }

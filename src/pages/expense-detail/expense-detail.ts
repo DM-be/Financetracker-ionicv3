@@ -1,3 +1,5 @@
+import { MomentProvider } from './../../providers/moment/moment';
+import { CategoryProvider } from './../../providers/category/category';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Category } from '../../models/Category';
@@ -21,20 +23,26 @@ export class ExpenseDetailPage {
   public expense: Expense;
   public tags: any = [];
   public page = this;
+  public selectedDate;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.categories = this.navParams.get("categories");
+  constructor(public navCtrl: NavController, public navParams: NavParams, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider) {
+    
     this.expense = this.navParams.get("expense");
+    this.selectedDate = this.momentProvider.getSelectedMonthAndYear();
+  
+    this.awaitCategories();
     this.tags = this.expense.getTags().map(tag => tag.tagName);
-    console.log(this.expense.getCategoryName())
     
   }
 
   ionViewWillEnter() {
     this.editMode = this.navParams.get("editMode");
-    console.log(this.categories)
-   
 
+  }
+
+  async awaitCategories() {
+    console.log(this.selectedDate);
+    this.categories = await this.categoryProvider.getCategories(this.selectedDate);
   }
 
   dismiss() {

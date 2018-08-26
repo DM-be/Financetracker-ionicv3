@@ -1,3 +1,4 @@
+import { ExpenseDetailPage } from './../expense-detail/expense-detail';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Category } from '../../models/Category';
@@ -20,7 +21,7 @@ export class ExpensesOverviewPage {
   public expenses: Expense [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-  this.category = this.navParams.data.category
+  this.category = this.navParams.get("category");
   this.expenses = this.category.getExpenses();
   console.log(this.navParams.data)
     
@@ -31,4 +32,12 @@ export class ExpensesOverviewPage {
     
   }
 
+
+  detailExpenseModal(expense: Expense, editMode ? : any) {
+    let detailExpenseModal = this.navCtrl.push(ExpenseDetailPage, {
+      expense: expense,
+      editMode: editMode
+    })
+
+}
 }
