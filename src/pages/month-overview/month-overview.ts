@@ -53,11 +53,12 @@ export class MonthOverviewPage {
   }
 
   async ionViewWillEnter() {
+    
     this.monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(this.selectedDate);
-    let monthOverviewObject =this.monthOverviewObject;
-    this.categories = monthOverviewObject.getCategories();
-    this.expenses = monthOverviewObject.getAllExpenses();
-    this.accounts = monthOverviewObject.getAllAccounts();
+    console.log(this.monthOverviewObject);
+    this.categories = this.monthOverviewObject.getCategories();
+    this.expenses = this.monthOverviewObject.getAllExpenses();
+    this.accounts = this.monthOverviewObject.getAllAccounts();
    // let data  = this.buildData(this.categories);
    // this.buildChart(data);
   }

@@ -94,19 +94,16 @@ export class CategoryOptionsPage {
     this.budget = await this.budgetProvider.getBudget(this.selectedDate, this.category.getCategoryName());
   }
 
-
-
   colorPickerPopover(ev) {
     let popover = this.popoverCtrl.create(ColorPickerPage);
     popover.present({
       ev: ev
     });
-    popover.onDidDismiss(color => {
+    popover.onDidDismiss(async color => {
       if (color !== undefined) {
         this.selectedColor = color;
         this.category.setCategoryColor(color);
-
-        // save to db here or wait until leaving page?
+        await this.categoryProvider.updateCategoryColor(this.category, color);
 
       } else {
         this.selectedColor = this.category.getCategoryColor();
@@ -121,10 +118,11 @@ export class CategoryOptionsPage {
     popover.present({
       ev: ev
     });
-    popover.onDidDismiss(icon => {
+    popover.onDidDismiss(async icon => {
       if (icon !== undefined) {
         this.selectedIcon = icon;
         this.category.setIconName(icon);
+        await this.categoryProvider.updateCategoryIcon(this.category, icon);
       } else {
         this.selectedIcon = this.category.getIconName();
       }
