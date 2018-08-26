@@ -47,18 +47,19 @@ export class MonthOverviewPage {
 
   
 
+  async refreshData() {
+    this.monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(this.selectedDate);
+    this.categories = this.monthOverviewObject.getCategories();
+    this.expenses = this.monthOverviewObject.getAllExpenses();
+    this.accounts = this.monthOverviewObject.getAllAccounts();
+  }
   async updateDate() {
-    await this.dbProvider.getMonthOverview(this.selectedDate);
+    await this.refreshData();
    // await this.dbProvider.getCategoryCosts(this.selectedDate);
   }
 
   async ionViewWillEnter() {
-    
-    this.monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(this.selectedDate);
-    console.log(this.monthOverviewObject);
-    this.categories = this.monthOverviewObject.getCategories();
-    this.expenses = this.monthOverviewObject.getAllExpenses();
-    this.accounts = this.monthOverviewObject.getAllAccounts();
+    await this.refreshData();
    // let data  = this.buildData(this.categories);
    // this.buildChart(data);
   }

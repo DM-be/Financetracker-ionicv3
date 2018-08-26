@@ -1,7 +1,11 @@
 page-month-overview {
-    .button-large-md {
-        height: 2.8em;
-        font-size: 1rem;
-        padding: 0 1em;
-    }
+  .button-large-md {
+    height: 2.8em;
+    font-size: 1rem;
+    padding: 0 1em;
+  }
+  .customScroll {
+    max-height: 25vh;
+    overflow-y: scroll;
+  }
 }

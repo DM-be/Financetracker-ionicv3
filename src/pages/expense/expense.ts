@@ -65,7 +65,7 @@ export class ExpensePage {
 
   addExpense() {
 
-    let expense = new Expense(parseInt(this.cost), this.description, moment().format(), this.usedAccount, this.categoryName, this.tags);
+    let expense = new Expense(parseInt(this.cost), this.description, moment().format(), this.usedAccount, this.categoryName, '',this.tags);
     //this.dbProvider.addExpenses(this.selectedDate, expense, this.categoryName, this.chartColor);
 
   }
