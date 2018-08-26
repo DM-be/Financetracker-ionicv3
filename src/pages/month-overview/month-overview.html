@@ -9,16 +9,16 @@
 
 
     <ion-card>
-        <ion-item-divider color="primary">
-          Accounts
-      <button float-right ion-button icon-only item-end no-padding clear color="white" (click)="addCategoryModal()">
-        <ion-icon name="more"></ion-icon>
-      </button>
+      <ion-item-divider color="primary">
+        Accounts
+        <button float-right ion-button icon-only item-end no-padding clear color="white" (click)="addCategoryModal()">
+          <ion-icon name="add-circle"></ion-icon>
+        </button>
       </ion-item-divider>
       <ion-list class="customScroll">
         <ion-item-sliding *ngFor="let account of accounts">
           <button ion-item (click)="accountsDetailPage(account)">
-            <ion-icon name="cafe" item-start></ion-icon>
+            <ion-icon [name]="account.getIconName()" item-start></ion-icon>
             {{account.accountName}}
 
             <ion-badge item-end>{{account.getInitialBalance()}}</ion-badge>
@@ -44,18 +44,18 @@
 
     <ion-card>
 
-        <ion-item-divider color="primary">
-            Categories
+      <ion-item-divider color="primary">
+        Categories
         <button float-right ion-button icon-only item-end no-padding clear color="white" (click)="addCategoryModal()">
           <ion-icon name="add-circle"></ion-icon>
         </button>
-        </ion-item-divider>
-       
+      </ion-item-divider>
+
       <ion-list class="customScroll">
-        <div *ngFor="let category of categories" >
+        <div *ngFor="let category of categories">
 
           <button ion-item (click)="showCategoryDetails(category)">
-            <ion-icon name="cafe" item-start></ion-icon>
+            <ion-icon [name]="category.getIconName()" item-start></ion-icon>
             {{category.getCategoryName()}}
             <ion-badge item-end>{{category.getBudget().currentAmountSpent}}</ion-badge>
           </button>
@@ -71,35 +71,35 @@
         </div>
 
       </ion-list>
-    
+
     </ion-card>
 
 
     <ion-card>
-        <ion-item-divider color="primary">
-            Expenses
+      <ion-item-divider color="primary">
+        Expenses
         <button float-right ion-button icon-only item-end no-padding clear color="white" (click)="addCategoryModal()">
-          <ion-icon name="more"></ion-icon>
+          <ion-icon name="add-circle"></ion-icon>
         </button>
-        </ion-item-divider>
-   
-        
-        <ion-list class="customScroll">
-          <ion-item-sliding *ngFor="let expense of expenses">
-            <button ion-item (click)="detailExpenseModal(expense, false)">
-              <ion-icon name="cafe" item-start></ion-icon>
-              {{expense.getDescription()}}
+      </ion-item-divider>
 
-              <ion-badge item-end>{{expense.getCost()}}</ion-badge>
-            </button>
 
-            <ion-item-options side="right">
-              <button ion-button (click)="detailExpenseModal(expense, true)">edit</button>
-            </ion-item-options>
+      <ion-list class="customScroll">
+        <ion-item-sliding *ngFor="let expense of expenses">
+          <button ion-item (click)="detailExpenseModal(expense, false)">
+            <ion-icon [name]="expense.getIconName() " item-start></ion-icon>
+            {{expense.getDescription()}}
 
-          </ion-item-sliding>
-        </ion-list>
-     
+            <ion-badge item-end>{{expense.getCost()}}</ion-badge>
+          </button>
+
+          <ion-item-options side="right">
+            <button ion-button (click)="detailExpenseModal(expense, true)">edit</button>
+          </ion-item-options>
+
+        </ion-item-sliding>
+      </ion-list>
+
 
 
 
@@ -107,7 +107,7 @@
 
   </ion-grid>
 
-  <ion-fab bottom right >
+  <ion-fab bottom right>
     <button color="tertiary" ion-fab>
       <ion-icon name="add"></ion-icon>
     </button>
@@ -115,7 +115,7 @@
       <button (click)="transferAccountsModal()" ion-fab icon-only>
         <ion-icon name="swap"></ion-icon>
       </button>
-      <button (click)="transferExternalAccountsModal() "ion-fab icon-only>
+      <button (click)="transferExternalAccountsModal() " ion-fab icon-only>
         <ion-icon name="gift"></ion-icon>
       </button>
       <button (click)="addExpenseModal()" ion-fab icon-only>

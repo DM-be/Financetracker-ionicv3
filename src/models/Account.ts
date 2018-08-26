@@ -13,10 +13,11 @@ export class Account {
      */
 
      // todo fix constructor with iconname 
-    constructor(owner: string, accountName: string,initialBalance: number, finalBalance?: number, transactions?: Transaction []) {
+    constructor(owner: string, accountName: string, initialBalance: number, iconName: string, finalBalance?: number, transactions?: Transaction []) {
         this.owner = owner;
         this.accountName = accountName;
         this.initialBalance = initialBalance;
+        this.iconName = iconName;
         this.finalBalance = initialBalance; // always the same when created 
         this.transactions = [];
 
@@ -39,6 +40,13 @@ export class Account {
         return this.accountName;
     }
 
+    public getIconName(): string {
+        return this.iconName;
+    }
+
+    public setIconName(iconName: string): void {
+        this.iconName = iconName;
+    }
     
 
     public addTransaction(transaction: Transaction): void {

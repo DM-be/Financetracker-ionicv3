@@ -62,5 +62,9 @@ export class Expense {
         this.iconName = iconName;
     }
 
+    public getIconName(): string {
+        return this.iconName;
+    }
+
  
 }
