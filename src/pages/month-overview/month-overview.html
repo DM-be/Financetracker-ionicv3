@@ -89,7 +89,7 @@
           <div *ngIf="category.getBudget().isBeingTracked()">
             <button ion-item>
               <ion-label>
-                <progress-bar [progress]="loadProgress(category.getBudget())"></progress-bar>
+                <progress-bar [color]="category.getCategoryColor()"[progress]="loadProgress(category.getBudget())"></progress-bar>
               </ion-label>
               <ion-badge item-end>{{category.getBudget().getRemainingAmount()}}</ion-badge>
             </button>

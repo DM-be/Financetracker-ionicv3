@@ -1,8 +1,4 @@
 progress-bar {
-
-    .wrapper {
-     
-    }
   .progress-outer {
         width: 96%;
         text-align: center;
@@ -10,11 +6,9 @@ progress-bar {
         color: #fff;
         border-radius: 20px;
     }
- 
     .progress-inner {
         white-space: nowrap;
         overflow: hidden;
         border-radius: 20px;
-        background-color: map-get($colors, primary);
     }
 }
