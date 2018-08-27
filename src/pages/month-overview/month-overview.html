@@ -1,6 +1,6 @@
 <ion-header>
   <ion-item color="tertiary">
-    <ion-datetime displayFormat="MMMM YYYY" pickerFormat="MMMM YYYY" [(ngModel)]="selectedDate" (ionChange)="updateDate()"></ion-datetime>
+    <ion-datetime displayFormat="MMMM YYYY" pickerFormat="MMMM YYYY" [(ngModel)]="selectedDate" (ionChange)="updateDate()" [min]="momentProvider.getMinDate()" [max]="momentProvider.getMaxDate()"></ion-datetime>
   </ion-item>
 </ion-header>
 

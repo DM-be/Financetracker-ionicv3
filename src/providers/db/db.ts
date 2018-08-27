@@ -59,6 +59,7 @@ export class DbProvider {
     this.registeredUsername = details.user_id;
     this.db = new PouchDB('finance');
     this.db.sync(this.remote).on('complete', () => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
+      this.initializeMinAndMaxDate();
       this.db.sync(this.remote, {
         live: true,
         retry: true, // waiting is overkill?
@@ -72,6 +73,13 @@ export class DbProvider {
 
   initSignUp(details) {
     this.initSignIn(details, true);
+  }
+
+  /* needs to be setup before app starts, the ion datepicker doesnt handle promises */
+
+  async initializeMinAndMaxDate() {
+    this.momentProvider.setMaxDate(await this.getMaxDate());
+    this.momentProvider.setMinDate(await this.getMinDate());
   }
 
   async getUserOverview() {
@@ -399,5 +407,16 @@ export class DbProvider {
     await this.db.bulkDocs({docs: newDocs});
 
   }
+
+  async getMinDate() {
+    let allDocs = await this.db.allDocs();
+    return allDocs.rows[0].id || this.momentProvider.getCurrentMonthAndYear();
+  }
+
+  async getMaxDate() {
+    let allDocs = await this.db.allDocs();
+    return allDocs.rows[allDocs.rows.length -1].id || this.momentProvider.getCurrentMonthAndYear();
+  }
+
 
 }

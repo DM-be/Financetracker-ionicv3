@@ -14,6 +14,8 @@ export class MomentProvider {
   /* property only changed when the datepicker is changed, used to keep track of which monthoverview
   needs to be loaded */
   private selectedMonthAndyear: string = this.getCurrentMonthAndYear();
+  private minDate: string;
+  private maxDate: string;
 
   constructor() {}
 
@@ -37,5 +39,28 @@ export class MomentProvider {
   getCurrentExactDate() {
     return moment().format();
   }
+
+  setMinDate(minDate: string)
+  {
+    this.minDate = minDate;
+  }
+
+  setMaxDate(maxDate: string)
+  {
+    this.maxDate = maxDate;
+  }
+
+  getMinDate(): string {
+    return this.minDate;
+  }
+
+  getMaxDate(): string {
+    return this.maxDate;
+  }
+
+
+
+
+  
 
 }

@@ -84,6 +84,8 @@ export class MonthOverviewPage {
   public expenses: Expense[];
   public accounts: Account[];
   public monthOverviewObject: MonthOverView;
+  public minDate: string;
+  public maxDate: string;
 
 
   constructor(public navCtrl: NavController, public dbProvider: DbProvider, public monthOverviewProvider: MonthOverviewProvider, public modalCtrl: ModalController,
@@ -91,8 +93,7 @@ export class MonthOverviewPage {
     this.selectedDate = this.momentProvider.getCurrentMonthAndYear();
   }
 
-
-
+ 
   async refreshData() {
     this.monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(this.selectedDate);
     this.categories = this.monthOverviewObject.getCategories();
