@@ -89,9 +89,8 @@
           <div *ngIf="category.getBudget().isBeingTracked()">
             <button ion-item>
               <ion-label>
-                <progress-bar [color]="category.getCategoryColor()"[progress]="loadProgress(category.getBudget())"></progress-bar>
+                <progress-bar [color]="getBudgetBarColor(loadProgress(category.getBudget()))"[progress]="loadProgress(category.getBudget())"></progress-bar>
               </ion-label>
-              <ion-badge item-end>{{category.getBudget().getRemainingAmount()}}</ion-badge>
             </button>
           </div>
 
@@ -152,12 +151,14 @@
       <button (click)="transferAccountsModal()" ion-fab icon-only>
         <ion-icon name="swap"></ion-icon>
       </button>
-      <button (click)="transferExternalAccountsModal() " ion-fab icon-only>
-        <ion-icon name="gift"></ion-icon>
-      </button>
+      
       <button (click)="addExpenseModal()" ion-fab icon-only>
         <ion-icon name="card"></ion-icon>
       </button>
+      <button (click)="transferExternalAccountsModal() " ion-fab icon-only>
+                <ion-icon name="gift"></ion-icon>
+            </button>
+
     </ion-fab-list>
   </ion-fab>
 

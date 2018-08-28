@@ -150,6 +150,16 @@ export class MonthOverviewPage {
     return (budget.currentAmountSpent / budget.limitAmount) * 100;
   }
 
+  public getBudgetBarColor(percentage: number):string {
+      if (percentage < 60) {
+        return "#8BC34A"
+        
+      } else if (percentage < 80 ){
+        return "#FF9800";
+      }
+      else return "#F44336";
+  }
+
   showCategoryDetails(category: Category) {
     this.navCtrl.push(ExpensesOverviewPage, {
         category: category,
@@ -180,8 +190,12 @@ export class MonthOverviewPage {
 
 
   addExpenseModal() {
-    let expenseModal = this.modalCtrl.create(ExpensePage, {
-      "categories": this.categories
+    let expenseModal = this.modalCtrl.create(ExpenseDetailPage, {
+      categories: this.categories,
+      editMode: true,
+      selectedDate: this.selectedDate,
+      expense: undefined
+
     });
     expenseModal.present();
   }
