@@ -49,8 +49,9 @@ export class DbProvider {
 
 
   constructor(public momentProvider: MomentProvider) {
-    console.log('Hello DbProvider Provider');
-    this._id_now = this.momentProvider.getCurrentMonthAndYear();
+    /* used for doc _id fields*/
+    this._id_now = this.momentProvider.getCurrentYearAndMonth();
+
     //PouchDB.plugin(pouchdbUpsert);
   }
 
@@ -59,7 +60,9 @@ export class DbProvider {
     this.registeredUsername = details.user_id;
     this.db = new PouchDB('finance');
     this.db.sync(this.remote).on('complete', () => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
+      // initialized here, the datetime [min] and [max] does not work with promises
       this.initializeMinAndMaxDate();
+
       this.db.sync(this.remote, {
         live: true,
         retry: true, // waiting is overkill?
@@ -111,12 +114,10 @@ export class DbProvider {
       //let _id_previousMonth = moment(this._id_now).subtract(1, 'M').format('YYYY-MM');
       let _id_previousMonth = moment(_id_month).subtract(1, 'M').format('YYYY-MM');
       let doc = await this.db.get(_id_previousMonth);
-      console.log(doc);
       doc.accounts.forEach(acc => {
         acc.initialBalance = acc.finalBalance;
       });
       // a get without a put --> dont need to make a copy, just dont put it back in.
-      //let newMonthOverview = new MonthOverView(this._id_now, doc.accounts);
       let newMonthOverview = new MonthOverView(_id_month, doc.accounts, doc.categories, undefined, doc.usedTags);
       newMonthOverview.clearExpensesFromCategories();
       newMonthOverview.clearTransactionsFromAccounts();
@@ -131,22 +132,21 @@ export class DbProvider {
 
   // TODO: update to current month when finished
   public async getMonthOverview(_id_month: string): Promise < MonthOverView > {
-    try {
-      return this.getMonthOverviewObject(_id_month);
-    } catch (error) {
-      console.log(error);
-      if (error.name === 'not_found') {
-        console.log('did not find month overview, making a new month overview');
-        //return await this.createNewMonthOverview(); // use current month!
-        return await this.createNewMonthOverview(_id_month); // purely for testing ! 
-      }
-    }
+    return this.getMonthOverviewObject(_id_month);
   }
 
   private async getMonthOverviewObject(_id_month: string): Promise < MonthOverView > {
 
-    let doc = await this.db.get(_id_month);
-    return new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
+    try {
+      let doc = await this.db.get(_id_month);
+      return new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
+    } catch (error) {
+      if (error.name === 'not_found') {
+        await this.initializeMinAndMaxDate();
+        return this.createNewMonthOverview(_id_month); 
+        
+      }
+    }
   }
 
   // REFACTOR 
@@ -410,12 +410,12 @@ export class DbProvider {
 
   async getMinDate() {
     let allDocs = await this.db.allDocs();
-    return allDocs.rows[0].id || this.momentProvider.getCurrentMonthAndYear();
+    return allDocs.rows[0].id || this.momentProvider.getCurrentYearAndMonth();
   }
 
   async getMaxDate() {
     let allDocs = await this.db.allDocs();
-    return allDocs.rows[allDocs.rows.length -1].id || this.momentProvider.getCurrentMonthAndYear();
+    return allDocs.rows[allDocs.rows.length -1].id || this.momentProvider.getCurrentYearAndMonth();
   }
 
 

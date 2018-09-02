@@ -25,9 +25,14 @@
 
     <form>
       
-         <ion-auto-complete #searchbar [dataProvider]="externalAccountProvider" [options]="{ placeholder : 'Sender' }"></ion-auto-complete>
+      <ion-row>
+        <ion-col>
+           <ion-auto-complete #searchbar [dataProvider]="externalAccountProvider" [options]="{ placeholder : 'Sender' }"></ion-auto-complete>
       
-       
+        </ion-col>
+      </ion-row>
+        
+ 
       
       <ion-item item-end>
         <ion-label>Reciever</ion-label>
@@ -44,9 +49,9 @@
         <ion-input text-right type="number" [(ngModel)]="amount" name="amount"></ion-input>
       </ion-item>
 
-      <button ion-button (click)="transferFromExternalAccount()" block>Transfer </button>
     </form>
     
+    <button ion-button icon-only (click)="transferFromExternalAccount()" full round ><ion-icon name="card"></ion-icon></button>
 
 
   </ion-grid>

@@ -46,7 +46,7 @@ export class TransferExternalPage {
 
   public recievingAccounts: Account[];
   public externalAccounts: ExternalAccount[];
-  public selectedMonthYear: string; // defaults at this month/year --> can be updated 
+  public selectedYearAndMonth: string; // defaults at this month/year --> can be updated 
   public accountHolderName: string;
   public recievingAccountName: string;
   public amount: string;
@@ -57,16 +57,16 @@ export class TransferExternalPage {
   }
 
   async initialize() {
-    this.recievingAccounts = await this.accountProvider.getAccounts(this.momentProvider.getCurrentMonthAndYear());
-    this.selectedMonthYear = this.momentProvider.getCurrentMonthYearAndDay();
+    this.recievingAccounts = await this.accountProvider.getAccounts(this.momentProvider.getCurrentYearAndMonth());
+    this.selectedYearAndMonth = this.momentProvider.getCurrentYearAndMonth();
     this.externalAccounts = await this.externalAccountProvider.getExternalAccounts();
   }
 
   transferFromExternalAccount() {
     if (!this.isInExternalAccounts(this.searchbar.getValue())) {
-      this.externalAccountProvider.addExternalAccount(new ExternalAccount(this.searchbar.getValue(), this.selectedMonthYear));
+      this.externalAccountProvider.addExternalAccount(new ExternalAccount(this.searchbar.getValue(), this.selectedYearAndMonth));
     }
-    this.externalAccountProvider.transferFromExternalAccount(this.selectedMonthYear, this.searchbar.getValue(), this.recievingAccountName, parseInt(this.amount), this.momentProvider.getCurrentExactDate());
+    this.externalAccountProvider.transferFromExternalAccount(this.selectedYearAndMonth, this.searchbar.getValue(), this.recievingAccountName, parseInt(this.amount), this.momentProvider.getCurrentDate_ISO_8601());
   }
 
   isInExternalAccounts(accountHolderName: string): boolean {

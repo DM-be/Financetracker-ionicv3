@@ -79,7 +79,7 @@ import {
 })
 export class MonthOverviewPage {
 
-  public selectedDate: string;
+  public selectedYearAndMonth: string;
   public categories: Category[];
   public expenses: Expense[];
   public accounts: Account[];
@@ -90,21 +90,24 @@ export class MonthOverviewPage {
 
   constructor(public navCtrl: NavController, public dbProvider: DbProvider, public monthOverviewProvider: MonthOverviewProvider, public modalCtrl: ModalController,
     public popoverCtrl: PopoverController, public momentProvider: MomentProvider) {
-    this.selectedDate = this.momentProvider.getCurrentMonthAndYear();
+    this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth() || this.momentProvider.getCurrentYearAndMonth();
   }
 
  
   async refreshData() {
-    this.monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(this.selectedDate);
-    this.categories = this.monthOverviewObject.getCategories();
-    this.expenses = this.monthOverviewObject.getAllExpenses();
-    this.accounts = this.monthOverviewObject.getAllAccounts();
-  }
 
-  // cleanup --> seperate date + refreshing
+    
+      this.monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(this.selectedYearAndMonth);
+      this.categories = this.monthOverviewObject.getCategories();
+      this.expenses = this.monthOverviewObject.getAllExpenses();
+      this.accounts = this.monthOverviewObject.getAllAccounts();
+    
+
+    
+  }
   async updateDate() {
     await this.refreshData();
-    this.momentProvider.setSelectedMonthAndYear(this.selectedDate);
+    this.momentProvider.setSelectedYearAndMonth(this.selectedYearAndMonth);
     // await this.dbProvider.getCategoryCosts(this.selectedDate);
   }
 
@@ -147,7 +150,12 @@ export class MonthOverviewPage {
   }
 
   loadProgress(budget: Budget) {
-    return (budget.currentAmountSpent / budget.limitAmount) * 100;
+    let percentage = (budget.currentAmountSpent / budget.limitAmount) * 100;
+    if(percentage <= 100)
+    {
+      return percentage;
+    }
+    return 100;
   }
 
   public getBudgetBarColor(percentage: number):string {
@@ -157,13 +165,12 @@ export class MonthOverviewPage {
       } else if (percentage < 80 ){
         return "#FF9800";
       }
-      else return "#F44336";
+      return "#F44336";
   }
 
   showCategoryDetails(category: Category) {
     this.navCtrl.push(ExpensesOverviewPage, {
         category: category,
-        selectedDate: this.selectedDate
       }
     );
   }
@@ -172,7 +179,6 @@ export class MonthOverviewPage {
     this.navCtrl.push(CategoryOptionsPage, 
       {
         category: category,
-        selectedDate: this.selectedDate
       }
     );
   }
@@ -191,11 +197,7 @@ export class MonthOverviewPage {
 
   addExpenseModal() {
     let expenseModal = this.modalCtrl.create(ExpenseDetailPage, {
-      categories: this.categories,
       editMode: true,
-      selectedDate: this.selectedDate,
-      expense: undefined
-
     });
     expenseModal.present();
   }
@@ -209,7 +211,6 @@ export class MonthOverviewPage {
       expense: expense,
       categories: this.categories,
       editMode: editMode,
-      selectedDate: this.selectedDate
     })
     //  detailExpenseModal.present();
   }
@@ -239,25 +240,25 @@ export class MonthOverviewPage {
 
 
 
-  handleSwipe($e) {
-    if ($e.offsetDirection == 4) {
-      // Swiped right
-      this.selectedDate = moment(this.selectedDate).subtract(1, 'M').format('YYYY-MM');
-    } else if ($e.offsetDirection == 2) {
-      // Swiped left
-      this.selectedDate = moment(this.selectedDate).add(1, 'M').format('YYYY-MM');
-    } else if ($e.offsetDirection == 8) {
-      // swiped up
-      let dateToTest = moment(this.selectedDate).add(1, 'years').format('YYYY');
-      let now = moment().format('YYYY');
-      if (dateToTest <= now) {
-        this.selectedDate = moment(this.selectedDate).add(1, 'years').format('YYYY-MM');
-      }
-    } else if ($e.offsetDirection == 16) {
-      // swiped down
-      this.selectedDate = moment(this.selectedDate).subtract(1, 'years').format('YYYY-MM');
-    }
-  }
+  // handleSwipe($e) {
+  //   if ($e.offsetDirection == 4) {
+  //     // Swiped right
+  //     this.selectedDate = moment(this.selectedDate).subtract(1, 'M').format('YYYY-MM');
+  //   } else if ($e.offsetDirection == 2) {
+  //     // Swiped left
+  //     this.selectedDate = moment(this.selectedDate).add(1, 'M').format('YYYY-MM');
+  //   } else if ($e.offsetDirection == 8) {
+  //     // swiped up
+  //     let dateToTest = moment(this.selectedDate).add(1, 'years').format('YYYY');
+  //     let now = moment().format('YYYY');
+  //     if (dateToTest <= now) {
+  //       this.selectedDate = moment(this.selectedDate).add(1, 'years').format('YYYY-MM');
+  //     }
+  //   } else if ($e.offsetDirection == 16) {
+  //     // swiped down
+  //     this.selectedDate = moment(this.selectedDate).subtract(1, 'years').format('YYYY-MM');
+  //   }
+  // }
 
 
 }

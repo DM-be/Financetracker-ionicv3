@@ -41,14 +41,14 @@ export class CategoryOptionsPage {
   public budget: Budget;
   public selectedColor: string;
   public selectedIcon: string;
-  public currentDate: string;
-  public selectedDate: string;
+  public currentDate_ISO_8601: string;
+  public selectedYearAndMonth: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public popoverCtrl: PopoverController, public budgetProvider: BudgetProvider, public momentProvider: MomentProvider, public categoryProvider: CategoryProvider) {
     this.category = this.navParams.get("category")
-    this.selectedDate = this.navParams.get("selectedDate")
+    this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth();
     this.budget = this.category.getBudget();
-    this.currentDate = this.momentProvider.getCurrentMonthAndYear();
+    this.currentDate_ISO_8601 = this.momentProvider.getCurrentDate_ISO_8601();
     this.selectedColor = this.category.getCategoryColor();
     this.selectedIcon = this.category.getIconName();
     
@@ -59,7 +59,7 @@ export class CategoryOptionsPage {
   }
 
   isInThePast(){
-    return this.currentDate !== this.selectedDate;
+    return (this.momentProvider.getFormattedDateInYearAndMonth(this.currentDate_ISO_8601) !== this.selectedYearAndMonth)
   }
 
   addNewBudget() {
@@ -91,7 +91,7 @@ export class CategoryOptionsPage {
 
   async deleteBudget() {
     await this.budgetProvider.deleteBudget(this.category.getCategoryName(), this.budget);
-    this.budget = await this.budgetProvider.getBudget(this.selectedDate, this.category.getCategoryName());
+    this.budget = await this.budgetProvider.getBudget(this.selectedYearAndMonth, this.category.getCategoryName());
   }
 
   colorPickerPopover(ev) {

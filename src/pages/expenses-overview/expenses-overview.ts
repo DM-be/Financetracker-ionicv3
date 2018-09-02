@@ -24,8 +24,7 @@ export class ExpensesOverviewPage {
   this.category = this.navParams.get("category");
   this.expenses = this.category.getExpenses();
   console.log(this.navParams.data)
-    
-
+  
   }
 
   ionViewWillEnter() {

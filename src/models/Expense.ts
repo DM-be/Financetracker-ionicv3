@@ -66,5 +66,9 @@ export class Expense {
         return this.iconName;
     }
 
+    public setCreatedDate(date: string): void {
+        this.createdDate = date;
+    }
+
  
 }

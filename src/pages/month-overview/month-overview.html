@@ -1,6 +1,7 @@
 <ion-header>
   <ion-item color="tertiary">
-    <ion-datetime displayFormat="MMMM YYYY" pickerFormat="MMMM YYYY" [(ngModel)]="selectedDate" (ionChange)="updateDate()" [min]="momentProvider.getMinDate()" [max]="momentProvider.getMaxDate()"></ion-datetime>
+    <ion-datetime displayFormat="MMMM YYYY" pickerFormat="MMMM YYYY" [(ngModel)]="selectedYearAndMonth" (ionChange)="updateDate()" [min]="momentProvider.getMinDate()"
+      [max]="momentProvider.getMaxDate()"></ion-datetime>
   </ion-item>
 </ion-header>
 
@@ -66,37 +67,37 @@
       <ion-list class="customScroll">
 
         <div *ngFor="let category of categories">
-          <ion-item-sliding >
-          <button ion-item (click)="showCategoryDetails(category)">
-            <ion-icon [name]="category.getIconName()" item-start></ion-icon>
-            {{category.getCategoryName()}}
-            <ion-badge item-end>{{category.getBudget().currentAmountSpent}}</ion-badge>
-          </button>
-          <ion-item-options side="right">
+          <ion-item-sliding>
+            <button ion-item (click)="showCategoryDetails(category)">
+              <ion-icon [name]="category.getIconName()" item-start></ion-icon>
+              {{category.getCategoryName()}}
+              <ion-badge item-end>{{category.getBudget().currentAmountSpent}}</ion-badge>
+            </button>
+            <ion-item-options side="right">
               <button ion-button color="dark" (click)="showCategoryOptions(category)">
                 <ion-icon name="create"></ion-icon>
                 Edit
               </button>
             </ion-item-options>
             <ion-item-options side="left">
-                <button ion-button color="danger">
-                  <ion-icon name="trash"></ion-icon>
-                  Delete
-                </button>
-              </ion-item-options>
-        
-        </ion-item-sliding>
+              <button ion-button color="danger">
+                <ion-icon name="trash"></ion-icon>
+                Delete
+              </button>
+            </ion-item-options>
+
+          </ion-item-sliding>
           <div *ngIf="category.getBudget().isBeingTracked()">
             <button ion-item>
               <ion-label>
-                <progress-bar [color]="getBudgetBarColor(loadProgress(category.getBudget()))"[progress]="loadProgress(category.getBudget())"></progress-bar>
+                <progress-bar [color]="getBudgetBarColor(loadProgress(category.getBudget()))" [progress]="loadProgress(category.getBudget())"></progress-bar>
               </ion-label>
             </button>
           </div>
 
 
-        
-</div>
+
+        </div>
       </ion-list>
 
     </ion-card>
@@ -105,9 +106,6 @@
     <ion-card>
       <ion-item-divider color="primary">
         Expenses
-        <button float-right ion-button icon-only item-end no-padding clear color="white" (click)="addCategoryModal()">
-          <ion-icon name="add-circle"></ion-icon>
-        </button>
       </ion-item-divider>
 
 
@@ -127,11 +125,11 @@
             </button>
           </ion-item-options>
           <ion-item-options side="left">
-              <button ion-button color="danger">
-                <ion-icon name="trash"></ion-icon>
-                Delete
-              </button>
-            </ion-item-options>
+            <button ion-button color="danger">
+              <ion-icon name="trash"></ion-icon>
+              Delete
+            </button>
+          </ion-item-options>
 
         </ion-item-sliding>
       </ion-list>
@@ -151,14 +149,12 @@
       <button (click)="transferAccountsModal()" ion-fab icon-only>
         <ion-icon name="swap"></ion-icon>
       </button>
-      
       <button (click)="addExpenseModal()" ion-fab icon-only>
-        <ion-icon name="card"></ion-icon>
+        <ion-icon name="pricetag"></ion-icon>
       </button>
       <button (click)="transferExternalAccountsModal() " ion-fab icon-only>
-                <ion-icon name="gift"></ion-icon>
-            </button>
-
+        <ion-icon name="card"></ion-icon>
+      </button>
     </ion-fab-list>
   </ion-fab>
 

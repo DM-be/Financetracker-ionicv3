@@ -34,7 +34,7 @@ export class ExternalAccountProvider implements AutoCompleteService{
   }
 
   async transferFromExternalAccount(_id: string, accountHolderName: string, accountName: string, amount: number, transactionDate: string) {
-    await this.dbProvider.addTransferFromExternalAccount(_id, accountHolderName, accountName, amount, this.momentProvider.getCurrentExactDate());
+    await this.dbProvider.addTransferFromExternalAccount(_id, accountHolderName, accountName, amount, this.momentProvider.getCurrentDate_ISO_8601());
   } 
 
   async getResults(keyword: string): Promise<ExternalAccount []> {

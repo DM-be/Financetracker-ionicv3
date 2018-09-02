@@ -18,7 +18,7 @@ export class CategoryProvider {
   // adding a category in the past will not allow you to add expenses in that month
 
   constructor(public momentOverviewProvider: MonthOverviewProvider, public dbProvider: DbProvider, public momentProvider: MomentProvider) {
-    this._id_now = this.momentProvider.getCurrentMonthAndYear();
+    this._id_now = this.momentProvider.getCurrentYearAndMonth();
   }
 
   public async updateCategoryIcon(category: Category, iconName: string)

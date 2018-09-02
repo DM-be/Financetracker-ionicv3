@@ -32,13 +32,13 @@ export class BudgetProvider {
   async updateBudget(categoryName: string, newBudget: Budget)
   {
 
-    let monthOverview = await this.monthOverviewProvider.getMonthOverview(this.momentProvider.getCurrentMonthAndYear());
+    let monthOverview = await this.monthOverviewProvider.getMonthOverview(this.momentProvider.getCurrentYearAndMonth());
     monthOverview.getCategoryByName(categoryName).replaceBudget(newBudget);
     await this.monthOverviewProvider.saveMonthOverview(monthOverview);
   } 
 
   async deleteBudget(categoryName: string, oldBudget: Budget) {
-    let monthOverview = await this.monthOverviewProvider.getMonthOverview(this.momentProvider.getCurrentMonthAndYear());
+    let monthOverview = await this.monthOverviewProvider.getMonthOverview(this.momentProvider.getCurrentYearAndMonth());
     monthOverview.getCategoryByName(categoryName).getBudget().setLimitAmount(0); // --> 0 0
     await this.monthOverviewProvider.saveMonthOverview(monthOverview);
   }

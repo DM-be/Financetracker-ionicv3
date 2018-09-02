@@ -13,32 +13,57 @@ export class MomentProvider {
 
   /* property only changed when the datepicker is changed, used to keep track of which monthoverview
   needs to be loaded */
-  private selectedMonthAndyear: string = this.getCurrentMonthAndYear();
+  private selectedYearAndMonth: string = this.getCurrentYearAndMonth(); // starts at current month and year
   private minDate: string;
   private maxDate: string;
 
+
+
+  /* only full ISO_8601 strings are used in the database, with the exception of doc ids, which are in yearMonth format
+  every other date gets filtered here
+  */
   constructor() {}
 
-  getCurrentMonthAndYear() {
+  /* used for the _id field in documents in the database */
+  getCurrentYearAndMonth() {
     return moment().format('YYYY-MM');
   }
 
-  public setSelectedMonthAndYear(selectedMonthAndyear: string): void
-  {
-    this.selectedMonthAndyear = selectedMonthAndyear;
-  } 
-
-  public getSelectedMonthAndYear(): string {
-    return this.selectedMonthAndyear;
-  }
-
-  getCurrentMonthYearAndDay() {
+  getCurrentYearMonthAndDay() {
     return moment().format('YYYY-MM-DD');
   }
 
-  getCurrentExactDate() {
+  getCurrentDate_ISO_8601() {
     return moment().format();
   }
+
+  public setSelectedYearAndMonth(selectedYearAndMonth: string): void
+  {
+    this.selectedYearAndMonth = selectedYearAndMonth;
+  } 
+
+  public getSelectedYearAndMonth(): string {
+    return this.selectedYearAndMonth;
+  }
+
+  public getFormattedDateInYearAndMonth(date: string):string  {
+    return moment(date).format('YYYY-MM');
+  }
+
+  public getFormattedDateInYearMonthDay(date: string):string  {
+    return moment(date).format('YYYY-MM-DD');
+  }
+
+  public getFormattedDateFromNow(date_ISO_8601): string {
+    return moment(date_ISO_8601).fromNow();
+  }
+
+  public getFormattedDateCalendar(date_ISO_8601): string {
+    return moment(date_ISO_8601).calendar();
+  }
+
+  
+
 
   setMinDate(minDate: string)
   {

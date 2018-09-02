@@ -18,7 +18,7 @@ import { Account } from '../../models/Account';
 })
 export class TransferPage {
   public accounts: Account [];
-  public currentMonthYearAndDay: string;
+  public currentYearMonthAndDay: string;
   public amount: string;
 
   // 2 arrays to hold both select options, they need to exclude each other
@@ -53,10 +53,10 @@ export class TransferPage {
 
 
   async initialize() {
-    this.accounts = await this.accountProvider.getAccounts(this.momentProvider.getCurrentMonthAndYear());
+    this.accounts = await this.accountProvider.getAccounts(this.momentProvider.getCurrentYearAndMonth());
     this.sendingAccounts = this.accounts;
     this.recievingAccounts = this.accounts;
-    this.currentMonthYearAndDay = this.momentProvider.getCurrentMonthYearAndDay();
+    this.currentYearMonthAndDay = this.momentProvider.getCurrentYearMonthAndDay();
     
   }
 

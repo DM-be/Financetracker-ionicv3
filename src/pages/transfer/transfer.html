@@ -7,7 +7,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Transfer External 
+      Transfer between accounts
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismiss()">
@@ -45,9 +45,12 @@
           <ion-label>Amount</ion-label>
           <ion-input text-right type="number" [(ngModel)]="amount" name="amount"></ion-input>
         </ion-item>
+
+        
+
       </form>
 
-
+    <button ion-button full icon-only full ><ion-icon name="swap"></ion-icon> </button>
 
     </ion-grid>
   </ion-content>

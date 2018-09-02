@@ -82,7 +82,7 @@ export class CategoryPage {
   async addNewCategory() {
     // implement checking for form validity (formbuilder instead of ngmodel?)
     
-    let category = new Category(this.categoryName, this.selectedColor, this.selectedIcon, this.momentProvider.getCurrentMonthAndYear())
+    let category = new Category(this.categoryName, this.selectedColor, this.selectedIcon, this.momentProvider.getCurrentYearAndMonth())
     await this.categoryProvider.addCategory(category);
     this.navCtrl.pop();
   }

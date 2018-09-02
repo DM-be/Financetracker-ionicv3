@@ -32,11 +32,13 @@
         </ion-item>
         <ion-item item-end>
           <ion-label>Account</ion-label>
-          <ion-input text-right disabled="{{!editMode}}" type="text" [(ngModel)]="expense.usedAccountName" name="usedAccountName"></ion-input>
+          <ion-select disabled="{{!editMode}}" [(ngModel)]="expense.usedAccountName" name="usedAccountName">
+              <ion-option *ngFor="let account of accounts" [value]="account.getAccountName()">{{account.getAccountName()}}</ion-option>
+            </ion-select>
         </ion-item>
         <ion-item item-end>
           <ion-label>Date</ion-label>
-          <ion-datetime disabled="{{!editMode}}" displayFormat="DDDD DD HH:MM" pickerFormat="DDDD MMMM" [(ngModel)]="expense.createdDate"
+          <ion-datetime disabled="{{!editMode}}" displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="expense.createdDate"
             name="date"></ion-datetime>
         </ion-item>
         <ion-item item-end>
@@ -53,10 +55,10 @@
       
 
 
-        <button ion-button icon-only hidden="{{!editMode}}" (click)="updateExpense()" block><ion-icon name="done-all"></ion-icon></button>
+        
       </form>
 
-
+<button ion-button icon-only [hidden]="!editMode" (click)="updateExpense()" full round ><ion-icon name="done-all"></ion-icon></button>
 
     </ion-grid>
   </ion-content>

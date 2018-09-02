@@ -1,3 +1,5 @@
+import { AccountProvider } from './../../providers/account/account';
+import { Account } from './../../models/Account';
 import { MomentProvider } from './../../providers/moment/moment';
 import { CategoryProvider } from './../../providers/category/category';
 import { Component } from '@angular/core';
@@ -20,29 +22,40 @@ export class ExpenseDetailPage {
 
   public editMode: boolean;
   public categories: Category [];
+  public accounts: Account [];
   public expense: Expense;
-  public tags: any = [];
+  public tags: string [];
   public page = this;
-  public selectedDate;
+  public selectedYearAndMonth: string; // is set in momentProvider, only updated when top datepicker is selected
+  public currentDate_ISO_8601: string;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider) {
+  this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth();
+  this.currentDate_ISO_8601 = this.momentProvider.getCurrentDate_ISO_8601();
+  this.expense = this.navParams.get("expense") || new Expense(0, '', this.currentDate_ISO_8601, '', '', '');
+  this.editMode = this.navParams.get("editMode");
+  this.tags = this.expense.getTags().map(tag => tag.tagName);
+  }
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider) {
-    
-    this.expense = this.navParams.get("expense");
-    this.selectedDate = this.momentProvider.getSelectedMonthAndYear();
   
-    this.awaitCategories();
-    this.tags = this.expense.getTags().map(tag => tag.tagName);
+  async ionViewWillEnter() {
+    await this.getCategoriesAndAccounts();
+    this.bindDateToModel();
     
   }
-
-  ionViewWillEnter() {
-    this.editMode = this.navParams.get("editMode");
-
+  
+  bindDateToModel() {
+    let currentYearAndMonth = this.momentProvider.getFormattedDateInYearAndMonth(this.currentDate_ISO_8601);
+    if(this.selectedYearAndMonth !== currentYearAndMonth)
+    {
+      this.expense.setCreatedDate('');
+    }
   }
 
-  async awaitCategories() {
-    console.log(this.selectedDate);
-    this.categories = await this.categoryProvider.getCategories(this.selectedDate);
+
+  async getCategoriesAndAccounts()
+  {
+    this.categories = await this.categoryProvider.getCategories(this.selectedYearAndMonth);
+    this.accounts = await this.accountProvider.getAccounts(this.selectedYearAndMonth);
   }
 
   dismiss() {
@@ -51,15 +64,11 @@ export class ExpenseDetailPage {
 
   verifyTag(tag: string): boolean
   {
-
-
     console.log(this)
     return true;
 
   }
-
   updateExpense() {
-      
   }
 
   
