@@ -116,7 +116,7 @@ export class ExpenseProvider {
 
   public async updateExpenseCostInInitialBalanceInFollowingMonths(_id: string, cost: number, accountName: string, operation: string)
   {
-    
+    let newDocs: MonthOverView[] = [];
     let allDocs = await this.dbProvider.getDb().allDocs({
       include_docs: true,
       startkey: _id
@@ -125,9 +125,10 @@ export class ExpenseProvider {
       let monthOverviewObJect = new MonthOverView(mo.doc._id, mo.doc.accounts, mo.doc.categories, mo.doc._rev, mo.doc.usedTags);
       let account = monthOverviewObJect.getAccByName(accountName);
       account.updateInitialBalance(operation, cost);
+      newDocs.push(monthOverviewObJect);
       }
     );
-    await this.dbProvider.getDb().bulkDocs({docs: allDocs});
+    await this.dbProvider.getDb().bulkDocs({docs: newDocs});
 
   }
 }
