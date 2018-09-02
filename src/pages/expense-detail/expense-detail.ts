@@ -1,12 +1,32 @@
-import { ExpenseProvider } from './../../providers/expense/expense';
-import { AccountProvider } from './../../providers/account/account';
-import { Account } from './../../models/Account';
-import { MomentProvider } from './../../providers/moment/moment';
-import { CategoryProvider } from './../../providers/category/category';
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Category } from '../../models/Category';
-import { Expense } from '../../models/Expense';
+import {
+  ExpenseProvider
+} from './../../providers/expense/expense';
+import {
+  AccountProvider
+} from './../../providers/account/account';
+import {
+  Account
+} from './../../models/Account';
+import {
+  MomentProvider
+} from './../../providers/moment/moment';
+import {
+  CategoryProvider
+} from './../../providers/category/category';
+import {
+  Component
+} from '@angular/core';
+import {
+  IonicPage,
+  NavController,
+  NavParams
+} from 'ionic-angular';
+import {
+  Category
+} from '../../models/Category';
+import {
+  Expense
+} from '../../models/Expense';
 
 /**
  * Generated class for the ExpenseDetailPage page.
@@ -23,92 +43,85 @@ export class ExpenseDetailPage {
 
   public editMode: boolean;
   public newExpense: boolean;
-  public categories: Category [];
-  public accounts: Account [];
+  public categories: Category[];
+  public accounts: Account[];
   public expense: Expense;
-  public tags: string [];
+  public tags: string[];
   public page = this;
   public selectedYearAndMonth: string; // is set in momentProvider, only updated when top datepicker is selected
   public currentDate_ISO_8601: string;
 
   public initialCategoryName: string;
-  public initialUsedAccountName: string; 
+  public initialUsedAccountName: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider, public expenseProvider: ExpenseProvider) {
-  this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth();
-  this.currentDate_ISO_8601 = this.momentProvider.getCurrentDate_ISO_8601();
-  this.expense = this.navParams.get("expense") || new Expense(0, '', this.currentDate_ISO_8601, '', '', '');
-  this.editMode = this.navParams.get("editMode");
-  this.newExpense = this.navParams.get("newExpense");
-  this.tags = this.expense.getTags().map(tag => tag.tagName);
+    this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth();
+    this.currentDate_ISO_8601 = this.momentProvider.getCurrentDate_ISO_8601();
+    this.expense = this.navParams.get("expense") || new Expense(0, '', this.currentDate_ISO_8601, '', '', '');
+    this.editMode = this.navParams.get("editMode");
+    this.newExpense = this.navParams.get("newExpense");
 
-  this.initialUsedAccountName = this.expense.usedAccountName;
-  this.initialCategoryName = this.expense.categoryName;
+    this.tags = this.expense.getTags().map(tag => tag.tagName);
+
+    
+    this.initialUsedAccountName = this.expense.usedAccountName;
+    this.initialCategoryName = this.expense.categoryName;
   }
 
-  
+
   async ionViewWillEnter() {
-    await this.getCategoriesAndAccounts();
+    this.categories = await this.categoryProvider.getCategories(this.selectedYearAndMonth);
+    this.accounts = await this.accountProvider.getAccounts(this.selectedYearAndMonth);
     this.bindDateToModel();
   }
-  
+
   bindDateToModel() {
     let currentYearAndMonth = this.momentProvider.getFormattedDateInYearAndMonth(this.currentDate_ISO_8601);
-    if(this.selectedYearAndMonth !== currentYearAndMonth)
-    {
+    if (this.selectedYearAndMonth !== currentYearAndMonth) {
       this.expense.setCreatedDate('');
     }
   }
 
 
-  async getCategoriesAndAccounts()
-  {
-    this.categories = await this.categoryProvider.getCategories(this.selectedYearAndMonth);
-    this.accounts = await this.accountProvider.getAccounts(this.selectedYearAndMonth);
+  async refreshCategoriesAndAccounts() {
+    let formattedBoundDate = this.momentProvider.getFormattedDateInYearAndMonth(this.expense.getCreatedDate());
+    this.categories = await this.categoryProvider.getCategories(formattedBoundDate);
+    this.accounts = await this.accountProvider.getAccounts(formattedBoundDate);
   }
+
+
+
 
   dismiss() {
     this.navCtrl.pop();
   }
 
-  verifyTag(tag: string): boolean
-  {
+  verifyTag(tag: string): boolean {
     console.log(this)
     return true;
 
   }
   updateExpense() {
-    if(this.newExpense)
-    {
-      
-    }
-    else {
 
-      if(this.initialCategoryName !== this.expense.categoryName)
-      {
-        // remove from inital category, add to new categoryname 
+    let formattedBoundDate = this.momentProvider.getFormattedDateInYearAndMonth(this.expense.getCreatedDate());
+    if (this.newExpense) {
+      this.expenseProvider.addExpense(formattedBoundDate, this.expense);
+    } else {
 
+      if (this.initialCategoryName !== this.expense.categoryName) {
+        this.expenseProvider.addExpense(formattedBoundDate, this.expense, this.initialCategoryName);
+      } else if ((this.initialUsedAccountName !== this.expense.usedAccountName) && (this.initialCategoryName !== this.expense.categoryName)) {
+        this.expenseProvider.addExpense(formattedBoundDate, this.expense, this.initialCategoryName, this.initialUsedAccountName);
+      } else if (this.initialUsedAccountName !== this.expense.usedAccountName) {
+        this.expenseProvider.addExpense(formattedBoundDate, this.expense, undefined, this.initialUsedAccountName);
       }
-
-      if(this.initialUsedAccountName !== this.expense.usedAccountName)
-      {
-
-        // increment initialusedaccount with expense cost
-        let accounts = this.accountProvider.getAccounts(this.selectedYearAndMonth);
-        
-        // decrement new usedAccount name with cost
-
-      }
-      
-      this.expenseProvider.editExpense(this.selectedYearAndMonth, this.expense.categoryName, this.expense);
     }
-    
 
 
 
   }
 
-  
+
   /* 
 
   todo: check if usedAccount changed (best via formcontrol or touched etc, see docs)
@@ -123,6 +136,6 @@ export class ExpenseDetailPage {
     
   */
 
- 
+
 
 }

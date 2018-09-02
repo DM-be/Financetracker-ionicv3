@@ -38,7 +38,7 @@
         </ion-item>
         <ion-item item-end>
           <ion-label>Date</ion-label>
-          <ion-datetime disabled="{{!editMode}}" displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="expense.createdDate"
+          <ion-datetime (ionChange)="refreshCategoriesAndAccounts()" disabled="{{!editMode}}" displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="expense.createdDate"
             name="date"></ion-datetime>
         </ion-item>
         <ion-item item-end>

@@ -44,7 +44,7 @@ export class AccountProvider {
     let account = monthOverviewObject.getAccByName(accountName);
     if(operator === '+')
     {
-      account.
+      
     }
     else {
 

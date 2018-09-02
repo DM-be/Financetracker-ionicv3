@@ -1,3 +1,5 @@
+import { MonthOverView } from './../../models/MonthOverview';
+import { DbProvider } from './../db/db';
 import { MomentProvider } from './../moment/moment';
 import { Account } from './../../models/Account';
 import { Expense } from './../../models/Expense';
@@ -14,12 +16,23 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class ExpenseProvider {
 
-  constructor(public monthOverviewProvider: MonthOverviewProvider, public momentProvider: MomentProvider) {
+  constructor(public monthOverviewProvider: MonthOverviewProvider, public momentProvider: MomentProvider, public dbProvider: DbProvider) {
   }
 
   public async getExpenses(_id: string, categoryName: string) {
     let monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(_id);
     return monthOverviewObject.getExpensesByCategoryName(categoryName);
+  }
+
+  public async deleteExpense(_id: string, expense: Expense)
+  {
+    let parsedIntCost = parseInt(expense.getCost()); // bound in model is a string
+    let monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(_id);
+    let category = monthOverviewObject.getCategoryByName(expense.getCategoryName());
+    category.removeExpense(expense);
+    category.getBudget().reduceAmountSpentInBudget(parsedIntCost);
+    monthOverviewObject.getAccByName(expense.getUsedAccountName()).updateFinalBalance('increase', parsedIntCost);
+    await this.monthOverviewProvider.saveMonthOverview(monthOverviewObject);
   }
 
   public async editExpense(_id: string, categoryName, expense: Expense)
@@ -30,40 +43,46 @@ export class ExpenseProvider {
     await this.monthOverviewProvider.saveMonthOverview(monthOverviewObject);
   }
   
-  public async addExpense(_id: string, categoryName, expense: Expense, oldCategoryName?: string, oldAccountName?: string)
+  public async addExpense(_id: string, expense: Expense, oldCategoryName?: string, oldAccountName?: string)
   {
+    let parsedIntCost = parseInt(expense.getCost()); // bound in model is a string
     let monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(_id);
-    let category = monthOverviewObject.getCategoryByName(categoryName);
+    let category = monthOverviewObject.getCategoryByName(expense.getCategoryName());
     category.addExpense(expense);
-    category.getBudget().addToAmountSpentInBudget(expense.getCost());
+    category.getBudget().addToAmountSpentInBudget(parsedIntCost);
     if(oldCategoryName)
     {
       // case: updating categoryname requires removal of the expense in the old category
       let oldCategory = monthOverviewObject.getCategoryByName(oldCategoryName);
       oldCategory.removeExpense(expense);
-      oldCategory.getBudget().reduceAmountSpentInBudget(expense.getCost());
+      oldCategory.getBudget().reduceAmountSpentInBudget(parsedIntCost);
     }
     // case: updating categoryname in the past, has no effect on balances
 
-    if(oldAccountName)
+    if(oldAccountName) 
     {
+      // increase A
+      let account = monthOverviewObject.getAccByName(expense.getUsedAccountName())
+      account.updateFinalBalance('increase', parsedIntCost);
+      // decrease B
       let oldAccount = monthOverviewObject.getAccByName(oldAccountName);
-      oldAccount.updateFinalBalance('increase', expense.getCost());
-      oldAccount.updateInitialBalance('increase', expense.getCost());
+      oldAccount.updateFinalBalance('decrease', parsedIntCost);
       if(_id !== this.momentProvider.getCurrentYearAndMonth())
       {
-        // update final and initial balances in following months
+        // now initial balances following months of oldaccount/B are incorrect
+        // now initial balances following months of account A are incorrect
+        this.updateExpenseCostInInitialBalanceInFollowingMonths(_id, parsedIntCost, account.getAccountName(), 'increase');
+        this.updateExpenseCostInInitialBalanceInFollowingMonths(_id, parsedIntCost, oldAccount.getAccountName(), 'decrease');
       }
-
-
     }
     else {
+      //A
       let account = monthOverviewObject.getAccByName(expense.getUsedAccountName())
-      account.updateFinalBalance('increase', expense.getCost());
-      // do not update initialbalance because we are still in current month
+      account.updateFinalBalance('decrease', parsedIntCost);
       if(_id !== this.momentProvider.getCurrentYearAndMonth())
       {
-        // increase final and initial balances in following months
+        this.updateExpenseCostInInitialBalanceInFollowingMonths(_id, parsedIntCost, account.getAccountName(), 'decrease');
+        // initial balances in following months
       }
     }
     
@@ -93,4 +112,22 @@ export class ExpenseProvider {
 
 
  }
+
+
+  public async updateExpenseCostInInitialBalanceInFollowingMonths(_id: string, cost: number, accountName: string, operation: string)
+  {
+    
+    let allDocs = await this.dbProvider.getDb().allDocs({
+      include_docs: true,
+      startkey: _id
+    });
+    allDocs.rows.forEach(mo => {
+      let monthOverviewObJect = new MonthOverView(mo.doc._id, mo.doc.accounts, mo.doc.categories, mo.doc._rev, mo.doc.usedTags);
+      let account = monthOverviewObJect.getAccByName(accountName);
+      account.updateInitialBalance(operation, cost);
+      }
+    );
+    await this.dbProvider.getDb().bulkDocs({docs: allDocs});
+
+  }
 }

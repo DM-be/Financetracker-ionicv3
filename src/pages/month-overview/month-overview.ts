@@ -1,3 +1,4 @@
+import { ExpenseProvider } from './../../providers/expense/expense';
 import { MomentProvider } from './../../providers/moment/moment';
 import { ExpensesOverviewPage } from './../expenses-overview/expenses-overview';
 import {
@@ -89,7 +90,7 @@ export class MonthOverviewPage {
 
 
   constructor(public navCtrl: NavController, public dbProvider: DbProvider, public monthOverviewProvider: MonthOverviewProvider, public modalCtrl: ModalController,
-    public popoverCtrl: PopoverController, public momentProvider: MomentProvider) {
+    public popoverCtrl: PopoverController, public momentProvider: MomentProvider, public expenseProvider: ExpenseProvider) {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth() || this.momentProvider.getCurrentYearAndMonth();
   }
 
@@ -215,6 +216,13 @@ export class MonthOverviewPage {
     })
     //  detailExpenseModal.present();
   }
+
+  async deleteExpense(expense: Expense) {
+    await this.expenseProvider.deleteExpense(this.selectedYearAndMonth, expense);
+    await this.refreshData();
+  }
+
+
   accountsDetailPage(account: Account) {
 
     this.navCtrl.push(AccountDetailsPage, {

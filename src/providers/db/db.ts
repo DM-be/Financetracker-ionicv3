@@ -90,6 +90,10 @@ export class DbProvider {
     return new UserOverview(doc._id, doc._rev, doc.externalAccounts);
   }
 
+  getDb(): PouchDB {
+    return this.db;
+  }
+
   async saveMonthOverview(monthOverview: MonthOverView) {
     await this.db.put(monthOverview);
   }

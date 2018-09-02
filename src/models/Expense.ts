@@ -30,7 +30,7 @@ export class Expense {
 
     }
 
-    public getCost() {
+    public getCost(): any {
         return this.cost;
     }
 
