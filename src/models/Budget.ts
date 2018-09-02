@@ -1,5 +1,5 @@
 export class Budget {
-
+ 
     public limitAmount: number;
     public currentAmountSpent: number; 
 
@@ -32,6 +32,11 @@ export class Budget {
     {
         this.currentAmountSpent += amount;
     }
+
+    reduceAmountSpentInBudget(amount: number): any {
+        this.currentAmountSpent -= amount;
+      }
+    
     
     public aboveBudget(): boolean {
         return this.currentAmountSpent > this.limitAmount;

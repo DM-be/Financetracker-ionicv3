@@ -1,3 +1,4 @@
+import { MonthOverviewProvider } from './../month-overview/month-overview';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DbProvider } from '../db/db';
@@ -15,7 +16,7 @@ import { ExternalAccount } from '../../models/ExternalAccount';
 export class AccountProvider {
   
 
-  constructor(public dbProvider: DbProvider) {
+  constructor(public dbProvider: DbProvider, public monthOverviewProvider: MonthOverviewProvider) {
   }
 
   async getAccounts(_id: string)
@@ -35,6 +36,19 @@ export class AccountProvider {
   async updateBalanceBetweenAccountAndExternalAccount(sender: any, reciever: any, amount: number, date: string ) {
     
 
+  }
+
+  async adjustAccountBalance(_id: string, accountName: string, operator: string)
+  {
+    let monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(_id);
+    let account = monthOverviewObject.getAccByName(accountName);
+    if(operator === '+')
+    {
+      account.
+    }
+    else {
+
+    }
   }
 
 

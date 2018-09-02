@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import { Budget } from "./Budget";
 
 export class Category {
+  
     public categoryName: string;
     public expenses: Expense []
     public budget: Budget;
@@ -48,6 +49,23 @@ export class Category {
     public getExpenses(): Expense [] {
         return this.expenses;
     }
+
+    public replaceExpense(expense: Expense)
+    {
+        let i = this.expenses.findIndex(
+            e => e.description == expense.description
+            && e.cost === expense.cost
+        )
+        this.expenses[i] = expense;
+    }
+
+    removeExpense(expense: Expense): any {
+        let i = this.expenses.findIndex(
+            e => e.description == expense.description
+            && e.cost === expense.cost
+        )
+        this.expenses.splice(i, 1);
+      }
 
     public getBudget(): Budget {
         return this.budget;

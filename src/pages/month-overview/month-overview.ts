@@ -198,6 +198,7 @@ export class MonthOverviewPage {
   addExpenseModal() {
     let expenseModal = this.modalCtrl.create(ExpenseDetailPage, {
       editMode: true,
+      newExpense: true
     });
     expenseModal.present();
   }

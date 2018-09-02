@@ -23,8 +23,6 @@ export class ExpensesOverviewPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   this.category = this.navParams.get("category");
   this.expenses = this.category.getExpenses();
-  console.log(this.navParams.data)
-  
   }
 
   ionViewWillEnter() {
@@ -37,6 +35,5 @@ export class ExpensesOverviewPage {
       expense: expense,
       editMode: editMode
     })
-
 }
 }

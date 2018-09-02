@@ -1,3 +1,4 @@
+import { ExpenseProvider } from './../../providers/expense/expense';
 import { AccountProvider } from './../../providers/account/account';
 import { Account } from './../../models/Account';
 import { MomentProvider } from './../../providers/moment/moment';
@@ -21,6 +22,7 @@ import { Expense } from '../../models/Expense';
 export class ExpenseDetailPage {
 
   public editMode: boolean;
+  public newExpense: boolean;
   public categories: Category [];
   public accounts: Account [];
   public expense: Expense;
@@ -28,19 +30,26 @@ export class ExpenseDetailPage {
   public page = this;
   public selectedYearAndMonth: string; // is set in momentProvider, only updated when top datepicker is selected
   public currentDate_ISO_8601: string;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider) {
+
+  public initialCategoryName: string;
+  public initialUsedAccountName: string; 
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider, public expenseProvider: ExpenseProvider) {
   this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth();
   this.currentDate_ISO_8601 = this.momentProvider.getCurrentDate_ISO_8601();
   this.expense = this.navParams.get("expense") || new Expense(0, '', this.currentDate_ISO_8601, '', '', '');
   this.editMode = this.navParams.get("editMode");
+  this.newExpense = this.navParams.get("newExpense");
   this.tags = this.expense.getTags().map(tag => tag.tagName);
+
+  this.initialUsedAccountName = this.expense.usedAccountName;
+  this.initialCategoryName = this.expense.categoryName;
   }
 
   
   async ionViewWillEnter() {
     await this.getCategoriesAndAccounts();
     this.bindDateToModel();
-    
   }
   
   bindDateToModel() {
@@ -69,6 +78,34 @@ export class ExpenseDetailPage {
 
   }
   updateExpense() {
+    if(this.newExpense)
+    {
+      
+    }
+    else {
+
+      if(this.initialCategoryName !== this.expense.categoryName)
+      {
+        // remove from inital category, add to new categoryname 
+
+      }
+
+      if(this.initialUsedAccountName !== this.expense.usedAccountName)
+      {
+
+        // increment initialusedaccount with expense cost
+        let accounts = this.accountProvider.getAccounts(this.selectedYearAndMonth);
+        
+        // decrement new usedAccount name with cost
+
+      }
+      
+      this.expenseProvider.editExpense(this.selectedYearAndMonth, this.expense.categoryName, this.expense);
+    }
+    
+
+
+
   }
 
   

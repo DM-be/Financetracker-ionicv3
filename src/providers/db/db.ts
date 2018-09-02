@@ -149,19 +149,6 @@ export class DbProvider {
     }
   }
 
-  // REFACTOR 
-  // seperate category and expenses? extra db call but now its a mess...
-  private async addExpenseToCategoryToMonthOverview(_id_month: string, categoryName: string, expense: Expense) {
-    let monthOverview = await this.getMonthOverviewObject(_id_month);
-    let account = monthOverview.getAccByName(expense.getUsedAccountName());
-    account.updateFinalBalance('decrease', expense.getCost());
-    let category = monthOverview.getCategoryByName(categoryName);
-    category.addExpense(expense);
-    let budget = category.getBudget();
-    budget.addToAmountSpentInBudget(expense.getCost()); // always add to amountspent --> when a user decides to add a budget to this category, it will already be tracked 
-    monthOverview.addTagsToUsedTags(expense.getTags());
-    await this.db.put(monthOverview);
-  }
 
   private addTransactionBetweenAccounts(accountA: Account, operationA: string, accountB: Account, operationB: string, amount: number, transactionDate ? : string) {
     accountA.addTransaction(new Transaction(amount, accountA.getAccountName(), accountB.getAccountName(), operationA, transactionDate));
@@ -183,19 +170,29 @@ export class DbProvider {
 
 
 
-  private updateFinalBalanceRecievingAccount(recievingAccount: Account, amount: number) {
-    recievingAccount.updateFinalBalance('increase', amount);
+  // private updateFinalBalanceRecievingAccount(recievingAccount: Account, amount: number) {
+  //   recievingAccount.updateFinalBalance('increase', amount);
+  // }
+
+  // private updateFinalBalanceSendingAccount(sendingAccount: Account, amount: number) {
+  //   sendingAccount.updateFinalBalance('decrease', amount);
+  // }
+
+  private updateFinalBalanceAccount(account: Account, amount: number, operation: string)
+  {
+    account.updateFinalBalance(operation, amount);
   }
 
-  private updateFinalBalanceSendingAccount(sendingAccount: Account, amount: number) {
-    sendingAccount.updateFinalBalance('decrease', amount);
+  private updateInitialBalanceAccount(account: Account, amount: number, operation: string)
+  {
+    account.updateInitialBalance(operation, amount);
   }
 
   private async transferFromExternalAccount(_id_month: string, accountHolderName: string, recievingAccountName: string, amount: number, transactionDate ? : string) {
     try {
       let monthOverview = await this.getMonthOverviewObject(_id_month);
       let recievingAccount = monthOverview.getAccByName(recievingAccountName);
-      this.updateFinalBalanceRecievingAccount(recievingAccount, amount);
+      this.updateFinalBalanceAccount(recievingAccount, amount, 'increase');
       recievingAccount.addTransaction(new Transaction(amount, accountHolderName, recievingAccount.getAccountName(), 'increase', transactionDate));
       await this.db.put(monthOverview);
     } catch (error) {
@@ -240,7 +237,7 @@ export class DbProvider {
     while (_id_monthPlusAmonth !== nowPlusAmonth) {
       let monthOverview = await this.getMonthOverviewObject(_id_monthPlusAmonth);
       let recievingAccount = monthOverview.getAccByName(recievingAccountName);
-      this.updateFinalBalanceRecievingAccount(recievingAccount, amount);
+      this.updateFinalBalanceAccount(recievingAccount, amount, 'increase');
       await this.db.put(monthOverview, {
         latest: true,
         force: true
@@ -248,6 +245,9 @@ export class DbProvider {
       _id_monthPlusAmonth = moment(_id_monthPlusAmonth).add(1, 'M').format('YYYY-MM'); // refactor in moment provider.
     }
   }
+
+
+
 
   async getRangeOfDateTimes() { // implement range for date time picker via end and start, look at docs
     try {
@@ -293,7 +293,7 @@ export class DbProvider {
   }
 
 
-  private async updateBalanceInFollowingMonths(_id_month: string, expense: Expense) {
+  private async updateBalanceInFollowingMonthsAfterExpense(_id_month: string, expense: Expense, oldAccountName?: string) {
     var _id_monthPlusAmonth = moment(_id_month).add(1, 'M').format('YYYY-MM');
     var nowPlusAmonth = moment(this._id_now).add(1, 'M').format('YYYY-MM'); // refactor in moment provider.
     while (_id_monthPlusAmonth !== nowPlusAmonth) {
@@ -302,6 +302,12 @@ export class DbProvider {
       account.updateFinalBalance('decrease', expense.getCost());
       account.updateInitialBalance('decrease', expense.getCost());
       monthOverview.addTagsToUsedTags(expense.getTags());
+      if(oldAccountName)
+      {
+        let oldAccount = monthOverview.getAccByName(oldAccountName);
+        oldAccount.updateFinalBalance('increase', expense.getCost());
+        account.updateInitialBalance('increase', expense.getCost());
+      }
       await this.db.put(monthOverview, {
         latest: true,
         force: true
@@ -310,12 +316,28 @@ export class DbProvider {
     }
   }
 
+    // REFACTOR 
+  // seperate category and expenses? extra db call but now its a mess...
+  private async addExpenseToCategoryToMonthOverview(_id_month: string, categoryName: string, expense: Expense) {
+    let monthOverview = await this.getMonthOverviewObject(_id_month);
+    let account = monthOverview.getAccByName(expense.getUsedAccountName());
+    account.updateFinalBalance('decrease', expense.getCost());  // --> 2 times??
+    let category = monthOverview.getCategoryByName(categoryName);
+    category.addExpense(expense);
+    let budget = category.getBudget();
+    budget.addToAmountSpentInBudget(expense.getCost()); // always add to amountspent --> when a user decides to add a budget to this category, it will already be tracked 
+    monthOverview.addTagsToUsedTags(expense.getTags());
+    await this.db.put(monthOverview);
+  }
+
+
+
   public async addExpenseToCategory(_id_month: string, categoryName: string, expense: Expense) {
     try {
       this.addExpenseToCategoryToMonthOverview(_id_month, categoryName, expense);
       if (_id_month !== this._id_now) {
         console.log('updating balances in following months');
-        this.updateBalanceInFollowingMonths(_id_month, expense);
+        this.updateBalanceInFollowingMonthsAfterExpense(_id_month, expense);
       }
 
     } catch (error) {
