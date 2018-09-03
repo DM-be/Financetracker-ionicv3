@@ -34,7 +34,7 @@ export class ExpenseProvider {
     monthOverviewObject.getAccByName(expense.getUsedAccountName()).updateFinalBalance('increase', parsedIntCost);
     if(_id !== this.momentProvider.getCurrentYearAndMonth() )
     {
-      this.updateExpenseCostInInitialBalanceInFollowingMonths(_id, parsedIntCost, expense.getUsedAccountName(), 'increase');
+      this.updateExpenseCostInFollowingMonths(_id, parsedIntCost, expense.getUsedAccountName(), 'increase', true, true);
     }
     await this.monthOverviewProvider.saveMonthOverview(monthOverviewObject);
   }
@@ -52,8 +52,7 @@ export class ExpenseProvider {
     let parsedIntCost = parseInt(expense.getCost()); // bound in model is a string
     let monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(_id);
     let category = monthOverviewObject.getCategoryByName(expense.getCategoryName());
-    category.addExpense(expense);
-    category.getBudget().addToAmountSpentInBudget(parsedIntCost);
+    
     if(oldCategoryName)
     {
       // case: updating categoryname requires removal of the expense in the old category
@@ -63,20 +62,25 @@ export class ExpenseProvider {
     }
     // case: updating categoryname in the past, has no effect on balances
 
+    if(!oldAccountName)
+    {
+      category.addExpense(expense);
+      category.getBudget().addToAmountSpentInBudget(parsedIntCost);
+    }
     if(oldAccountName) 
     {
-      // increase A
+      // increase A (former account balance)
       let account = monthOverviewObject.getAccByName(expense.getUsedAccountName())
       account.updateFinalBalance('increase', parsedIntCost);
-      // decrease B
+      // decrease B (new account balance)
       let oldAccount = monthOverviewObject.getAccByName(oldAccountName);
       oldAccount.updateFinalBalance('decrease', parsedIntCost);
       if(_id !== this.momentProvider.getCurrentYearAndMonth())
       {
         // now initial balances following months of oldaccount/B are incorrect
         // now initial balances following months of account A are incorrect
-        this.updateExpenseCostInInitialBalanceInFollowingMonths(_id, parsedIntCost, account.getAccountName(), 'increase');
-        this.updateExpenseCostInInitialBalanceInFollowingMonths(_id, parsedIntCost, oldAccount.getAccountName(), 'decrease');
+        this.updateExpenseCostInFollowingMonths(_id, parsedIntCost, account.getAccountName(), 'increase', true);
+        this.updateExpenseCostInFollowingMonths(_id, parsedIntCost, oldAccount.getAccountName(), 'decrease', true);
       }
     }
     else {
@@ -85,7 +89,8 @@ export class ExpenseProvider {
       account.updateFinalBalance('decrease', parsedIntCost);
       if(_id !== this.momentProvider.getCurrentYearAndMonth())
       {
-        this.updateExpenseCostInInitialBalanceInFollowingMonths(_id, parsedIntCost, account.getAccountName(), 'decrease');
+        this.updateExpenseCostInFollowingMonths(_id, parsedIntCost, account.getAccountName(), 'decrease', true, true);
+        
         // initial balances in following months
       }
     }
@@ -118,7 +123,7 @@ export class ExpenseProvider {
  }
 
 
-  public async updateExpenseCostInInitialBalanceInFollowingMonths(_id: string, cost: number, accountName: string, operation: string)
+  public async updateExpenseCostInFollowingMonths(_id: string, cost: number, accountName: string, operation: string, initial?: boolean, final?: boolean)
   {
     let newDocs: MonthOverView[] = [];
     let allDocs = await this.dbProvider.getDb().allDocs({
@@ -128,11 +133,21 @@ export class ExpenseProvider {
     allDocs.rows.forEach(mo => {
       let monthOverviewObJect = new MonthOverView(mo.doc._id, mo.doc.accounts, mo.doc.categories, mo.doc._rev, mo.doc.usedTags);
       let account = monthOverviewObJect.getAccByName(accountName);
-      account.updateInitialBalance(operation, cost);
+      if(initial)
+      {
+        account.updateInitialBalance(operation, cost);
+      }
+      if(final)
+      {
+        account.updateFinalBalance(operation, cost);
+      }
+      
       newDocs.push(monthOverviewObJect);
       }
     );
     await this.dbProvider.getDb().bulkDocs({docs: newDocs});
 
   }
+
+  
 }
