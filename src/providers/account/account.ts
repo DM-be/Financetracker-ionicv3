@@ -21,7 +21,7 @@ export class AccountProvider {
 
   async getAccounts(_id: string)
   {
-    let monthOverview: MonthOverView = await this.dbProvider.getMonthOverview(_id);
+    let monthOverview: MonthOverView = await this.monthOverviewProvider.getMonthOverview(_id);
     return monthOverview.getAllAccounts();
   }
   

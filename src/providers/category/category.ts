@@ -17,7 +17,7 @@ export class CategoryProvider {
   public _id_now; // always in the present
   // adding a category in the past will not allow you to add expenses in that month
 
-  constructor(public momentOverviewProvider: MonthOverviewProvider, public dbProvider: DbProvider, public momentProvider: MomentProvider) {
+  constructor(public monthOverviewProvider: MonthOverviewProvider, public dbProvider: DbProvider, public momentProvider: MomentProvider) {
     this._id_now = this.momentProvider.getCurrentYearAndMonth();
   }
 
@@ -38,21 +38,21 @@ export class CategoryProvider {
 
   public async getCategories(_id: string): Promise<Category []>
   {
-    let monthOverview = await this.momentOverviewProvider.getMonthOverview(_id);
+    let monthOverview = await this.monthOverviewProvider.getMonthOverview(_id);
     return monthOverview.getCategories();
   }
 
   public async addCategory(category: Category)
   {
-    let monthOverview = await this.momentOverviewProvider.getMonthOverview(this._id_now);
+    let monthOverview = await this.monthOverviewProvider.getMonthOverview(this._id_now);
     monthOverview.addCategory(category);
-    await this.momentOverviewProvider.saveMonthOverview(monthOverview);
+    await this.monthOverviewProvider.saveMonthOverview(monthOverview);
   }
 
   public async deleteCategory(category: Category) {
-    let monthOverview = await this.momentOverviewProvider.getMonthOverview(this._id_now);
+    let monthOverview = await this.monthOverviewProvider.getMonthOverview(this._id_now);
     monthOverview.deleteCategory(category);
-    await this.momentOverviewProvider.saveMonthOverview(monthOverview);
+    await this.monthOverviewProvider.saveMonthOverview(monthOverview);
   }
 
 

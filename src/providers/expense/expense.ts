@@ -32,6 +32,10 @@ export class ExpenseProvider {
     category.removeExpense(expense);
     category.getBudget().reduceAmountSpentInBudget(parsedIntCost);
     monthOverviewObject.getAccByName(expense.getUsedAccountName()).updateFinalBalance('increase', parsedIntCost);
+    if(_id !== this.momentProvider.getCurrentYearAndMonth() )
+    {
+      this.updateExpenseCostInInitialBalanceInFollowingMonths(_id, parsedIntCost, expense.getUsedAccountName(), 'increase');
+    }
     await this.monthOverviewProvider.saveMonthOverview(monthOverviewObject);
   }
 

@@ -143,6 +143,7 @@ export class DbProvider {
 
     try {
       let doc = await this.db.get(_id_month);
+      console.log(_id_month);
       return new MonthOverView(doc._id, doc.accounts, doc.categories, doc._rev, doc.usedTags);
     } catch (error) {
       if (error.name === 'not_found') {

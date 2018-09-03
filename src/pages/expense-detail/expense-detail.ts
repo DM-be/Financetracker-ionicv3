@@ -57,7 +57,8 @@ export class ExpenseDetailPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider, public expenseProvider: ExpenseProvider) {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth();
     this.currentDate_ISO_8601 = this.momentProvider.getCurrentDate_ISO_8601();
-    this.expense = this.navParams.get("expense") || new Expense(0, '', this.currentDate_ISO_8601, '', '', '');
+    
+    this.expense = this.navParams.get("expense") || new Expense(0,'', this.currentDate_ISO_8601, '', '', '');
     this.editMode = this.navParams.get("editMode");
     this.newExpense = this.navParams.get("newExpense");
 
@@ -66,19 +67,32 @@ export class ExpenseDetailPage {
     
     this.initialUsedAccountName = this.expense.usedAccountName;
     this.initialCategoryName = this.expense.categoryName;
+
   }
 
 
   async ionViewWillEnter() {
+    await this.getCategoriesAndAccounts();
+    this.bindDateToModel();
+  }
+
+  async getCategoriesAndAccounts() {
     this.categories = await this.categoryProvider.getCategories(this.selectedYearAndMonth);
     this.accounts = await this.accountProvider.getAccounts(this.selectedYearAndMonth);
-    this.bindDateToModel();
+    
   }
 
   bindDateToModel() {
     let currentYearAndMonth = this.momentProvider.getFormattedDateInYearAndMonth(this.currentDate_ISO_8601);
     if (this.selectedYearAndMonth !== currentYearAndMonth) {
-      this.expense.setCreatedDate('');
+      let newDateInView = this.momentProvider.getCurrentDateMinusAMonth_ISO_8601();
+      this.expense.setCreatedDate(newDateInView);
+      console.log(newDateInView)
+     // let newDateInView = this.momentProvider.subtractAMonthFromDate(this.currentDate_ISO_8601);
+      
+      // this.expense.setCreatedDate(newDateInView.toString());
+      
+      // console.log(newDateInView);
     }
   }
 

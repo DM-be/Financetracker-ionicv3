@@ -109,6 +109,7 @@ export class MonthOverviewPage {
   async updateDate() {
     await this.refreshData();
     this.momentProvider.setSelectedYearAndMonth(this.selectedYearAndMonth);
+    console.log(this.selectedYearAndMonth);
     // await this.dbProvider.getCategoryCosts(this.selectedDate);
   }
 

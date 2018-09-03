@@ -25,22 +25,28 @@ export class MomentProvider {
   constructor() {}
 
   /* used for the _id field in documents in the database */
-  getCurrentYearAndMonth() {
+  getCurrentYearAndMonth(): string {
     return moment().format('YYYY-MM');
   }
 
-  getCurrentYearMonthAndDay() {
+  getCurrentYearMonthAndDay(): string {
     return moment().format('YYYY-MM-DD');
   }
 
-  getCurrentDate_ISO_8601() {
+  getCurrentDate_ISO_8601(): string {
     return moment().format();
   }
+
+  
 
   public setSelectedYearAndMonth(selectedYearAndMonth: string): void
   {
     this.selectedYearAndMonth = selectedYearAndMonth;
   } 
+
+  public getCurrentDateMinusAMonth_ISO_8601(): string {
+    return moment().subtract(1, 'month').format();
+  }
 
   public getSelectedYearAndMonth(): string {
     return this.selectedYearAndMonth;
