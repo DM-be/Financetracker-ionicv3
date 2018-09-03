@@ -39,15 +39,23 @@ export class ExpenseProvider {
     await this.monthOverviewProvider.saveMonthOverview(monthOverviewObject);
   }
 
-  public async editExpense(_id: string, categoryName, expense: Expense)
+  public async addExpense2(_id: string, expense: Expense)
   {
+    let parsedIntCost = parseInt(expense.getCost()); // bound in model is a string
     let monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(_id);
-    let category = monthOverviewObject.getCategoryByName(categoryName);
-    category.replaceExpense(expense);
+    let category = monthOverviewObject.getCategoryByName(expense.getCategoryName());
+    category.addExpense(expense);
+    category.getBudget().addToAmountSpentInBudget(parsedIntCost);
+    monthOverviewObject.getAccByName(expense.getUsedAccountName()).updateFinalBalance('decrease', parsedIntCost);
+    if(_id !== this.momentProvider.getCurrentYearAndMonth() )
+    {
+      this.updateExpenseCostInFollowingMonths(_id, parsedIntCost, expense.getUsedAccountName(), 'decrease', true, true);
+    }
     await this.monthOverviewProvider.saveMonthOverview(monthOverviewObject);
   }
+
   
-  public async addExpense(_id: string, expense: Expense, oldCategoryName?: string, oldAccountName?: string)
+  public async addExpense(_id: string, expense: Expense, oldCategoryName?: string, oldAccountName?: string, newCost?: number)
   {
     let parsedIntCost = parseInt(expense.getCost()); // bound in model is a string
     let monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(_id);
@@ -62,11 +70,12 @@ export class ExpenseProvider {
     }
     // case: updating categoryname in the past, has no effect on balances
 
-    if(!oldAccountName)
+    if(!oldAccountName || (oldAccountName && oldCategoryName))
     {
       category.addExpense(expense);
       category.getBudget().addToAmountSpentInBudget(parsedIntCost);
     }
+
     if(oldAccountName) 
     {
       // increase A (former account balance)
@@ -84,6 +93,13 @@ export class ExpenseProvider {
       }
     }
     else {
+
+      if(newCost)
+      {
+
+      }
+
+
       //A
       let account = monthOverviewObject.getAccByName(expense.getUsedAccountName())
       account.updateFinalBalance('decrease', parsedIntCost);

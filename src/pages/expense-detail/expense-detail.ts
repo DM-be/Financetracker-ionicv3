@@ -46,6 +46,7 @@ export class ExpenseDetailPage {
   public categories: Category[];
   public accounts: Account[];
   public expense: Expense;
+  public oldExpense: Expense;
   public tags: string[];
   public page = this;
   public selectedYearAndMonth: string; // is set in momentProvider, only updated when top datepicker is selected
@@ -59,6 +60,7 @@ export class ExpenseDetailPage {
     this.currentDate_ISO_8601 = this.momentProvider.getCurrentDate_ISO_8601();
     
     this.expense = this.navParams.get("expense") || new Expense(0,'', this.currentDate_ISO_8601, '', '', '');
+    // a copy of the original expense
     this.editMode = this.navParams.get("editMode");
     this.newExpense = this.navParams.get("newExpense");
 
@@ -74,6 +76,8 @@ export class ExpenseDetailPage {
   async ionViewWillEnter() {
     await this.getCategoriesAndAccounts();
     this.bindDateToModel();
+    this.oldExpense = this.expense; 
+    console.log(this.oldExpense);
   }
 
   async getCategoriesAndAccounts() {
@@ -115,20 +119,22 @@ export class ExpenseDetailPage {
     return true;
 
   }
-  updateExpense() {
+  async updateExpense() {
 
     let formattedBoundDate = this.momentProvider.getFormattedDateInYearAndMonth(this.expense.getCreatedDate());
     if (this.newExpense) {
-      this.expenseProvider.addExpense(formattedBoundDate, this.expense);
+      await this.expenseProvider.addExpense(formattedBoundDate, this.expense);
     } else {
 
-      if (this.initialCategoryName !== this.expense.categoryName) {
-        this.expenseProvider.addExpense(formattedBoundDate, this.expense, this.initialCategoryName);
-      } else if ((this.initialUsedAccountName !== this.expense.usedAccountName) && (this.initialCategoryName !== this.expense.categoryName)) {
-        this.expenseProvider.addExpense(formattedBoundDate, this.expense, this.initialCategoryName, this.initialUsedAccountName);
-      } else if (this.initialUsedAccountName !== this.expense.usedAccountName) {
-        this.expenseProvider.addExpense(formattedBoundDate, this.expense, undefined, this.initialUsedAccountName);
-      }
+      await this.expenseProvider.deleteExpense(formattedBoundDate, this.oldExpense);
+      await this.expenseProvider.addExpense2(formattedBoundDate, this.expense);
+      // if (this.initialCategoryName !== this.expense.categoryName) {
+      //   this.expenseProvider.addExpense(formattedBoundDate, this.expense, this.initialCategoryName);
+      // } else if ((this.initialUsedAccountName !== this.expense.usedAccountName) && (this.initialCategoryName !== this.expense.categoryName)) {
+      //   this.expenseProvider.addExpense(formattedBoundDate, this.expense, this.initialCategoryName, this.initialUsedAccountName);
+      // } else if (this.initialUsedAccountName !== this.expense.usedAccountName) {
+      //   this.expenseProvider.addExpense(formattedBoundDate, this.expense, undefined, this.initialUsedAccountName);
+      // }
     }
 
 
