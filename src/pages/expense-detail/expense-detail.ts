@@ -106,10 +106,12 @@ export class ExpenseDetailPage {
     let formattedBoundDate = this.momentProvider.getFormattedDateInYearAndMonth(this.expense.getCreatedDate());
     if (this.newExpense) {
       await this.expenseProvider.addExpense(formattedBoundDate, this.expense);
+      this.navCtrl.pop();
     } else {
       let oldExpenseDateInYearAndMonth = this.momentProvider.getFormattedDateInYearAndMonth(this.oldExpense.getCreatedDate());
       await this.expenseProvider.deleteExpense(oldExpenseDateInYearAndMonth, this.oldExpense);
       await this.expenseProvider.addExpense(formattedBoundDate, this.expense);
+      this.navCtrl.pop();
     }
   }
 

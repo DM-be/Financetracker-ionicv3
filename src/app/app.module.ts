@@ -53,6 +53,7 @@ import { BudgetProvider } from '../providers/budget/budget';
 import { CategoryOptionsPage } from '../pages/category-options/category-options';
 import { CategoryProvider } from '../providers/category/category';
 import { ExpenseProvider } from '../providers/expense/expense';
+import { ChartBudgetPage } from '../pages/chart-budget/chart-budget';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,9 @@ import { ExpenseProvider } from '../providers/expense/expense';
     TransferPage,
     TransferExternalPage,
     AccountsPopoverPage,
-    CategoryOptionsPage
+    CategoryOptionsPage,
+    ChartBudgetPage,
+    ChartBudgetPage
   ],
   imports: [
     BrowserModule,
@@ -117,7 +120,8 @@ import { ExpenseProvider } from '../providers/expense/expense';
     TransferPage,
     TransferExternalPage,
     AccountsPopoverPage,
-    CategoryOptionsPage
+    CategoryOptionsPage,
+    ChartBudgetPage
   ],
   providers: [
     StatusBar,

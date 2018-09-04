@@ -88,7 +88,7 @@
 
           </ion-item-sliding>
           <div *ngIf="category.getBudget().isBeingTracked()">
-            <button ion-item>
+            <button ion-item (click)="chartBudgetModal(category.getExpenses())">
               <ion-label>
                 <progress-bar [color]="getBudgetBarColor(loadProgress(category.getBudget()))" [progress]="loadProgress(category.getBudget())"></progress-bar>
               </ion-label>

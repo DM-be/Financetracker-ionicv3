@@ -1,6 +1,13 @@
-import { ExpenseProvider } from './../../providers/expense/expense';
-import { MomentProvider } from './../../providers/moment/moment';
-import { ExpensesOverviewPage } from './../expenses-overview/expenses-overview';
+import { ChartBudgetPage } from './../chart-budget/chart-budget';
+import {
+  ExpenseProvider
+} from './../../providers/expense/expense';
+import {
+  MomentProvider
+} from './../../providers/moment/moment';
+import {
+  ExpensesOverviewPage
+} from './../expenses-overview/expenses-overview';
 import {
   CategoryOptionsPage
 } from './../category-options/category-options';
@@ -94,23 +101,26 @@ export class MonthOverviewPage {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth() || this.momentProvider.getCurrentYearAndMonth();
   }
 
- 
+
   async refreshData() {
-
-    
-      this.monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(this.selectedYearAndMonth);
-      this.categories = this.monthOverviewObject.getCategories();
-      this.expenses = this.monthOverviewObject.getAllExpenses();
-      this.accounts = this.monthOverviewObject.getAllAccounts();
-    
-
-    
+    this.monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(this.selectedYearAndMonth);
+    this.categories = this.monthOverviewObject.getCategories();
+    this.expenses = this.monthOverviewObject.getAllExpenses();
+    this.accounts = this.monthOverviewObject.getAllAccounts();
   }
+
   async updateDate() {
     await this.refreshData();
     this.momentProvider.setSelectedYearAndMonth(this.selectedYearAndMonth);
     console.log(this.selectedYearAndMonth);
     // await this.dbProvider.getCategoryCosts(this.selectedDate);
+  }
+
+  chartBudgetModal(expenses: Expense []) {
+    let chartModal = this.navCtrl.push(ChartBudgetPage, {
+      expenses: expenses,
+    });
+
   }
 
   async ionViewWillEnter() {
@@ -119,70 +129,37 @@ export class MonthOverviewPage {
     // this.buildChart(data);
   }
 
-  buildData(categories: Category[]) {
-    let data = [];
-    categories.forEach(category => {
-      data.push(category.getBudget().currentAmountSpent);
-    });
-    return data;
-  }
-
-  buildChart(data) {
-    var ctx = document.getElementById("myChart");
-    var chartData = {
-      datasets: [{
-        data: data
-      }],
-
-      // These labels appear in the legend and in the tooltips when hovering different arcs
-      labels: [
-        'Red',
-        'Yellow',
-        'Blue'
-      ]
-    };
-
-    var myPieChart = new Chart(ctx, {
-      type: 'pie',
-      data: chartData,
-      options: Chart.defaults.doughnut
-    });
 
 
-  }
 
   loadProgress(budget: Budget) {
     let percentage = (budget.currentAmountSpent / budget.limitAmount) * 100;
-    if(percentage <= 100)
-    {
+    if (percentage <= 100) {
       return percentage;
     }
     return 100;
   }
 
-  public getBudgetBarColor(percentage: number):string {
-      if (percentage < 60) {
-        return "#8BC34A"
-        
-      } else if (percentage < 80 ){
-        return "#FF9800";
-      }
-      return "#F44336";
+  public getBudgetBarColor(percentage: number): string {
+    if (percentage < 60) {
+      return "#8BC34A"
+
+    } else if (percentage < 80) {
+      return "#FF9800";
+    }
+    return "#F44336";
   }
 
   showCategoryDetails(category: Category) {
     this.navCtrl.push(ExpensesOverviewPage, {
-        category: category,
-      }
-    );
+      category: category,
+    });
   }
 
   showCategoryOptions(category: Category) {
-    this.navCtrl.push(CategoryOptionsPage, 
-      {
-        category: category,
-      }
-    );
+    this.navCtrl.push(CategoryOptionsPage, {
+      category: category,
+    });
   }
 
 

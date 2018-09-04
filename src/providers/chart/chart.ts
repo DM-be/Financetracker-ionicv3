@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+
 import { Injectable } from '@angular/core';
-import * as chart from 'chart.js';
+import * as Chart from 'chart.js';
 
 /*
   Generated class for the ChartProvider provider.
@@ -11,8 +11,12 @@ import * as chart from 'chart.js';
 @Injectable()
 export class ChartProvider {
 
-  constructor(public http: HttpClient) {
-    console.log('Hello ChartProvider Provider');
+  constructor() {
+  }
+
+  createChart(ctx: any, type: string, data: any, options: any)
+  {
+    return new Chart()
   }
 
 
