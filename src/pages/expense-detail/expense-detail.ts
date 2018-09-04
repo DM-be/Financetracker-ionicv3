@@ -56,24 +56,19 @@ export class ExpenseDetailPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider, public expenseProvider: ExpenseProvider) {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth();
     this.currentDate_ISO_8601 = this.momentProvider.getCurrentDate_ISO_8601();
-    
     this.expense = this.navParams.get("expense") || new Expense(0,'', this.currentDate_ISO_8601, '', '', '');
     this.editMode = this.navParams.get("editMode");
     this.newExpense = this.navParams.get("newExpense");
- 
     this.tags = this.expense.getTags().map(tag => tag.tagName);
-
   }
-
 
   async ionViewWillEnter() {
     await this.getCategoriesAndAccounts();
     this.bindDateToModel();
     this.oldExpense = new Expense(this.expense.cost, this.expense.description, this.expense.createdDate, this.expense.usedAccountName, this.expense.categoryName, this.expense.iconName, this.expense.tags);
-
-
   }
 
+  /* needs to be resynced when changing date, cannot add expense to non existing category in the past */
   async getCategoriesAndAccounts() {
     this.categories = await this.categoryProvider.getCategories(this.selectedYearAndMonth);
     this.accounts = await this.accountProvider.getAccounts(this.selectedYearAndMonth);
@@ -89,24 +84,20 @@ export class ExpenseDetailPage {
     }
   }
 
-
   async refreshCategoriesAndAccounts() {
     let formattedBoundDate = this.momentProvider.getFormattedDateInYearAndMonth(this.expense.getCreatedDate());
     this.categories = await this.categoryProvider.getCategories(formattedBoundDate);
     this.accounts = await this.accountProvider.getAccounts(formattedBoundDate);
   }
 
-
-
-
   dismiss() {
     this.navCtrl.pop();
   }
 
+  //todo: add verifying tags code --> no duplicates, no empties, ....
   verifyTag(tag: string): boolean {
     console.log(this)
     return true;
-
   }
   async updateExpense() {
 
@@ -115,38 +106,10 @@ export class ExpenseDetailPage {
       await this.expenseProvider.addExpense(formattedBoundDate, this.expense);
     } else {
       let oldExpenseDateInYearAndMonth = this.momentProvider.getFormattedDateInYearAndMonth(this.oldExpense.getCreatedDate());
-
-
       await this.expenseProvider.deleteExpense(oldExpenseDateInYearAndMonth, this.oldExpense);
-      await this.expenseProvider.addExpense2(formattedBoundDate, this.expense);
-      // if (this.initialCategoryName !== this.expense.categoryName) {
-      //   this.expenseProvider.addExpense(formattedBoundDate, this.expense, this.initialCategoryName);
-      // } else if ((this.initialUsedAccountName !== this.expense.usedAccountName) && (this.initialCategoryName !== this.expense.categoryName)) {
-      //   this.expenseProvider.addExpense(formattedBoundDate, this.expense, this.initialCategoryName, this.initialUsedAccountName);
-      // } else if (this.initialUsedAccountName !== this.expense.usedAccountName) {
-      //   this.expenseProvider.addExpense(formattedBoundDate, this.expense, undefined, this.initialUsedAccountName);
-      // }
+      await this.expenseProvider.addExpense(formattedBoundDate, this.expense);
     }
-
-
-
   }
-
-
-  /* 
-
-  todo: check if usedAccount changed (best via formcontrol or touched etc, see docs)
-  1: if changed --> use the initial usedAccount and increment cost of expense
-  2: delete expense from the account
-  3: decrement new account balance with expense cost
-  4: save new monthObject
-
-  todo: if the month of the date is not the same as the current month
-  1: check first todo
-  2: 
-    
-  */
-
 
 
 }
