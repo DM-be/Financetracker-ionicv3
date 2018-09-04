@@ -1,3 +1,4 @@
+import { Category } from './../../models/Category';
 import {
   ExpenseProvider
 } from './../../providers/expense/expense';
@@ -21,9 +22,7 @@ import {
   NavController,
   NavParams
 } from 'ionic-angular';
-import {
-  Category
-} from '../../models/Category';
+
 import {
   Expense
 } from '../../models/Expense';
@@ -48,10 +47,9 @@ export class ExpenseDetailPage {
   public expense: Expense;
   public oldExpense: Expense;
   public tags: string[];
-  public page = this;
+  public page = this; // for use in tags
   public selectedYearAndMonth: string; // is set in momentProvider, only updated when top datepicker is selected
   public currentDate_ISO_8601: string;
-
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider, public expenseProvider: ExpenseProvider) {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth();
@@ -72,7 +70,11 @@ export class ExpenseDetailPage {
   async getCategoriesAndAccounts() {
     this.categories = await this.categoryProvider.getCategories(this.selectedYearAndMonth);
     this.accounts = await this.accountProvider.getAccounts(this.selectedYearAndMonth);
-    
+  }
+
+  setIconName(categoryName: string) {
+    let iconName = this.categories.find(c => c.categoryName === categoryName).getIconName();
+    this.expense.setIconName(iconName);
   }
 
   /* edge case: adding a new expense in a past month --> date is pre filled */

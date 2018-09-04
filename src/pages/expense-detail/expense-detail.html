@@ -26,8 +26,8 @@
       <form>
         <ion-item>
           <ion-label>Category</ion-label>
-          <ion-select disabled="{{!editMode}}" [(ngModel)]="expense.categoryName" name="categoryName">
-            <ion-option *ngFor="let category of categories" [value]="category.getCategoryName()">{{category.getCategoryName()}}</ion-option>
+          <ion-select  (ionChange)="setIconName(expense.categoryName)" disabled="{{!editMode}}" [(ngModel)]="expense.categoryName" name="categoryName">
+            <ion-option  *ngFor="let category of categories" [value]="category.getCategoryName()">{{category.getCategoryName()}}</ion-option>
           </ion-select>
         </ion-item>
         <ion-item item-end>
