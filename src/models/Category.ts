@@ -62,10 +62,14 @@ export class Category {
     removeExpense(expense: Expense): any {
         // todo update to all properties or uniqid?
         let i = this.expenses.findIndex(
-            e => e.description == expense.description
-            && e.cost === expense.cost && e.createdDate === expense.createdDate 
-            
+            e => {
+                return e.description == expense.description
+                && e.cost === expense.cost
+                && e.createdDate == expense.createdDate
+            } 
+        
         )
+        console.log(i);
         this.expenses.splice(i, 1);
       }
 

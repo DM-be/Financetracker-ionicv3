@@ -52,23 +52,15 @@ export class ExpenseDetailPage {
   public selectedYearAndMonth: string; // is set in momentProvider, only updated when top datepicker is selected
   public currentDate_ISO_8601: string;
 
-  public initialCategoryName: string;
-  public initialUsedAccountName: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider, public expenseProvider: ExpenseProvider) {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth();
     this.currentDate_ISO_8601 = this.momentProvider.getCurrentDate_ISO_8601();
     
     this.expense = this.navParams.get("expense") || new Expense(0,'', this.currentDate_ISO_8601, '', '', '');
-    // a copy of the original expense
     this.editMode = this.navParams.get("editMode");
-    this.newExpense = this.navParams.get("newExpense");
-
+ 
     this.tags = this.expense.getTags().map(tag => tag.tagName);
-
-    
-    this.initialUsedAccountName = this.expense.usedAccountName;
-    this.initialCategoryName = this.expense.categoryName;
 
   }
 
@@ -76,6 +68,7 @@ export class ExpenseDetailPage {
   async ionViewWillEnter() {
     await this.getCategoriesAndAccounts();
     this.bindDateToModel();
+    // object references in javascript
     this.oldExpense = this.expense; 
     console.log(this.oldExpense);
   }
@@ -125,8 +118,10 @@ export class ExpenseDetailPage {
     if (this.newExpense) {
       await this.expenseProvider.addExpense(formattedBoundDate, this.expense);
     } else {
+      let oldExpenseDateInYearAndMonth = this.momentProvider.getFormattedDateInYearAndMonth(this.oldExpense.getCreatedDate());
 
-      await this.expenseProvider.deleteExpense(formattedBoundDate, this.oldExpense);
+
+      await this.expenseProvider.deleteExpense(oldExpenseDateInYearAndMonth, this.oldExpense);
       await this.expenseProvider.addExpense2(formattedBoundDate, this.expense);
       // if (this.initialCategoryName !== this.expense.categoryName) {
       //   this.expenseProvider.addExpense(formattedBoundDate, this.expense, this.initialCategoryName);
