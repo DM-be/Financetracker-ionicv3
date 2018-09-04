@@ -59,6 +59,7 @@ export class ExpenseDetailPage {
     
     this.expense = this.navParams.get("expense") || new Expense(0,'', this.currentDate_ISO_8601, '', '', '');
     this.editMode = this.navParams.get("editMode");
+    this.newExpense = this.navParams.get("newExpense");
  
     this.tags = this.expense.getTags().map(tag => tag.tagName);
 
@@ -68,9 +69,9 @@ export class ExpenseDetailPage {
   async ionViewWillEnter() {
     await this.getCategoriesAndAccounts();
     this.bindDateToModel();
-    // object references in javascript
-    this.oldExpense = this.expense; 
-    console.log(this.oldExpense);
+    this.oldExpense = new Expense(this.expense.cost, this.expense.description, this.expense.createdDate, this.expense.usedAccountName, this.expense.categoryName, this.expense.iconName, this.expense.tags);
+
+
   }
 
   async getCategoriesAndAccounts() {
@@ -79,17 +80,12 @@ export class ExpenseDetailPage {
     
   }
 
+  /* edge case: adding a new expense in a past month --> date is pre filled */
   bindDateToModel() {
     let currentYearAndMonth = this.momentProvider.getFormattedDateInYearAndMonth(this.currentDate_ISO_8601);
-    if (this.selectedYearAndMonth !== currentYearAndMonth) {
+    if ((this.selectedYearAndMonth !== currentYearAndMonth) && this.newExpense) {
       let newDateInView = this.momentProvider.getCurrentDateMinusAMonth_ISO_8601();
       this.expense.setCreatedDate(newDateInView);
-      console.log(newDateInView)
-     // let newDateInView = this.momentProvider.subtractAMonthFromDate(this.currentDate_ISO_8601);
-      
-      // this.expense.setCreatedDate(newDateInView.toString());
-      
-      // console.log(newDateInView);
     }
   }
 
