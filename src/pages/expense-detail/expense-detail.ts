@@ -61,9 +61,12 @@ export class ExpenseDetailPage {
   }
 
   async ionViewWillEnter() {
-    await this.getCategoriesAndAccounts();
+    if(this.editMode)
+    {
+       await this.getCategoriesAndAccounts();
     this.bindDateToModel();
     this.oldExpense = new Expense(this.expense.cost, this.expense.description, this.expense.createdDate, this.expense.usedAccountName, this.expense.categoryName, this.expense.iconName, this.expense.tags);
+    }
   }
 
   /* needs to be resynced when changing date, cannot add expense to non existing category in the past */

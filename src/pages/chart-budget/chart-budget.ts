@@ -1,3 +1,4 @@
+import { ExpenseDetailPage } from './../expense-detail/expense-detail';
 import { ChartProvider } from './../../providers/chart/chart';
 import { Expense } from './../../models/Expense';
 import { Component } from '@angular/core';
@@ -24,7 +25,10 @@ export class ChartBudgetPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public events: Events) {
     this.expenses = this.navParams.get("expenses");
 
-    events.subscribe('expense:clicked', (i) => {console.log(this.expenses[i])});
+    events.subscribe('expense:clicked', (i) => {
+      this.detailExpenseModal(this.expenses[i]);
+      console.log(this.expenses[i])
+    });
     
   }
 
@@ -33,9 +37,21 @@ export class ChartBudgetPage {
     let data = this.chartProvider.buildExpenseData(this.expenses);
     var ctx = document.getElementById("myChart");
     this.chartProvider.createNewChart(ctx, data, colors, ['test', 'test']);
-    this
+
    // this.buildChart(this.buildData(this.expenses), this.buildRandomColors(2));
   }
+
+
+
+  detailExpenseModal(expense: Expense) {
+    let detailExpenseModal = this.navCtrl.push(ExpenseDetailPage, {
+      expense: expense,
+      editMode: false,
+    })
+    //  detailExpenseModal.present();
+  }
+
+
 
   
 

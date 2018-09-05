@@ -33,7 +33,11 @@ export class ChartProvider {
       options: {
         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
         onClick :  (evt, item) => {
-         //2x events fired? 
+        
+          evt.stopPropagation();
+          console.log(evt);
+         //2x events fired 
+         // touchend + click --> stilll need touchend? 
          if(item.length > 0)
          {
            this.events.publish('expense:clicked', item[0]._index);

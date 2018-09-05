@@ -189,7 +189,6 @@ export class MonthOverviewPage {
   detailExpenseModal(expense: Expense, editMode ? : any) {
     let detailExpenseModal = this.navCtrl.push(ExpenseDetailPage, {
       expense: expense,
-      categories: this.categories,
       editMode: editMode,
     })
     //  detailExpenseModal.present();
