@@ -1,8 +1,10 @@
+import { Category } from './../../models/Category';
 import { Expense } from './../../models/Expense';
 
 import { Injectable } from '@angular/core';
 import * as Chart from 'chart.js';
 import randomColor  from 'randomcolor'
+import { Events } from 'ionic-angular';
 
 /*
   Generated class for the ChartProvider provider.
@@ -13,7 +15,8 @@ import randomColor  from 'randomcolor'
 @Injectable()
 export class ChartProvider {
 
-  constructor() {}
+
+  constructor(public events: Events) {}
 
   createNewChart(ctx: any, data: number [], hexColorsArray: string [], labels: string [],   options?: any)
   { 
@@ -27,9 +30,20 @@ export class ChartProvider {
     new Chart(ctx, {
       type: 'pie',
       data: chartData,
-      options: Chart.defaults.doughnut
+      options: {
+        events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
+        onClick :  (evt, item) => {
+         //2x events fired? 
+         if(item.length > 0)
+         {
+           this.events.publish('expense:clicked', item[0]._index);
+         }
+      }
+      },
+      
     });
   }
+
 
   buildRandomColors(amount: number) {
     let colors = [];
@@ -39,9 +53,34 @@ export class ChartProvider {
     return colors;
   }
 
-  buildData(expenses: Expense []) {
+  buildExpenseData(expenses: Expense []) {
     return expenses.map(e => e.getCost());
   }
+
+  buildExpenseLabels(expenses: Expense [])
+  {
+    return expenses.map(e => e.getDescription())
+  }
+
+
+  buildCategoryData(categories: Category []): number []
+  {
+    let totalCategoryCosts = [];
+    categories.forEach(c => totalCategoryCosts.push(c.getTotalExpenseCost()));
+    return totalCategoryCosts;
+  } 
+
+  buildCategoryLabels(categories: Category []): string []
+  {
+    return categories.map(c => c.getCategoryName());
+  }
+
+  buildCategoryColors(categories: Category []): string [] {
+    return categories.map(c => c.getCategoryColor());
+  }
+
+
+
 
 
 

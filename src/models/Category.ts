@@ -50,6 +50,14 @@ export class Category {
         return this.expenses;
     }
 
+    public getTotalExpenseCost(): number {
+        let cost: number = 0;
+        this.expenses.forEach(e => {
+            cost += e.getCost();
+        });
+        return cost;
+    }
+
     public replaceExpense(expense: Expense)
     {
         let i = this.expenses.findIndex(
@@ -58,6 +66,7 @@ export class Category {
         )
         this.expenses[i] = expense;
     }
+
 
     removeExpense(expense: Expense): any {
         // todo update to all properties or uniqid?
