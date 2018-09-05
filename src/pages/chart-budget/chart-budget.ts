@@ -1,3 +1,4 @@
+import { ChartProvider } from './../../providers/chart/chart';
 import { Expense } from './../../models/Expense';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
@@ -20,58 +21,26 @@ import randomColor  from 'randomcolor'
 export class ChartBudgetPage {
 
   public expenses: Expense [];
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider) {
     this.expenses = this.navParams.get("expenses");
+
     
     
   }
 
   ionViewDidLoad() {
-    this.buildChart(this.buildData(this.expenses), this.buildRandomColors(2));
-  }
-
-  buildData(expenses: Expense []) {
-    let data = [];
-    this.expenses.forEach(expense => {
-      data.push(expense.getCost());
-    });
-    return data;
-  }
-
-  buildRandomColors(amount: number) {
-    let colors = [];
-    for (let i = 0; i <= amount; i++) {
-      colors.push(randomColor());
-    }
-    return colors;
-  }
-
-
-
-  buildChart(data, colors) {
+    let colors = this.chartProvider.buildRandomColors(2);
+    let data = this.chartProvider.buildData(this.expenses);
     var ctx = document.getElementById("myChart");
-    var chartData = {
-      datasets: [{
-        data: data,
-        backgroundColor: colors
-      }],
+    this.chartProvider.createNewChart(ctx, data, colors, ['test', 'test'])
+   // this.buildChart(this.buildData(this.expenses), this.buildRandomColors(2));
+  }
 
-      // These labels appear in the legend and in the tooltips when hovering different arcs
-      labels: [
-        'Red',
-        'Yellow',
-        'Blue'
-      ]
-    };
+  
 
-    var myPieChart = new Chart(ctx, {
-      type: 'pie',
-      data: chartData,
-      options: Chart.defaults.doughnut
-    });
+  
 
 
 
-}
 
 }

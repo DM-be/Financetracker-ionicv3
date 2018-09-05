@@ -1,6 +1,8 @@
+import { Expense } from './../../models/Expense';
 
 import { Injectable } from '@angular/core';
 import * as Chart from 'chart.js';
+import randomColor  from 'randomcolor'
 
 /*
   Generated class for the ChartProvider provider.
@@ -11,12 +13,34 @@ import * as Chart from 'chart.js';
 @Injectable()
 export class ChartProvider {
 
-  constructor() {
+  constructor() {}
+
+  createNewChart(ctx: any, data: number [], hexColorsArray: string [], labels: string [],   options?: any)
+  { 
+    let chartData = {
+      datasets: [{
+        data: data,
+        backgroundColor: hexColorsArray
+      }],
+      labels: labels
+    };
+    new Chart(ctx, {
+      type: 'pie',
+      data: chartData,
+      options: Chart.defaults.doughnut
+    });
   }
 
-  createChart(ctx: any, type: string, data: any, options: any)
-  {
-    return new Chart()
+  buildRandomColors(amount: number) {
+    let colors = [];
+    for (let i = 0; i <= amount; i++) {
+      colors.push(randomColor());
+    }
+    return colors;
+  }
+
+  buildData(expenses: Expense []) {
+    return expenses.map(e => e.getCost());
   }
 
 
