@@ -18,7 +18,11 @@ export class ChartProvider {
 
   constructor(public events: Events) {}
 
-  createNewChart(ctx: any, data: number [], hexColorsArray: string [], labels: string [],   options?: any)
+
+  public getChartTypes() {
+    return ['line', 'pie'];
+  }
+  createNewChart(ctx: any, data: number [], hexColorsArray: string [], labels: string [], type?: string)
   { 
     let chartData = {
       datasets: [{
@@ -28,7 +32,7 @@ export class ChartProvider {
       labels: labels
     };
     new Chart(ctx, {
-      type: 'pie',
+      type: type || 'pie',
       data: chartData,
       options: {
         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],

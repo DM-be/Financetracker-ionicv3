@@ -15,6 +15,7 @@ export class Expense {
 
 
     constructor( cost: number, description: string, createdDate: string, usedAccount: string, categoryName: string, iconName: string, tags?: Tag []) {
+        
         this.cost = cost;
         this.description = description;
         this.createdDate = createdDate;
@@ -32,6 +33,10 @@ export class Expense {
 
     public getCost(): any {
         return this.cost;
+    }
+
+    public setCost(cost: number) {
+        this.cost = cost;
     }
 
     public getUsedAccountName() {

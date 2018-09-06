@@ -108,6 +108,7 @@ export class ExpenseDetailPage {
 
     let formattedBoundDate = this.momentProvider.getFormattedDateInYearAndMonth(this.expense.getCreatedDate());
     if (this.newExpense) {
+      console.log(typeof this.expense.cost);
       await this.expenseProvider.addExpense(formattedBoundDate, this.expense);
       this.navCtrl.pop();
     } else {

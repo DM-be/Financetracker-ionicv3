@@ -53,7 +53,7 @@ export class Category {
     public getTotalExpenseCost(): number {
         let cost: number = 0;
         this.expenses.forEach(e => {
-            cost += e.getCost();
+            cost = cost + e.getCost();
         });
         return cost;
     }

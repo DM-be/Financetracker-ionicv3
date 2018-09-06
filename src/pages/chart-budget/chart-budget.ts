@@ -27,8 +27,6 @@ export class ChartBudgetPage {
 
     events.subscribe('expense:clicked', (i) => {
       this.detailExpenseModal(this.expenses[i]);
-      
-      console.log(this.expenses[i])
     });
     
   }
@@ -38,6 +36,7 @@ export class ChartBudgetPage {
     let data = this.chartProvider.buildExpenseData(this.expenses);
     var ctx = document.getElementById("myChart");
     this.chartProvider.createNewChart(ctx, data, colors, ['test', 'test']);
+    console.log(data);
 
    // this.buildChart(this.buildData(this.expenses), this.buildRandomColors(2));
   }

@@ -51,7 +51,8 @@ export class ExpenseProvider {
   }
 
   public async addExpense(_id: string, expense: Expense) {
-    let parsedIntCost = parseInt(expense.getCost()); // bound in model is a string
+    let parsedIntCost= parseInt(expense.getCost()); // bound in model is a string
+    expense.setCost(parsedIntCost);
     let monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(_id);
     let category = monthOverviewObject.getCategoryByName(expense.getCategoryName());
     category.addExpense(expense);

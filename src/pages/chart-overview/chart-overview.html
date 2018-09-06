@@ -1,18 +1,29 @@
 <!--
-  Generated template for the ChartOverviewPage page.
+  Generated template for the ChartBudgetPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>ChartOverview</ion-title>
-  </ion-navbar>
-
+  <ion-item color="tertiary">
+    <ion-datetime displayFormat="MMMM YYYY" pickerFormat="MMMM YYYY" [(ngModel)]="selectedYearAndMonth" (ionChange)="updateDate()" [min]="momentProvider.getMinDate()"
+      [max]="momentProvider.getMaxDate()"></ion-datetime>
+  </ion-item>
 </ion-header>
 
 
-<ion-content padding>
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-select  (ionChange)="updateChart()" [(ngModel)]="selectedChartType" name="selectedChartType">
+          <ion-option  *ngFor="let chartType of chartProvider.getChartTypes()" [value]="chartType">{{chartType}}</ion-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+</ion-grid>
 
+<ion-content padding>
+  <canvas id="myChart" width="400" height="400"></canvas>
 </ion-content>
