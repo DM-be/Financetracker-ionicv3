@@ -2,7 +2,7 @@ import { ExpenseDetailPage } from './../expense-detail/expense-detail';
 import { ChartProvider } from './../../providers/chart/chart';
 import { Expense } from './../../models/Expense';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events, ModalController } from 'ionic-angular';
 import { Budget } from '../../models/Budget';
 
 import * as Chart from 'chart.js';
@@ -22,11 +22,12 @@ import randomColor  from 'randomcolor'
 export class ChartBudgetPage {
 
   public expenses: Expense [];
-  constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public events: Events) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public events: Events, public modalCtrl: ModalController) {
     this.expenses = this.navParams.get("expenses");
 
     events.subscribe('expense:clicked', (i) => {
       this.detailExpenseModal(this.expenses[i]);
+      
       console.log(this.expenses[i])
     });
     
@@ -44,11 +45,18 @@ export class ChartBudgetPage {
 
 
   detailExpenseModal(expense: Expense) {
-    let detailExpenseModal = this.navCtrl.push(ExpenseDetailPage, {
+    let detailExpenseModal = this.modalCtrl.create(ExpenseDetailPage, {
       expense: expense,
       editMode: false,
     })
-    //  detailExpenseModal.present();
+    detailExpenseModal.present();
+  }
+
+  dismissAndUnSubscribe() {
+    this.events.unsubscribe('expense:clicked'); 
+    // every time this page gets instantiated, another subscription is made
+    // unsubscribe when leaving to prevent this
+    this.navCtrl.pop();
   }
 
 
