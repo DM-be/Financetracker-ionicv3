@@ -57,7 +57,7 @@ export class ChartProvider {
           }
         },
         legend: {
-            display: !categoriesHTML
+          display: !categoriesHTML
         }
       },
 
@@ -108,10 +108,12 @@ export class ChartProvider {
   public buildCompleteHTML(categories: Category[]) {
     let html = `<ul>`;
     categories.forEach(c => {
-      html += `<li> <span style="background-color:${c.getCategoryColor()}">`
-      html += this.buildIconHTMLForComplexLegend(c.getIconName());
-      html += `</span>`
-      html += '</li>'
+      if (c.getTotalExpenseCost() > 0) {
+        html += `<li> <span style="background-color:${c.getCategoryColor()}">`
+        html += this.buildIconHTMLForComplexLegend(c.getIconName());
+        html += `</span>`
+        html += '</li>'
+      }
     });
     html += `</ul>`
     return html;
