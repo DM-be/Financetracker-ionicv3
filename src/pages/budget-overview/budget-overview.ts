@@ -29,7 +29,7 @@ export class BudgetOverviewPage {
   }
 
   addNewBudget() {
-  this.modalCtrl.create  
+ // this.modalCtrl.create  
   this.budget.limitAmount = 0;
   }
 

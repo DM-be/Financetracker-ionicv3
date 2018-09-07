@@ -12,18 +12,26 @@
 </ion-header>
 
 
-<ion-grid>
-  <ion-row>
-    <ion-col>
-      <ion-item>
-        <ion-select  (ionChange)="updateChart()" [(ngModel)]="selectedChartType" name="selectedChartType">
-          <ion-option  *ngFor="let chartType of chartProvider.getChartTypes()" [value]="chartType">{{chartType}}</ion-option>
-        </ion-select>
-      </ion-item>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+
 
 <ion-content padding>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-select  (ionChange)="updateChart()" [(ngModel)]="selectedChartType" name="selectedChartType">
+            <ion-option  *ngFor="let chartType of chartProvider.getChartTypes()" [value]="chartType">{{chartType}}</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+        <div id="chartjs-legend" ></div>
+    </ion-row>
+  </ion-grid>
+
+
+
   <canvas id="myChart" width="400" height="400"></canvas>
+  
 </ion-content>

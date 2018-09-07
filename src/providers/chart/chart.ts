@@ -1,10 +1,18 @@
-import { Category } from './../../models/Category';
-import { Expense } from './../../models/Expense';
+import {
+  Category
+} from './../../models/Category';
+import {
+  Expense
+} from './../../models/Expense';
 
-import { Injectable } from '@angular/core';
+import {
+  Injectable
+} from '@angular/core';
 import * as Chart from 'chart.js';
-import randomColor  from 'randomcolor'
-import { Events } from 'ionic-angular';
+import randomColor from 'randomcolor'
+import {
+  Events
+} from 'ionic-angular';
 
 /*
   Generated class for the ChartProvider provider.
@@ -22,8 +30,7 @@ export class ChartProvider {
   public getChartTypes() {
     return ['line', 'pie'];
   }
-  createNewChart(ctx: any, data: number [], hexColorsArray: string [], labels: string [], type?: string)
-  { 
+  createNewChart(ctx: any, data: number[], hexColorsArray: string[], labels: string[], type ? : string, expense ? : boolean, categoriesHTML ? : string) {
     let chartData = {
       datasets: [{
         data: data,
@@ -31,24 +38,29 @@ export class ChartProvider {
       }],
       labels: labels
     };
-    new Chart(ctx, {
+    return new Chart(ctx, {
       type: type || 'pie',
       data: chartData,
       options: {
         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
-        onClick :  (evt, item) => {
-        
-          evt.stopImmediatePropagation()
-          console.log(item);
-         //2x events fired 
-         // touchend + click --> stilll need touchend?
-         if(item.length > 0)
-         {
-           this.events.publish('expense:clicked', item[0]._index);
-         }
-      }
+        onClick: (evt, item) => {
+          //evt.stopImmediatePropagation();
+          //2x events fired 
+          // touchend + click --> stilll need touchend?
+          if (item.length > 0 && expense) {
+            this.events.publish('expense:clicked', item[0]._index);
+          }
+        },
+        legendCallback: (chart) => {
+          if (categoriesHTML) {
+            return categoriesHTML;
+          }
+        },
+        legend: {
+            display: !categoriesHTML
+        }
       },
-      
+
     });
   }
 
@@ -61,30 +73,48 @@ export class ChartProvider {
     return colors;
   }
 
-  buildExpenseData(expenses: Expense []) {
+  buildExpenseData(expenses: Expense[]) {
     return expenses.map(e => e.getCost());
   }
 
-  buildExpenseLabels(expenses: Expense [])
-  {
+  buildExpenseLabels(expenses: Expense[]) {
     return expenses.map(e => e.getDescription())
   }
 
 
-  buildCategoryData(categories: Category []): number []
-  {
+  buildCategoryData(categories: Category[]): number[] {
     let totalCategoryCosts = [];
     categories.forEach(c => totalCategoryCosts.push(c.getTotalExpenseCost()));
     return totalCategoryCosts;
-  } 
+  }
 
-  buildCategoryLabels(categories: Category []): string []
-  {
+  buildCategoryLabels(categories: Category[]): string[] {
     return categories.map(c => c.getCategoryName());
   }
 
-  buildCategoryColors(categories: Category []): string [] {
+  buildCategoryColors(categories: Category[]): string[] {
     return categories.map(c => c.getCategoryColor());
+  }
+
+  buildIconLegend(categories: Category[]) {
+    let icons = categories.map(c => c.getIconName())
+
+  }
+
+  private buildIconHTMLForComplexLegend(iconName: string) {
+    return `<ion-icon name="${iconName}" class="icon icon-md ion-md-${iconName} item-icon legend"></ion-icon>`;
+  }
+
+  public buildCompleteHTML(categories: Category[]) {
+    let html = `<ul>`;
+    categories.forEach(c => {
+      html += `<li> <span style="background-color:${c.getCategoryColor()}">`
+      html += this.buildIconHTMLForComplexLegend(c.getIconName());
+      html += `</span>`
+      html += '</li>'
+    });
+    html += `</ul>`
+    return html;
   }
 
 

@@ -23,6 +23,7 @@ export class ChartOverviewPage {
   public selectedYearAndMonth: string; 
   public monthOverview: MonthOverView;
   public selectedChartType: string; 
+  public chart: any;
 
 
 
@@ -31,15 +32,18 @@ export class ChartOverviewPage {
   }
 
   async ionViewWillEnter(){
-    this.refreshData();
+    await this.refreshData();
     let categories = this.monthOverview.getCategories();
     console.log(categories);
     let colors = this.chartProvider.buildCategoryColors(categories);
     let data = this.chartProvider.buildCategoryData(categories);
-    console.log(data);
     let labels = this.chartProvider.buildCategoryLabels(categories);
     let ctx = document.getElementById("myChart");
-    this.chartProvider.createNewChart(ctx, data, colors, labels, 'pie');
+    let categoriesHTML = this.chartProvider.buildCompleteHTML(categories);
+    this.chart = this.chartProvider.createNewChart(ctx, data, colors, labels, 'doughnut', false, categoriesHTML);
+    console.log(categoriesHTML);
+    let legend = document.getElementById("chartjs-legend");
+    legend.innerHTML = this.chart.generateLegend();
   }
   updateChart() {}
 
