@@ -5,6 +5,7 @@ import { ChartProvider } from './../../providers/chart/chart';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { MonthOverviewProvider } from '../../providers/month-overview/month-overview';
+import { DatasetPage } from '../dataset/dataset';
 
 /**
  * Generated class for the ChartOverviewPage page.
@@ -41,9 +42,12 @@ export class ChartOverviewPage {
     let ctx = document.getElementById("myChart");
     let categoriesHTML = this.chartProvider.buildCompleteHTML(categories);
     this.chart = this.chartProvider.createNewChart(ctx, data, colors, labels, 'doughnut', false, categoriesHTML);
-    console.log(categoriesHTML);
+ //   console.log(categoriesHTML);
     let legend = document.getElementById("chartjs-legend");
     legend.innerHTML = this.chart.generateLegend();
+    console.log(this.chart);
+    console.log(this.chartProvider.getDatasets());
+    console.log(this.chart.data.datasets[0])
   }
   updateChart() {}
 
@@ -55,6 +59,10 @@ export class ChartOverviewPage {
 
   async refreshData() {
     this.monthOverview = await this.monthOverviewProvider.getMonthOverview(this.selectedYearAndMonth);
+  }
+  
+  addDatasetModal() {
+    this.navCtrl.push(DatasetPage);
   }
 
 }

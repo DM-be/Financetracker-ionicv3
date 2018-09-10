@@ -9,12 +9,21 @@
     <ion-datetime displayFormat="MMMM YYYY" pickerFormat="MMMM YYYY" [(ngModel)]="selectedYearAndMonth" (ionChange)="updateDate()" [min]="momentProvider.getMinDate()"
       [max]="momentProvider.getMaxDate()"></ion-datetime>
   </ion-item>
+  <ion-buttons>
+    <button ion-button><ion-icon name="podium">Pie</ion-icon></button>
+    <button ion-button><ion-icon name="podium">Radar</ion-icon></button>
+    <button ion-button><ion-icon name="podium">Line</ion-icon></button>
+    <button ion-button><ion-icon name="podium">Bar</ion-icon></button>
+
+  </ion-buttons>
 </ion-header>
 
 
 
 
 <ion-content padding>
+
+  <button ion-button (click)="addDatasetModal()">open</button>
   <ion-grid fixed>
     <ion-row>
       <ion-col>

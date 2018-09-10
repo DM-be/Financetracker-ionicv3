@@ -1,3 +1,4 @@
+import { Dataset } from './../../models/Dataset';
 import {
   Category
 } from './../../models/Category';
@@ -23,6 +24,7 @@ import {
 @Injectable()
 export class ChartProvider {
 
+  private chartInstance: any;
 
   constructor(public events: Events) {}
 
@@ -38,12 +40,12 @@ export class ChartProvider {
       }],
       labels: labels
     };
-    return new Chart(ctx, {
+    this.chartInstance = new Chart(ctx, {
       type: type || 'pie',
       data: chartData,
       options: {
         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
-        onClick: (evt, item) => {
+        onClick: (evt, item) => {  
           //evt.stopImmediatePropagation();
           //2x events fired 
           // touchend + click --> stilll need touchend?
@@ -58,10 +60,35 @@ export class ChartProvider {
         },
         legend: {
           display: !categoriesHTML
-        }
+        },
+        cutoutPercentage: 85
       },
 
     });
+
+    return this.chartInstance;
+  }
+
+  public addDataset(dataset: {data: number [], backGroundColor: string []} ): void {
+    this.chartInstance.data.datasets.push(dataset);
+    this.chartInstance.update();
+  }
+
+  public getDatasets(): any {
+   return this.chartInstance.data.datasets
+  }
+
+  public clearDatasets(): void {
+    this.chartInstance.data.datasets = [];
+    this.chartInstance.update();
+  }
+
+  public getChartInstance(): any {
+    return this.chartInstance;
+  }
+
+  public getLabels(): string [] {
+    return this.chartInstance.data.labels;
   }
 
 
@@ -98,7 +125,6 @@ export class ChartProvider {
 
   buildIconLegend(categories: Category[]) {
     let icons = categories.map(c => c.getIconName())
-
   }
 
   private buildIconHTMLForComplexLegend(iconName: string) {

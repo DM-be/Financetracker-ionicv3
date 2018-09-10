@@ -54,6 +54,7 @@ import { CategoryOptionsPage } from '../pages/category-options/category-options'
 import { CategoryProvider } from '../providers/category/category';
 import { ExpenseProvider } from '../providers/expense/expense';
 import { ChartBudgetPage } from '../pages/chart-budget/chart-budget';
+import { DatasetPage } from '../pages/dataset/dataset';
 
 @NgModule({
   declarations: [
@@ -84,7 +85,7 @@ import { ChartBudgetPage } from '../pages/chart-budget/chart-budget';
     AccountsPopoverPage,
     CategoryOptionsPage,
     ChartBudgetPage,
-    ChartBudgetPage
+    DatasetPage
   ],
   imports: [
     BrowserModule,
@@ -121,7 +122,8 @@ import { ChartBudgetPage } from '../pages/chart-budget/chart-budget';
     TransferExternalPage,
     AccountsPopoverPage,
     CategoryOptionsPage,
-    ChartBudgetPage
+    ChartBudgetPage,
+    DatasetPage
   ],
   providers: [
     StatusBar,
