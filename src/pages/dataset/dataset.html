@@ -35,6 +35,8 @@
                 <ion-option  *ngFor="let dataType of dataTypes" [value]="dataType">{{dataType}}</ion-option>
               </ion-select>
             </ion-item>
+          <button ion-button *ngIf="dataType === 'category'" (click)="addCategoriesAlert()" >add</button> 
+
           <ion-item item-end>
             <ion-label>From</ion-label>
             <ion-datetime  displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.from"
@@ -55,7 +57,7 @@
           
         </form>
   
-  <button ion-button icon-only  (click)="addDataset()" full round ><ion-icon name="done-all"></ion-icon></button>
+  <button ion-button icon-only  (click)="addAllDatasetsToChart()" full round ><ion-icon name="done-all"></ion-icon></button>
   
       </ion-grid>
     </ion-content>

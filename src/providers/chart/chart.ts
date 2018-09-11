@@ -1,3 +1,4 @@
+import { CategoryProvider } from './../category/category';
 import { Dataset } from './../../models/Dataset';
 import {
   Category
@@ -26,7 +27,7 @@ export class ChartProvider {
 
   private chartInstance: any;
 
-  constructor(public events: Events) {}
+  constructor(public events: Events,public categoryProvider: CategoryProvider) {}
 
 
   public getChartTypes() {
@@ -41,7 +42,7 @@ export class ChartProvider {
       labels: labels
     };
     this.chartInstance = new Chart(ctx, {
-      type: type || 'pie',
+      type: 'bar',
       data: chartData,
       options: {
         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
@@ -69,10 +70,19 @@ export class ChartProvider {
     return this.chartInstance;
   }
 
-  public addDataset(dataset: {data: number [], backGroundColor: string []} ): void {
+  public addDataset(dataset: {data: number [], backgroundColor: string []} ): void {
     this.chartInstance.data.datasets.push(dataset);
     this.chartInstance.update();
   }
+
+  public getDatasetData(timeperiod: {from: string, to: string}, categoryName: string, labelType: string, dataType: string, operationType: string)
+  {
+    if(dataType === 'category')
+    {
+      return this.categoryProvider.getCategoryBetweenDatesWithOperationAndLabelType(timeperiod.from, timeperiod.to, labelType, categoryName, operationType)
+    }
+  } 
+
 
   public getDatasets(): any {
    return this.chartInstance.data.datasets
@@ -89,6 +99,18 @@ export class ChartProvider {
 
   public getLabels(): string [] {
     return this.chartInstance.data.labels;
+  }
+
+  public setLabels(labels: string [])
+  {
+    this.chartInstance.data.labels = labels;
+    this.chartInstance.update();
+  }
+
+  public setType(type: string)
+  {
+    this.chartInstance.type = type;
+    this.chartInstance.update();
   }
 
 

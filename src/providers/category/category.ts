@@ -1,3 +1,4 @@
+import { MonthOverView } from './../../models/MonthOverview';
 import { DbProvider } from './../db/db';
 import { MomentProvider } from './../moment/moment';
 import { Category } from './../../models/Category';
@@ -53,6 +54,45 @@ export class CategoryProvider {
     let monthOverview = await this.monthOverviewProvider.getMonthOverview(this._id_now);
     monthOverview.deleteCategory(category);
     await this.monthOverviewProvider.saveMonthOverview(monthOverview);
+  }
+
+//   public async getCategoriesBetweenDates(from: string, to: string)
+//   {
+//     let categories: Category[] = [];
+//     let allDocs = await this.dbProvider.getDb().allDocs({
+//       include_docs: true,
+//       startkey: from,
+//       endKey: to
+//     });
+//     allDocs.rows.forEach(mo => {
+//       let monthOverviewObJect = new MonthOverView(mo.doc._id, mo.doc.accounts, mo.doc.categories, mo.doc._rev, mo.doc.usedTags);
+//       categories.push(monthOverviewObJect.getCategories());
+      
+
+//   }
+// }
+
+  public async getCategoryBetweenDatesWithOperationAndLabelType(from: string, to: string, labelType: string, categoryName: string, operation: string) {
+    let resultingData: number[] = [];
+         let allDocs = await this.dbProvider.getDb().allDocs({
+           include_docs: true,
+           startkey: from,
+           endKey: to
+        });
+         allDocs.rows.forEach(mo => {
+          let monthOverviewObJect = new MonthOverView(mo.doc._id, mo.doc.accounts, mo.doc.categories, mo.doc._rev, mo.doc.usedTags);
+          if(operation === 'total' && labelType === 'month')
+          {
+            if(monthOverviewObJect.containsCategory(categoryName))
+            {
+              resultingData.push(monthOverviewObJect.getCategoryByName(categoryName).getTotalExpenseCost());
+            }
+            else {
+              resultingData.push(0);
+            }
+          }
+        })
+        return resultingData;
   }
 
 
