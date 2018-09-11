@@ -35,7 +35,7 @@ export class DatasetPage {
   public selectedCategories: Category [] = [];
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public alertCtrl: AlertController,) {
     this.timeperiod = {from: '', to: ''};
     this.ctx = this.navParams.get("ctx");
     
@@ -54,7 +54,7 @@ export class DatasetPage {
   addAllDatasetsToChart() {
     if(this.dataType === 'category')
     {
-      let labels = [this.timeperiod.from, this.timeperiod.to]
+      let labels = this.momentProvider.getLabelsBetweenTimePeriod(this.timeperiod.from, this.timeperiod.to);
 
       
       this.chartProvider.clearDatasets();

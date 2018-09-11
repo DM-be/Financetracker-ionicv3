@@ -48,6 +48,18 @@ export class MomentProvider {
     return moment().subtract(1, 'month').format();
   }
 
+  public getLabelsBetweenTimePeriod(from: string, to: string)
+  {
+    let labels = [];
+    labels.push(from);
+    while(from !== to)
+    {
+      from = moment(from).add(1, 'month').format('YYYY-MM')
+      labels.push(from);
+    }
+    return labels;
+  }
+
   public getSelectedYearAndMonth(): string {
     return this.selectedYearAndMonth;
   }
