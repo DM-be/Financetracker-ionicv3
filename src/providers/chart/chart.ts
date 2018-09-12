@@ -1,5 +1,9 @@
-import { CategoryProvider } from './../category/category';
-import { Dataset } from './../../models/Dataset';
+import {
+  CategoryProvider
+} from './../category/category';
+import {
+  Dataset
+} from './../../models/Dataset';
 import {
   Category
 } from './../../models/Category';
@@ -27,13 +31,13 @@ export class ChartProvider {
 
   private chartInstance: any;
 
-  constructor(public events: Events,public categoryProvider: CategoryProvider) {}
+  constructor(public events: Events, public categoryProvider: CategoryProvider) {}
 
 
   public getChartTypes() {
     return ['line', 'pie'];
   }
-  createNewChart(ctx: any, data: number[], hexColorsArray: string[], labels: string[], type ? : string, expense ? : boolean, categoriesHTML ? : string) {
+  createNewChart(ctx: any, data: number[], hexColorsArray: string[], labels: string[], type ? : string, expense ? : boolean, customLegend ? : boolean) {
     let chartData = {
       datasets: [{
         data: data,
@@ -46,7 +50,7 @@ export class ChartProvider {
       data: chartData,
       options: {
         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
-        onClick: (evt, item) => {  
+        onClick: (evt, item) => {
           //evt.stopImmediatePropagation();
           //2x events fired 
           // touchend + click --> stilll need touchend?
@@ -54,13 +58,9 @@ export class ChartProvider {
             this.events.publish('expense:clicked', item[0]._index);
           }
         },
-        legendCallback: (chart) => {
-          if (categoriesHTML) {
-            return categoriesHTML;
-          }
-        },
+
         legend: {
-          display: !categoriesHTML
+          display: !customLegend
         },
         cutoutPercentage: 85
       },
@@ -70,22 +70,30 @@ export class ChartProvider {
     return this.chartInstance;
   }
 
-  public addDataset(dataset: {data: number [], backgroundColor: string []} ): void {
+  public addDataset(dataset: {
+    data: number[],
+    backgroundColor: string[]
+  }): void {
     this.chartInstance.data.datasets.push(dataset);
     this.chartInstance.update();
   }
 
-  public getDatasetData(timeperiod: {from: string, to: string}, categoryName: string, labelType: string, dataType: string, operationType: string)
-  {
-    if(dataType === 'category')
-    {
+  public getDatasetData(timeperiod: {
+    from: string,
+    to: string
+  }, categoryName: string, labelType: string, dataType: string, operationType: string, categories?: Category []) {
+    if (dataType === 'category') {
       return this.categoryProvider.getCategoryBetweenDatesWithOperationAndLabelType(timeperiod.from, timeperiod.to, labelType, categoryName, operationType)
     }
-  } 
+    else if(dataType === 'category' && labelType === 'category')
+    {
+      return this.categoryProvider.getTest(timeperiod.from, timeperiod.to, categories, operationType)
+    } 
+  }
 
 
   public getDatasets(): any {
-   return this.chartInstance.data.datasets
+    return this.chartInstance.data.datasets
   }
 
   public clearDatasets(): void {
@@ -97,18 +105,16 @@ export class ChartProvider {
     return this.chartInstance;
   }
 
-  public getLabels(): string [] {
+  public getLabels(): string[] {
     return this.chartInstance.data.labels;
   }
 
-  public setLabels(labels: string [])
-  {
+  public setLabels(labels: string[]) {
     this.chartInstance.data.labels = labels;
     this.chartInstance.update();
   }
 
-  public setType(type: string)
-  {
+  public setType(type: string) {
     this.chartInstance.type = type;
     this.chartInstance.update();
   }
@@ -153,7 +159,7 @@ export class ChartProvider {
     return `<ion-icon name="${iconName}" class="icon icon-md ion-md-${iconName} item-icon legend"></ion-icon>`;
   }
 
-  public buildCompleteHTML(categories: Category[]) {
+  public buildCategoryLegendHTML(categories: Category[]) {
     let html = `<ul>`;
     categories.forEach(c => {
       if (c.getTotalExpenseCost() > 0) {

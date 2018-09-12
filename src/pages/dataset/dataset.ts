@@ -3,7 +3,7 @@ import { CategoryProvider } from './../../providers/category/category';
 import { Category } from './../../models/Category';
 import { ChartProvider } from './../../providers/chart/chart';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ViewController } from 'ionic-angular';
 
 /**
  * Generated class for the DatasetPage page.
@@ -23,9 +23,9 @@ export class DatasetPage {
 
   public labels: string []; // needs to be the same for multiple datasets!
   public data: number []; // numbers associated with the labels --> hobby - 200
-  public labelTypes: string [] = ['month', 'year', 'category', 'expense'] //can be week,month,year but also category name, expense description, tag name
+  public labelTypes: string [] = ['month', 'year', 'category', 'tag'] //can be week,month,year but also category name, expense description, tag name
   public labelType: string;
-  public dataTypes: string [] = ['category', 'expense', 'tag'];
+  public dataTypes: string [] = ['category','tag'];
   public dataType: string; // needst to be the same for multiple datasets
   public timeperiod: {from: string, to: string}; // needs to be the same for multiple datasets
   public operationTypes: string [] = ['total', 'average']; // could be different for other datasets, avg vs total for example
@@ -35,7 +35,7 @@ export class DatasetPage {
   public selectedCategories: Category [] = [];
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public alertCtrl: AlertController,) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public alertCtrl: AlertController, private view: ViewController) {
     this.timeperiod = {from: '', to: ''};
     this.ctx = this.navParams.get("ctx");
     
@@ -51,12 +51,15 @@ export class DatasetPage {
    return this.chartProvider.getDatasetData({from: this.timeperiod.from, to: this.timeperiod.to}, categoryName, this.labelType, this.dataType, this.operationType);
   }
 
-  addAllDatasetsToChart() {
-    if(this.dataType === 'category')
+  createDataDatasetSingular(categories: Category []): Promise <number []>
+ {
+   return this.chartProvider.getDatasetData({from: this.timeperiod.from, to: this.timeperiod.to}, undefined, this.labelType, this.dataType, this.operationType, categories);
+ }
+
+  async addAllDatasetsToChart() {
+    if(this.dataType === 'category' && this.labelType === 'month')
     {
       let labels = this.momentProvider.getLabelsBetweenTimePeriod(this.timeperiod.from, this.timeperiod.to);
-
-      
       this.chartProvider.clearDatasets();
       this.selectedCategories.forEach(async cat => {
         let data = {data: [], backgroundColor: []};
@@ -68,11 +71,27 @@ export class DatasetPage {
       });
       this.chartProvider.setLabels(labels);
      // this.chartProvider.setType('bar');
-     
      console.log(this.chartProvider.getDatasets());
-      this.navCtrl.pop();
+      this.view.dismiss(this.selectedCategories);
+    }
+    else if(this.dataType === 'category' && this.labelType === 'category')
+    {
+      let labels = [];
+      labels = this.selectedCategories.map(c => c.getCategoryName());
+      
 
-
+      let data = {data: [], backgroundColor: []};
+      this.chartProvider.clearDatasets();
+      console.log(await this.createDataDatasetSingular(this.selectedCategories));
+      data.data = await this.createDataDatasetSingular(this.selectedCategories);
+      data.backgroundColor = this.selectedCategories.map(c => c.getCategoryColor());
+      console.log(data);
+      this.chartProvider.addDataset(data);
+      this.chartProvider.setLabels(labels);
+      this.view.dismiss(this.selectedCategories);
+      
+      
+      
     }
   }
 

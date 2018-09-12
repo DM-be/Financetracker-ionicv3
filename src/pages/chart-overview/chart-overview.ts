@@ -55,15 +55,13 @@ export class ChartOverviewPage {
     let colors = this.chartProvider.buildCategoryColors(categories);
     let data = this.chartProvider.buildCategoryData(categories);
     let labels = this.chartProvider.buildCategoryLabels(categories);
-    let categoriesHTML = this.chartProvider.buildCompleteHTML(categories);
-    this.ctx = document.getElementById("myChart");
-    this.chart = this.chartProvider.createNewChart(this.ctx, data, colors, labels, 'doughnut', false, categoriesHTML);
- //   console.log(categoriesHTML);
     let legend = document.getElementById("chartjs-legend");
-    legend.innerHTML = this.chart.generateLegend();
-    console.log(this.chart);
-    console.log(this.chartProvider.getDatasets());
-    console.log(this.chart.data.datasets[0])
+    legend.innerHTML = this.chartProvider.buildCategoryLegendHTML(categories);
+    this.ctx = document.getElementById("myChart");
+    this.chart = this.chartProvider.createNewChart(this.ctx, data, colors, labels, 'doughnut', false, true);
+ //   console.log(categoriesHTML);
+    
+  
     this.chart = this.chartProvider.getChartInstance();
   }
 
@@ -78,9 +76,20 @@ export class ChartOverviewPage {
   }
   
   addDatasetModal() {
-    this.modalCtrl.create(DatasetPage, {
+    let datasetModal = this.modalCtrl.create(DatasetPage, {
       ctx: this.ctx
-    }).present();
+    });
+    datasetModal.present()
+
+    datasetModal.onDidDismiss(categories => {
+      if(categories)
+      {
+      let legend = document.getElementById("chartjs-legend");
+      legend.innerHTML = this.chartProvider.buildCategoryLegendHTML(categories);
+      }
+
+    }
+    ); 
 
   }
 

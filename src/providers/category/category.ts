@@ -95,6 +95,34 @@ export class CategoryProvider {
         return resultingData;
   }
 
+  public async getTest(from: string, to: string, categories: Category [], operation: string) {
+    let resultingData: number[] = [];
+
+    // [ A-total, B-total, ...]
+    // [ A-color, B-color, ....]
+         let allDocs = await this.dbProvider.getDb().allDocs({
+           include_docs: true,
+           startkey: from,
+           endKey: to
+        });
+         allDocs.rows.forEach(mo => {
+          let monthOverviewObJect = new MonthOverView(mo.doc._id, mo.doc.accounts, mo.doc.categories, mo.doc._rev, mo.doc.usedTags);
+          if(operation === 'total')
+          {
+            monthOverviewObJect.getCategories().forEach(cat => {
+              let i = categories.findIndex(c => c.categoryName === cat.categoryName);
+              console.log(i);
+              if(i >=0)
+              {
+                resultingData[i] += cat.getTotalExpenseCost();
+              }
+            });
+          }})
+        return resultingData;
+  }
+
+  
+
 
 
   
