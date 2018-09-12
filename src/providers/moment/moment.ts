@@ -51,11 +51,12 @@ export class MomentProvider {
   public getLabelsBetweenTimePeriod(from: string, to: string)
   {
     let labels = [];
-    labels.push(from);
-    while(from !== to)
+    let toPlusOneMonth = moment(to).add(1, 'month').format('YYYY-MM');
+    while(from !== toPlusOneMonth)
     {
+      let momentObject = moment(from, "YYYY-MM");
+      labels.push(moment(momentObject).format("MMM YY"));
       from = moment(from).add(1, 'month').format('YYYY-MM')
-      labels.push(from);
     }
     return labels;
   }
