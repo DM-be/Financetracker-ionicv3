@@ -62,8 +62,13 @@ export class ChartProvider {
         legend: {
           display: !customLegend
         },
-        cutoutPercentage: 85
-      },
+        scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero: true
+              }
+          }]
+      }},
 
     });
 
@@ -82,11 +87,12 @@ export class ChartProvider {
     from: string,
     to: string
   }, categoryName: string, labelType: string, dataType: string, operationType: string, categories?: Category []) {
-    if (dataType === 'category') {
+    if (dataType === 'category' && labelType === 'month') {
       return this.categoryProvider.getCategoryBetweenDatesWithOperationAndLabelType(timeperiod.from, timeperiod.to, labelType, categoryName, operationType)
     }
     else if(dataType === 'category' && labelType === 'category')
     {
+      console.log('in here')
       return this.categoryProvider.getTest(timeperiod.from, timeperiod.to, categories, operationType)
     } 
   }

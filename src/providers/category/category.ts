@@ -97,6 +97,9 @@ export class CategoryProvider {
 
   public async getTest(from: string, to: string, categories: Category [], operation: string) {
     let resultingData: number[] = [];
+    for (let i = 0; i < categories.length; i++) {
+      resultingData[i] = 0;
+    }
 
     // [ A-total, B-total, ...]
     // [ A-color, B-color, ....]

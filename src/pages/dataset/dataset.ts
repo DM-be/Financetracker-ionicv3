@@ -85,9 +85,8 @@ export class DatasetPage {
       console.log(await this.createDataDatasetSingular(this.selectedCategories));
       data.data = await this.createDataDatasetSingular(this.selectedCategories);
       data.backgroundColor = this.selectedCategories.map(c => c.getCategoryColor());
-      console.log(data);
-      this.chartProvider.addDataset(data);
       this.chartProvider.setLabels(labels);
+      this.chartProvider.addDataset(data);
       this.view.dismiss(this.selectedCategories);
       
       
