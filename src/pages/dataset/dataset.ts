@@ -1,3 +1,4 @@
+import { Dataset } from './../../models/Dataset';
 import { MomentProvider } from './../../providers/moment/moment';
 import { CategoryProvider } from './../../providers/category/category';
 import { Category } from './../../models/Category';
@@ -33,6 +34,8 @@ export class DatasetPage {
   public ctx;
   public categories: Category [];
   public selectedCategories: Category [] = [];
+  public chartType: string;
+  public chartTypes: string [] = ['pie', 'bar', 'line', 'doughnut', 'radar'];
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public alertCtrl: AlertController, private view: ViewController) {
@@ -67,7 +70,7 @@ export class DatasetPage {
         for (let i = 0; i < data.data.length; i++) {
           data.backgroundColor.push(cat.getCategoryColor());
         }
-        this.chartProvider.addDataset(data);
+       // this.chartProvider.addDataset(data);
       });
       this.chartProvider.setLabels(labels);
      // this.chartProvider.setType('bar');
@@ -84,9 +87,16 @@ export class DatasetPage {
       this.chartProvider.clearDatasets();
       console.log(await this.createDataDatasetSingular(this.selectedCategories));
       data.data = await this.createDataDatasetSingular(this.selectedCategories);
+      let datas = await this.createDataDatasetSingular(this.selectedCategories);
+      let backgroundColor = this.selectedCategories.map(c => c.getCategoryColor());
+      let dataObject = new Dataset(datas,backgroundColor);
+
+
+
+
       data.backgroundColor = this.selectedCategories.map(c => c.getCategoryColor());
       this.chartProvider.setLabels(labels);
-      this.chartProvider.addDataset(data);
+      this.chartProvider.addDataset(dataObject);
       this.view.dismiss(this.selectedCategories);
       
       

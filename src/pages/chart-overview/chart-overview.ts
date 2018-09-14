@@ -50,28 +50,28 @@ export class ChartOverviewPage {
   }
 
   async setupFirstChart() {
-    await this.refreshData();
+    await this.refreshMonthOverview();
+
     let categories = this.monthOverview.getCategories();
-    let colors = this.chartProvider.buildCategoryColors(categories);
-    let data = this.chartProvider.buildCategoryData(categories);
-    let labels = this.chartProvider.buildCategoryLabels(categories);
     let legend = document.getElementById("chartjs-legend");
     legend.innerHTML = this.chartProvider.buildCategoryLegendHTML(categories);
     this.ctx = document.getElementById("myChart");
-    this.chart = this.chartProvider.createNewChart(this.ctx, data, colors, labels, 'doughnut', false, true);
+    await this.chartProvider.setupDefaultChart(this.ctx);
+    //this.chart = this.chartProvider.createNewChart(this.ctx, data, colors, labels, 'doughnut', false, true);
  //   console.log(categoriesHTML);
     
   
     this.chart = this.chartProvider.getChartInstance();
+    console.log(this.chart);
   }
 
   async updateDate() {
     this.momentProvider.setSelectedYearAndMonth(this.selectedYearAndMonth);
-    await this.refreshData();
+    await this.refreshMonthOverview();
   }
 
 
-  async refreshData() {
+  async refreshMonthOverview() {
     this.monthOverview = await this.monthOverviewProvider.getMonthOverview(this.selectedYearAndMonth);
   }
   

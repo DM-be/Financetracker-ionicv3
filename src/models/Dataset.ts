@@ -1,26 +1,32 @@
 export class Dataset {
 
     public data: number [];
-    public backGroundColor: string [];
-    public labels: string [];
-    
+    public backgroundColor: string [];
     /**
-     *
+     *  data and backgroundcolor are needed for the chartjs instance
+     *  
+     *  
      */
-    constructor(data: number [], backgroundColor: string [], labels: string []) {
+    constructor(data: number [], backgroundColor: string []) {
         this.data = data;
-        this.backGroundColor = backgroundColor;
-        this.labels = labels;
+        this.backgroundColor = backgroundColor;
     }
 
     
-    public getBackGroundColor(): string [] {
-        return this.backGroundColor;
+    public getBackGroundColors(): string [] {
+        return this.backgroundColor;
     }
 
-   public getLabels(): string []
-   {
-       return this.labels;
-   }
-    
+    public setBackGroundColor(backgroundColor: string []): void {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public setData(data: number []): void {
+        this.data = data;
+    }
+
+    public getData(): number [] {
+        return this.data;
+    }
+
 }

@@ -1,3 +1,5 @@
+import { MomentProvider } from './../moment/moment';
+import { MonthOverviewProvider } from './../month-overview/month-overview';
 import {
   CategoryProvider
 } from './../category/category';
@@ -29,24 +31,24 @@ import {
 @Injectable()
 export class ChartProvider {
 
-  private chartInstance: any;
+  private chartInstance: any; // holds the chartjs instance
+  private labels: string []; // kept here for setup reasons --> chart constructor needs labels before instantiation
+  private labelType: string; // selected labelType --> determines the labels 
+  private dataType: string; // data on which operations are executed --> category etc..., needs to be the same for each dataset
 
-  constructor(public events: Events, public categoryProvider: CategoryProvider) {}
 
+  constructor(public events: Events, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider) {}
 
-  public getChartTypes() {
-    return ['line', 'pie'];
-  }
-  createNewChart(ctx: any, data: number[], hexColorsArray: string[], labels: string[], type ? : string, expense ? : boolean, customLegend ? : boolean) {
+  createNewChart(ctx: any, dataset?: Dataset, type ? : string, expense ? : boolean, customLegend ? : boolean, customLabels?: string []) {
     let chartData = {
       datasets: [{
-        data: data,
-        backgroundColor: hexColorsArray
+        data: dataset.data || [],
+        backgroundColor: dataset.backgroundColor || []
       }],
-      labels: labels
+      labels: customLabels || this.getLabels()
     };
-    this.chartInstance = new Chart(ctx, {
-      type: 'bar',
+    let chart = new Chart(ctx, {
+      type: type || 'bar',
       data: chartData,
       options: {
         events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
@@ -58,30 +60,75 @@ export class ChartProvider {
             this.events.publish('expense:clicked', item[0]._index);
           }
         },
-
         legend: {
           display: !customLegend
         },
         scales: {
           yAxes: [{
               ticks: {
-                  beginAtZero: true
-              }
+                  beginAtZero: (type === 'bar')
+              },
+              display: (type === 'bar')
           }]
       }},
-
     });
-
-    return this.chartInstance;
+    if(!customLabels) {
+      this.chartInstance = chart; // other charts other than the one on the mainpage are not referenced by this service
+    }
+    return chart;
   }
 
-  public addDataset(dataset: {
-    data: number[],
-    backgroundColor: string[]
-  }): void {
+  public setLabelType(labelType: string ): void {
+    this.labelType = labelType;
+  }
+
+  public setDataType(dataType: string): void {
+    this.dataType = dataType;
+  }
+
+  public setLabels(labels: string []): void {
+    this.labels = labels;
+  }
+
+  public getLabels(): string [] {
+    return this.labels;
+  }
+
+  public addDataset(dataset: Dataset): void {
     this.chartInstance.data.datasets.push(dataset);
     this.chartInstance.update();
   }
+
+  // setup first chart when landing on the chart overview page 
+  public async setupDefaultChart(ctx): Promise<void> {
+    let emptyDataset = new Dataset([], []);
+    
+
+    this.createNewChart(ctx, emptyDataset);
+    this.clearDatasets();
+
+    let currentYearAndMonth = this.momentProvider.getCurrentYearAndMonth();
+    let categories = await this.categoryProvider.getCategories(currentYearAndMonth);
+    let timeperiod = {from: currentYearAndMonth, to: currentYearAndMonth};
+    let labelType = 'category'; // get from default settings in useroverview 
+    this.setLabelType(labelType);
+    let labels = categories.map(c => c.getCategoryName());
+    this.setChartLabels(labels);
+    let dataType = 'category'; // get from default settings in useroverview 
+    let operationType = 'total'; // get from default settings in useroverview 
+    categories.forEach(async cat => {
+      let datasetData = await this.getDatasetData(timeperiod, cat.getCategoryName(), labelType, dataType, operationType);
+      let backgroundColor = [];
+      console.log(datasetData);
+      for (let i = 0; i < datasetData.length; i++) {
+        backgroundColor.push(cat.getCategoryColor());
+      }
+      let dataSet = new Dataset(datasetData, backgroundColor);
+      this.addDataset(dataSet);
+    });
+
+  }
+
 
   public getDatasetData(timeperiod: {
     from: string,
@@ -92,8 +139,7 @@ export class ChartProvider {
     }
     else if(dataType === 'category' && labelType === 'category')
     {
-      console.log('in here')
-      return this.categoryProvider.getTest(timeperiod.from, timeperiod.to, categories, operationType)
+      return this.categoryProvider.getCategoryBetweenDatesWithOperationAndLabelType(timeperiod.from, timeperiod.to, labelType, categoryName, operationType)
     } 
   }
 
@@ -111,11 +157,11 @@ export class ChartProvider {
     return this.chartInstance;
   }
 
-  public getLabels(): string[] {
+  public getChartLabels(): string[] {
     return this.chartInstance.data.labels;
   }
 
-  public setLabels(labels: string[]) {
+  public setChartLabels(labels: string[]) {
     this.chartInstance.data.labels = labels;
     this.chartInstance.update();
   }
@@ -124,6 +170,8 @@ export class ChartProvider {
     this.chartInstance.type = type;
     this.chartInstance.update();
   }
+
+  
 
 
   buildRandomColors(amount: number) {

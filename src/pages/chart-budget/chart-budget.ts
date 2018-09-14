@@ -35,7 +35,7 @@ export class ChartBudgetPage {
     let colors = this.chartProvider.buildRandomColors(2);
     let data = this.chartProvider.buildExpenseData(this.expenses);
     var ctx = document.getElementById("budgetChart");
-    this.chartProvider.createNewChart(ctx, data, colors, ['test', 'test'], undefined, true);
+    //this.chartProvider.createNewChart(ctx, data, colors, ['test', 'test'], undefined, true);
   
     //console.log(data);
 
