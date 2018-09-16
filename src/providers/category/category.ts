@@ -79,7 +79,16 @@ export class CategoryProvider {
   //   }
   // }
 
-  public async getCategoryBetweenDatesWithOperationAndLabelType(from: string, to: string, labelType: string, categoryName: string, operation: string) {
+
+  /*
+  returns a single dataset number array with each index containing the same category total/average/... cost
+  over a timeperiod, with labels: months of the year
+  example
+  [100, 0, 300, 400] for category:hobby --> from jan to april
+  
+  */
+
+  public async getCategoryDatasetWithMonthLabel(from: string, to: string, labelType: string, categoryName: string, operation: string) {
     let resultingData: number[] = [];
     let allDocs = await this.dbProvider.getDb().allDocs({
       include_docs: true,
@@ -95,25 +104,26 @@ export class CategoryProvider {
           resultingData.push(0);
         }
       }
-      if (operation === 'total' && labelType === 'category') {
-        if (monthOverviewObJect.containsCategory(categoryName)) {
-          resultingData.push(monthOverviewObJect.getCategoryByName(categoryName).getTotalExpenseCost());
-        } else {
-          resultingData.push(0);
-        }
-      }
     })
     return resultingData;
   }
 
-  public async getTest(from: string, to: string, categories: Category[], operation: string) {
+
+
+  /*
+
+  aggregates category numbers based on operation
+  returns a single dataset with each index having a computed number, depending on operation and time period
+  example
+  [500, 300]
+  --> hobby: 500 total cost, food: 300 total cost, from period jan to feb
+  */
+
+  public async getCategoryDatasetWithCategoryLabel(from: string, to: string, categories: Category[], operation: string) {
     let resultingData: number[] = [];
     for (let i = 0; i < categories.length; i++) {
       resultingData[i] = 0;
     }
-
-    // [ A-total, B-total, ...]
-    // [ A-color, B-color, ....]
     let allDocs = await this.dbProvider.getDb().allDocs({
       include_docs: true,
       startkey: from,

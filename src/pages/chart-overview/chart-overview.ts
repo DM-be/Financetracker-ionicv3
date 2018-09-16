@@ -51,18 +51,12 @@ export class ChartOverviewPage {
 
   async setupFirstChart() {
     await this.refreshMonthOverview();
-
     let categories = this.monthOverview.getCategories();
     let legend = document.getElementById("chartjs-legend");
     legend.innerHTML = this.chartProvider.buildCategoryLegendHTML(categories);
     this.ctx = document.getElementById("myChart");
     await this.chartProvider.setupDefaultChart(this.ctx);
-    //this.chart = this.chartProvider.createNewChart(this.ctx, data, colors, labels, 'doughnut', false, true);
- //   console.log(categoriesHTML);
-    
-  
     this.chart = this.chartProvider.getChartInstance();
-    console.log(this.chart);
   }
 
   async updateDate() {
@@ -81,11 +75,18 @@ export class ChartOverviewPage {
     });
     datasetModal.present()
 
-    datasetModal.onDidDismiss(categories => {
-      if(categories)
+    datasetModal.onDidDismiss(operationTypeWithCategories => {
+      let selectedCategories = operationTypeWithCategories.categories;
+      if(selectedCategories) // new dataset was entered
       {
+      // rebuild legend
       let legend = document.getElementById("chartjs-legend");
-      legend.innerHTML = this.chartProvider.buildCategoryLegendHTML(categories);
+      legend.innerHTML = this.chartProvider.buildCategoryLegendHTML(selectedCategories);
+
+      // rebuild chart
+      this.chartProvider.handleNewDataset(operationTypeWithCategories.operationType, operationTypeWithCategories.timeperiod, selectedCategories); 
+
+
       }
 
     }

@@ -21,6 +21,7 @@ import randomColor from 'randomcolor'
 import {
   Events
 } from 'ionic-angular';
+import { Tag } from '../../models/Tag';
 
 /*
   Generated class for the ChartProvider provider.
@@ -45,7 +46,7 @@ export class ChartProvider {
         data: dataset.data || [],
         backgroundColor: dataset.backgroundColor || []
       }],
-      labels: customLabels || this.getLabels()
+      labels: customLabels || this.getLabels() // customlabels are for use in other components other than chartoverview
     };
     let chart = new Chart(ctx, {
       type: type || 'bar',
@@ -86,10 +87,15 @@ export class ChartProvider {
     this.dataType = dataType;
   }
 
-  public setLabels(labels: string []): void {
-    this.labels = labels;
+  public getLabelType(): string {
+    return this.labelType;
   }
 
+  public getDataType(): string {
+    return this.dataType;
+  }
+
+  // only used once for the default instance, do not reuse, use appropiate setchartlabels and getter
   public getLabels(): string [] {
     return this.labels;
   }
@@ -102,44 +108,67 @@ export class ChartProvider {
   // setup first chart when landing on the chart overview page 
   public async setupDefaultChart(ctx): Promise<void> {
     let emptyDataset = new Dataset([], []);
-    
-
     this.createNewChart(ctx, emptyDataset);
     this.clearDatasets();
-
     let currentYearAndMonth = this.momentProvider.getCurrentYearAndMonth();
     let categories = await this.categoryProvider.getCategories(currentYearAndMonth);
     let timeperiod = {from: currentYearAndMonth, to: currentYearAndMonth};
     let labelType = 'category'; // get from default settings in useroverview 
-    this.setLabelType(labelType);
+    
     let labels = categories.map(c => c.getCategoryName());
-    this.setChartLabels(labels);
+    
     let dataType = 'category'; // get from default settings in useroverview 
-    let operationType = 'total'; // get from default settings in useroverview 
-    categories.forEach(async cat => {
-      let datasetData = await this.getDatasetData(timeperiod, cat.getCategoryName(), labelType, dataType, operationType);
-      let backgroundColor = [];
-      console.log(datasetData);
-      for (let i = 0; i < datasetData.length; i++) {
-        backgroundColor.push(cat.getCategoryColor());
-      }
-      let dataSet = new Dataset(datasetData, backgroundColor);
-      this.addDataset(dataSet);
-    });
+    
 
+    let operationType = 'total'; // get from default settings in useroverview 
+
+    this.setLabelType(labelType);
+    this.setDataType(dataType);
+    this.setChartLabels(labels);
+
+    let data = await this.getDatasetData(timeperiod,undefined,  labelType, dataType, operationType, categories,);
+    let backgroundColor = categories.map(c => c.getCategoryColor());
+    let dataObject = new Dataset(data,backgroundColor);
+    this.addDataset(dataObject);
   }
 
 
+  async handleNewDataset(operationType: string, timeperiod: {
+    from: string,
+    to: string
+  }, categories?: Category [], tags?: Tag [])
+  {
+    if(categories)
+    {
+      if(this.dataType === 'category' && this.labelType === 'category')
+      {
+        let data =  await this.categoryProvider.getCategoryDatasetWithCategoryLabel(timeperiod.from, timeperiod.to, categories, operationType)
+        let backgroundColor = categories.map(c => c.getCategoryColor());
+        let dataset = new Dataset(data, backgroundColor);
+        let labels = categories.map(c => c.getCategoryName());
+        this.setChartLabels(labels);
+        this.addDataset(dataset);
+      }
+      
+    }
+    else if(tags)
+    {
+      // and so on
+    }
+  } 
+
+
+  // refactor 
   public getDatasetData(timeperiod: {
     from: string,
     to: string
   }, categoryName: string, labelType: string, dataType: string, operationType: string, categories?: Category []) {
     if (dataType === 'category' && labelType === 'month') {
-      return this.categoryProvider.getCategoryBetweenDatesWithOperationAndLabelType(timeperiod.from, timeperiod.to, labelType, categoryName, operationType)
+      return this.categoryProvider.getCategoryDatasetWithMonthLabel(timeperiod.from, timeperiod.to, labelType, categoryName, operationType)
     }
     else if(dataType === 'category' && labelType === 'category')
     {
-      return this.categoryProvider.getCategoryBetweenDatesWithOperationAndLabelType(timeperiod.from, timeperiod.to, labelType, categoryName, operationType)
+      return this.categoryProvider.getCategoryDatasetWithCategoryLabel(timeperiod.from, timeperiod.to, categories, operationType)
     } 
   }
 

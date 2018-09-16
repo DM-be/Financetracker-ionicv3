@@ -25,7 +25,7 @@
     <form>
       <ion-item>
         <ion-label>Labels</ion-label>
-        <ion-select [(ngModel)]="labelType" name="labelType">
+        <ion-select [(ngModel)]="labelType" name="labelType" disabled="!labelType">
           <ion-option *ngFor="let labelType of labelTypes" [value]="labelType">{{labelType}}</ion-option>
         </ion-select>
       </ion-item>
@@ -37,7 +37,7 @@
       </ion-item>
       <ion-item>
         <ion-label>Compare</ion-label>
-        <ion-select [(ngModel)]="dataType" name="dataType">
+        <ion-select [(ngModel)]="dataType" name="dataType" disabled="!dataType"> 
           <ion-option *ngFor="let dataType of dataTypes" [value]="dataType">{{dataType}}</ion-option>
         </ion-select>
       </ion-item>

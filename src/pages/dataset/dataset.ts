@@ -40,9 +40,10 @@ export class DatasetPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public alertCtrl: AlertController, private view: ViewController) {
     this.timeperiod = {from: '', to: ''};
+    this.dataType = this.chartProvider.getDataType() || undefined;
+    this.labelType = this.chartProvider.getLabelType() || undefined;
     this.ctx = this.navParams.get("ctx");
-    
-
+  
   }
 
   async ionViewWillEnter(){
@@ -72,32 +73,31 @@ export class DatasetPage {
         }
        // this.chartProvider.addDataset(data);
       });
-      this.chartProvider.setLabels(labels);
+      //this.chartProvider.setLabels(labels);
      // this.chartProvider.setType('bar');
      console.log(this.chartProvider.getDatasets());
       this.view.dismiss(this.selectedCategories);
+      
+
     }
     else if(this.dataType === 'category' && this.labelType === 'category')
     {
-      let labels = [];
-      labels = this.selectedCategories.map(c => c.getCategoryName());
+      // let labels = [];
+      // labels = this.selectedCategories.map(c => c.getCategoryName());
+      // let data = {data: [], backgroundColor: []};
+      // this.chartProvider.clearDatasets();
+      // console.log(await this.createDataDatasetSingular(this.selectedCategories));
+      // data.data = await this.createDataDatasetSingular(this.selectedCategories);
+      // let datas = await this.createDataDatasetSingular(this.selectedCategories);
+      // let backgroundColor = this.selectedCategories.map(c => c.getCategoryColor());
+      // let dataObject = new Dataset(datas,backgroundColor);
+      // data.backgroundColor = this.selectedCategories.map(c => c.getCategoryColor());
+      // this.chartProvider.setLabels(labels);
+      // this.chartProvider.addDataset(dataObject);
+      let operationTypeWithCategoriesAndTimeperiod = {operationType: this.operationType, timeperiod: this.timeperiod, categories: this.selectedCategories};
+      this.view.dismiss(operationTypeWithCategoriesAndTimeperiod);
       
 
-      let data = {data: [], backgroundColor: []};
-      this.chartProvider.clearDatasets();
-      console.log(await this.createDataDatasetSingular(this.selectedCategories));
-      data.data = await this.createDataDatasetSingular(this.selectedCategories);
-      let datas = await this.createDataDatasetSingular(this.selectedCategories);
-      let backgroundColor = this.selectedCategories.map(c => c.getCategoryColor());
-      let dataObject = new Dataset(datas,backgroundColor);
-
-
-
-
-      data.backgroundColor = this.selectedCategories.map(c => c.getCategoryColor());
-      this.chartProvider.setLabels(labels);
-      this.chartProvider.addDataset(dataObject);
-      this.view.dismiss(this.selectedCategories);
       
       
       
