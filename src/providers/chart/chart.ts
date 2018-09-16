@@ -62,7 +62,7 @@ export class ChartProvider {
           }
         },
         legend: {
-          display: !customLegend
+          display: false
         },
         scales: {
           yAxes: [{
@@ -112,10 +112,11 @@ export class ChartProvider {
     this.clearDatasets();
     let currentYearAndMonth = this.momentProvider.getCurrentYearAndMonth();
     let categories = await this.categoryProvider.getCategories(currentYearAndMonth);
+    let filteredCategories = categories.filter(c => c.getTotalExpenseCost() > 0);
     let timeperiod = {from: currentYearAndMonth, to: currentYearAndMonth};
     let labelType = 'category'; // get from default settings in useroverview 
     
-    let labels = categories.map(c => c.getCategoryName());
+    let labels = filteredCategories.map(c => c.getCategoryName());
     
     let dataType = 'category'; // get from default settings in useroverview 
     
@@ -126,8 +127,8 @@ export class ChartProvider {
     this.setDataType(dataType);
     this.setChartLabels(labels);
 
-    let data = await this.getDatasetData(timeperiod,undefined,  labelType, dataType, operationType, categories,);
-    let backgroundColor = categories.map(c => c.getCategoryColor());
+    let data = await this.getDatasetData(timeperiod,undefined,  labelType, dataType, operationType, filteredCategories);
+    let backgroundColor = filteredCategories.map(c => c.getCategoryColor());
     let dataObject = new Dataset(data,backgroundColor);
     this.addDataset(dataObject);
   }
