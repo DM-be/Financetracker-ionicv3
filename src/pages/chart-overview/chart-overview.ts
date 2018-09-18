@@ -1,3 +1,4 @@
+import { DatasetButton } from './../../models/DatasetButton';
 import { MonthOverView } from './../../models/MonthOverview';
 import { CategoryProvider } from './../../providers/category/category';
 import { MomentProvider } from './../../providers/moment/moment';
@@ -26,12 +27,13 @@ export class ChartOverviewPage {
   public selectedChartType: string; 
   public chart: any;
   public ctx = document.getElementById("myChart");
+  public datasetButtons: DatasetButton [];
 
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public momentProvider: MomentProvider, public monthOverviewProvider: MonthOverviewProvider, public modalCtrl: ModalController) {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth() || this.momentProvider.getCurrentYearAndMonth();
-    
+    this.datasetButtons = [];
   
   }
 
@@ -57,6 +59,8 @@ export class ChartOverviewPage {
     this.ctx = document.getElementById("myChart");
     await this.chartProvider.setupDefaultChart(this.ctx);
     this.chart = this.chartProvider.getChartInstance();
+    this.datasetButtons.push(this.chartProvider.getDefaultDatasetButton());
+    
   }
 
   async updateDate() {
@@ -75,8 +79,10 @@ export class ChartOverviewPage {
     });
     datasetModal.present()
 
-    datasetModal.onDidDismiss(operationTypeWithCategories => {
-      let selectedCategories = operationTypeWithCategories.categories;
+    datasetModal.onDidDismiss(datasetModalData => {
+      const {selectedCategories, operationType, dataType, timeperiod} = datasetModalData;
+      //let selectedCategories = operationTypeWithCategories.categories;
+      //let operationType = operationTypeWithCategories.operationType;
       if(selectedCategories) // new dataset was entered
       {
       // rebuild legend
@@ -84,14 +90,26 @@ export class ChartOverviewPage {
       legend.innerHTML = this.chartProvider.buildCategoryLegendHTML(selectedCategories);
 
       // rebuild chart
-      this.chartProvider.handleNewDataset(operationTypeWithCategories.operationType, operationTypeWithCategories.timeperiod, selectedCategories); 
-
-
+      console.log(selectedCategories);
+      this.chartProvider.handleNewDataset(operationType, timeperiod, selectedCategories); 
+      // add datasetbutton
+      this.datasetButtons.push(new DatasetButton(operationType, dataType, timeperiod));  
       }
 
     }
     ); 
 
+  }
+
+  deleteDataset(i: number)
+  {
+    this.chartProvider.deleteDataset(i);
+    this.datasetButtons.splice(i, 1);
+    if(this.chartProvider.noDatasets())
+    {
+      let legend = document.getElementById("chartjs-legend");
+      legend.innerHTML = '';
+    }
   }
 
 }

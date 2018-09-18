@@ -1,3 +1,4 @@
+import { DatasetButton } from './../../models/DatasetButton';
 import { MomentProvider } from './../moment/moment';
 import { MonthOverviewProvider } from './../month-overview/month-overview';
 import {
@@ -115,23 +116,25 @@ export class ChartProvider {
     let filteredCategories = categories.filter(c => c.getTotalExpenseCost() > 0);
     let timeperiod = {from: currentYearAndMonth, to: currentYearAndMonth};
     let labelType = 'category'; // get from default settings in useroverview 
-    
     let labels = filteredCategories.map(c => c.getCategoryName());
-    
     let dataType = 'category'; // get from default settings in useroverview 
-    
-
     let operationType = 'total'; // get from default settings in useroverview 
-
     this.setLabelType(labelType);
     this.setDataType(dataType);
     this.setChartLabels(labels);
-
-    let data = await this.getDatasetData(timeperiod,undefined,  labelType, dataType, operationType, filteredCategories);
+    let data = await this.getDatasetData(timeperiod,undefined, labelType, dataType, operationType, filteredCategories);
     let backgroundColor = filteredCategories.map(c => c.getCategoryColor());
     let dataObject = new Dataset(data,backgroundColor);
     this.addDataset(dataObject);
   }
+
+  public getDefaultDatasetButton(): DatasetButton
+  {
+    let currentYearAndMonth = this.momentProvider.getCurrentYearAndMonth();
+    return new DatasetButton('total', 'category',{from: currentYearAndMonth, to: currentYearAndMonth} )
+  }
+
+
 
 
   async handleNewDataset(operationType: string, timeperiod: {
@@ -139,6 +142,7 @@ export class ChartProvider {
     to: string
   }, categories?: Category [], tags?: Tag [])
   {
+    console.log(categories);
     if(categories)
     {
       if(this.dataType === 'category' && this.labelType === 'category')
@@ -147,8 +151,13 @@ export class ChartProvider {
         let backgroundColor = categories.map(c => c.getCategoryColor());
         let dataset = new Dataset(data, backgroundColor);
         let labels = categories.map(c => c.getCategoryName());
-        this.setChartLabels(labels);
+        if(this.noDatasets())
+        {
+          this.setChartLabels(labels);
+        }
+        console.log(dataset);
         this.addDataset(dataset);
+
       }
       
     }
@@ -159,6 +168,7 @@ export class ChartProvider {
   } 
 
 
+  
   // refactor 
   public getDatasetData(timeperiod: {
     from: string,
@@ -176,6 +186,20 @@ export class ChartProvider {
 
   public getDatasets(): any {
     return this.chartInstance.data.datasets
+  }
+
+  public noDatasets(): boolean {
+    return this.chartInstance.data.datasets.length === 0;
+  }
+  public deleteDataset(index: number) {
+    this.chartInstance.data.datasets.splice(index, 1);
+    if(this.noDatasets())
+    {
+      this.clearChartLabels();
+      this.labelType = undefined;
+      this.dataType = undefined;
+    } 
+    this.chartInstance.update();
   }
 
   public clearDatasets(): void {
@@ -196,13 +220,15 @@ export class ChartProvider {
     this.chartInstance.update();
   }
 
+  public clearChartLabels(): void {
+    this.chartInstance.data.labels = [];
+    this.chartInstance.update();
+  }
+
   public setType(type: string) {
     this.chartInstance.type = type;
     this.chartInstance.update();
   }
-
-  
-
 
   buildRandomColors(amount: number) {
     let colors = [];
@@ -210,33 +236,6 @@ export class ChartProvider {
       colors.push(randomColor());
     }
     return colors;
-  }
-
-  buildExpenseData(expenses: Expense[]) {
-    return expenses.map(e => e.getCost());
-  }
-
-  buildExpenseLabels(expenses: Expense[]) {
-    return expenses.map(e => e.getDescription())
-  }
-
-
-  buildCategoryData(categories: Category[]): number[] {
-    let totalCategoryCosts = [];
-    categories.forEach(c => totalCategoryCosts.push(c.getTotalExpenseCost()));
-    return totalCategoryCosts;
-  }
-
-  buildCategoryLabels(categories: Category[]): string[] {
-    return categories.map(c => c.getCategoryName());
-  }
-
-  buildCategoryColors(categories: Category[]): string[] {
-    return categories.map(c => c.getCategoryColor());
-  }
-
-  buildIconLegend(categories: Category[]) {
-    let icons = categories.map(c => c.getIconName())
   }
 
   private buildIconHTMLForComplexLegend(iconName: string) {

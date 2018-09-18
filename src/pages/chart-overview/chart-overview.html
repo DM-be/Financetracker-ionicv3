@@ -17,6 +17,7 @@
   
   <ion-scroll scrollX="true" style="width: 100%; height: 100px">
     <div id="dataset-container">
+      <button ion-button *ngFor="let datasetButton of datasetButtons; let i = index " (click)="deleteDataset(i)">{{datasetButton.operationType}}</button>
     </div>
   </ion-scroll>
 

@@ -33,7 +33,7 @@ export class ChartBudgetPage {
 
   ionViewDidLoad() {
     let colors = this.chartProvider.buildRandomColors(2);
-    let data = this.chartProvider.buildExpenseData(this.expenses);
+    //let data = this.chartProvider.buildExpenseData(this.expenses);
     var ctx = document.getElementById("budgetChart");
     //this.chartProvider.createNewChart(ctx, data, colors, ['test', 'test'], undefined, true);
   
