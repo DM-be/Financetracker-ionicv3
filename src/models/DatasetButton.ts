@@ -7,6 +7,4 @@ export class DatasetButton {
         let labels = momentProvider.getLabelsBetweenTimePeriod(this.timeperiod.from, this.timeperiod.to);
         return `from ${labels[0]} to ${labels[1]}`;
     }
-
-
 }

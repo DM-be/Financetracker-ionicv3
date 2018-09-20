@@ -38,8 +38,15 @@ export class ChartProvider {
   private labelType: string; // selected labelType --> determines the labels 
   private dataType: string; // data on which operations are executed --> category etc..., needs to be the same for each dataset
 
+  public chartTypes: string [];
 
-  constructor(public events: Events, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider) {}
+  constructor(public events: Events, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider) {
+    this.chartTypes = ['bar', 'line', 'doughnut', 'radar'];
+  }
+
+  public getChartTypes(): string [] {
+    return this.chartTypes;
+  }
 
   createNewChart(ctx: any, dataset?: Dataset, type ? : string, expense ? : boolean, customLegend ? : boolean, customLabels?: string []) {
     let chartData = {
@@ -68,9 +75,9 @@ export class ChartProvider {
         scales: {
           yAxes: [{
               ticks: {
-                  beginAtZero: (type === 'bar')
+                  beginAtZero: true
               },
-              display: (type === 'bar')
+              display: true
           }]
       }},
     });
@@ -79,6 +86,24 @@ export class ChartProvider {
     }
     return chart;
   }
+
+  public setyAxes(beginAtZero: boolean, display: boolean)
+  {
+    this.chartInstance.options.scales.yAxes.ticks.beginAtZero = beginAtZero;
+    this.chartInstance.options.scales.yAxes.display = display;
+    this.chartInstance.update();
+  }
+
+  public resetOptions(): void {
+    this.chartInstance.options = {
+      legend: {
+        display: false
+      },
+    }
+    this.chartInstance.update();
+  }
+
+  // TODO: set config options for each type of chart !
 
   public setLabelType(labelType: string ): void {
     this.labelType = labelType;
@@ -95,6 +120,17 @@ export class ChartProvider {
   public getDataType(): string {
     return this.dataType;
   }
+
+  public setChartType(type: string): void{
+    this.chartInstance.config.type = type;
+    this.chartInstance.update(); 
+  }
+
+  public getChartType(): string {
+    return this.chartInstance.config.type;
+  }
+
+  
 
   // only used once for the default instance, do not reuse, use appropiate setchartlabels and getter
   public getLabels(): string [] {

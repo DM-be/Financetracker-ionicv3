@@ -58,6 +58,10 @@ export class MomentProvider {
       labels.push(moment(momentObject).format("MMM YY"));
       from = moment(from).add(1, 'month').format('YYYY-MM')
     }
+    if(labels.length === 1)
+    {
+      labels[1] = labels[0]; // todo seperate function for datasetbutton (from same montht to same month )
+    }
     return labels;
   }
 

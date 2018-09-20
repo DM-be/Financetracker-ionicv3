@@ -67,6 +67,7 @@ export class DatasetPage {
     };
     this.dataType = this.chartProvider.getDataType() || undefined;
     this.labelType = this.chartProvider.getLabelType() || undefined;
+    this.chartType = this.chartProvider.getChartType();
     this.labels = this.chartProvider.getChartLabels();
     this.selectedCategories = [];
     this.ctx = this.navParams.get("ctx");
@@ -136,6 +137,11 @@ export class DatasetPage {
       // this.chartProvider.addDataset(dataObject);
       this.chartProvider.setDataType(this.dataType);
       this.chartProvider.setLabelType(this.labelType);
+      this.chartProvider.setChartType(this.chartType);
+      if(this.chartType !== 'bar')
+     {
+       this.chartProvider.resetOptions();
+     }
       let datasetModalData = {
         operationType: this.operationType,
         timeperiod: this.timeperiod,
