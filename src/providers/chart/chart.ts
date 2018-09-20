@@ -47,6 +47,7 @@ export class ChartProvider {
   private dataType: string; // data on which operations are executed --> category etc..., needs to be the same for each dataset
 
   public chartTypes: string[];
+  private defaultDatasetButton: DatasetButton;
 
 
   constructor(public events: Events, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider) {
@@ -129,7 +130,13 @@ export class ChartProvider {
   }
 
   public getChartType(): string {
-    return this.chartInstance.config.type;
+    if(this.chartInstance)
+    {
+      return this.chartInstance.config.type
+    }
+    else {
+      return 'bar'// todo switch to default
+    }
   }
 
 
@@ -166,39 +173,39 @@ export class ChartProvider {
     let data = await this.getDatasetData(timeperiod, undefined, labelType, dataType, operationType, filteredCategories);
     let backgroundColor = filteredCategories.map(c => c.getCategoryColor());
     let dataObject = new Dataset(data, backgroundColor);
-    dataObject.setBackgroundColor_singular(randomColor());
+    let randomColor = this.getRandomColor();
+    dataObject.setBackgroundColor_singular(randomColor);
     dataObject.setBackgroundColor_multiple(backgroundColor);
+    this.defaultDatasetButton = new DatasetButton('total', 'category', {
+      from: currentYearAndMonth,
+      to: currentYearAndMonth, 
+    }, randomColor)
     this.addDataset(dataObject);
+
   }
 
   public getDefaultDatasetButton(): DatasetButton {
-    let currentYearAndMonth = this.momentProvider.getCurrentYearAndMonth();
-    return new DatasetButton('total', 'category', {
-      from: currentYearAndMonth,
-      to: currentYearAndMonth
-    })
+    return this.defaultDatasetButton;
   }
-
 
 
 
   async handleNewDataset(operationType: string, timeperiod: {
     from: string,
     to: string
-  }, categories ? : Category[], tags ? : Tag[]) {
+  }, backgroundColor_singular: string,  categories ? : Category[], tags ? : Tag[]) {
     console.log(categories);
     if (categories) {
       if (this.dataType === 'category' && this.labelType === 'category') {
         let data = await this.categoryProvider.getCategoryDatasetWithCategoryLabel(timeperiod.from, timeperiod.to, categories, operationType)
         let backgroundColor = categories.map(c => c.getCategoryColor());
         let dataset = new Dataset(data, backgroundColor);
-        dataset.setBackgroundColor_singular(randomColor());
+        dataset.setBackgroundColor_singular(backgroundColor_singular);
         dataset.setBackgroundColor_multiple(backgroundColor);
         let labels = categories.map(c => c.getCategoryName());
         if (this.noDatasets()) {
           this.setChartLabels(labels);
         }
-        console.log(dataset);
         this.addDataset(dataset);
 
       }
@@ -265,7 +272,12 @@ export class ChartProvider {
   }
 
   public noDatasets(): boolean {
-    return this.chartInstance.data.datasets.length === 0;
+    if(this.chartInstance)
+    {
+      return this.chartInstance.data.datasets.length === 0;
+    }
+    return true;
+    
   }
   public deleteDataset(index: number): void {
     this.chartInstance.data.datasets.splice(index, 1);
@@ -311,6 +323,10 @@ export class ChartProvider {
       colors.push(randomColor());
     }
     return colors;
+  }
+
+  public getRandomColor(): string {
+    return randomColor();
   }
 
 

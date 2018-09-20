@@ -106,7 +106,8 @@ export class ChartOverviewPage {
           selectedCategories,
           operationType,
           dataType,
-          timeperiod
+          timeperiod,
+          backgroundColor
         } = datasetModalData;
 
         // rebuild legend
@@ -115,12 +116,16 @@ export class ChartOverviewPage {
 
         // rebuild chart
         console.log(selectedCategories);
-        this.chartProvider.handleNewDataset(operationType, timeperiod, selectedCategories);
+        this.chartProvider.handleNewDataset(operationType, timeperiod, backgroundColor, selectedCategories);
         // add datasetbutton
-        this.datasetButtons.push(new DatasetButton(operationType, dataType, timeperiod));
+        this.datasetButtons.push(new DatasetButton(operationType, dataType, timeperiod, backgroundColor));
       }
     });
 
+  }
+
+  public legendHidden(): boolean {
+    return this.chartProvider.getChartType() === 'line' || this.chartProvider.getChartType() === 'radar';
   }
 
   public deleteDataset(i: number): void {

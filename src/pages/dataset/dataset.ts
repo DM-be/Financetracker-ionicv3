@@ -146,7 +146,8 @@ export class DatasetPage {
         operationType: this.operationType,
         timeperiod: this.timeperiod,
         selectedCategories: this.selectedCategories,
-        dataType: this.dataType
+        dataType: this.dataType,
+        backgroundColor: this.chartProvider.getRandomColor()
       };
       this.view.dismiss(datasetModalData);
 

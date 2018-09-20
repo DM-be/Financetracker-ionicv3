@@ -19,18 +19,18 @@
   <ion-grid fixed>
     <ion-row>
       <ion-col align-self-center>
-        <div id="chartjs-legend" ></div>
+        <div id="chartjs-legend" [style.opacity]="legendHidden() ?  0 : 1" ></div>
       </ion-col>
     </ion-row>
   </ion-grid>
 
 
-
-  <canvas id="myChart" width="400" height="400"></canvas>
-
-  <ion-scroll style="width: 100%; height: 20vh">
+<div>
+  <canvas id="myChart" width="400" height="400" [style.opacity]="this.chartProvider.noDatasets() ?  0 : 1"></canvas>
+</div>
+  <ion-scroll style="width: 100%; height: 20vh;">
       <div id="dataset-container">
-        <button ion-item *ngFor="let datasetButton of datasetButtons; let i = index " (click)="deleteDataset(i)">
+        <button ion-item [style.backgroundColor]="datasetButton.backgroundColor" *ngFor="let datasetButton of datasetButtons; let i = index " (click)="deleteDataset(i)">
           <ion-grid>
             <ion-row><ion-col>{{datasetButton.operationType}} of {{datasetButton.dataType}}</ion-col></ion-row>
             <ion-row><ion-col>{{datasetButton.getFormattedTimeperiod()}}</ion-col></ion-row>
