@@ -82,14 +82,6 @@ export class ChartProvider {
         legend: {
           display: false
         },
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            },
-            display: true
-          }]
-        }
       },
     });
     if (!customLabels) {
@@ -244,6 +236,29 @@ export class ChartProvider {
 
   }
 
+  public updateChartOptions(type: string): void {
+    this.chartInstance.scale = undefined;
+    if(type === 'doughnut')
+    {
+      this.chartInstance.options = Chart.defaults.doughnut;
+    }
+    else if(type === 'line')
+    {
+
+      this.chartInstance.options = Chart.defaults.line;
+    }
+    else if(type === 'radar')
+    {
+      this.chartInstance.options = Chart.defaults.radar;
+      
+      console.log(Chart.defaults.radar);
+    }
+    else if(type === 'bar')
+   {
+    this.chartInstance.options = Chart.defaults.bar;
+   }
+    this.chartInstance.update();
+  }
 
   public getDatasets(): Dataset[] {
     return this.chartInstance.data.datasets;

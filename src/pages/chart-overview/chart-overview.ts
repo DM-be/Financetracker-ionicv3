@@ -150,6 +150,7 @@ export class ChartOverviewPage {
       handler: (type: string) => {
         this.chartProvider.setChartType(type);
         this.chartProvider.updateActiveBackgroundColor(type);
+        this.chartProvider.updateChartOptions(type);
       }
     });
     alert.present();
