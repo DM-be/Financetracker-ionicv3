@@ -1,6 +1,12 @@
-import { DatasetButton } from './../../models/DatasetButton';
-import { MomentProvider } from './../moment/moment';
-import { MonthOverviewProvider } from './../month-overview/month-overview';
+import {
+  DatasetButton
+} from './../../models/DatasetButton';
+import {
+  MomentProvider
+} from './../moment/moment';
+import {
+  MonthOverviewProvider
+} from './../month-overview/month-overview';
 import {
   CategoryProvider
 } from './../category/category';
@@ -22,7 +28,9 @@ import randomColor from 'randomcolor'
 import {
   Events
 } from 'ionic-angular';
-import { Tag } from '../../models/Tag';
+import {
+  Tag
+} from '../../models/Tag';
 
 /*
   Generated class for the ChartProvider provider.
@@ -34,21 +42,23 @@ import { Tag } from '../../models/Tag';
 export class ChartProvider {
 
   private chartInstance: any; // holds the chartjs instance
-  private labels: string []; // kept here for setup reasons --> chart constructor needs labels before instantiation
+  private labels: string[]; // kept here for setup reasons --> chart constructor needs labels before instantiation
   private labelType: string; // selected labelType --> determines the labels 
   private dataType: string; // data on which operations are executed --> category etc..., needs to be the same for each dataset
 
-  public chartTypes: string [];
+  public chartTypes: string[];
+
 
   constructor(public events: Events, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider) {
     this.chartTypes = ['bar', 'line', 'doughnut', 'radar'];
+
   }
 
-  public getChartTypes(): string [] {
+  public getChartTypes(): string[] {
     return this.chartTypes;
   }
 
-  createNewChart(ctx: any, dataset?: Dataset, type ? : string, expense ? : boolean, customLegend ? : boolean, customLabels?: string []) {
+  createNewChart(ctx: any, dataset ? : Dataset, type ? : string, expense ? : boolean, customLegend ? : boolean, customLabels ? : string[]) {
     let chartData = {
       datasets: [{
         data: dataset.data || [],
@@ -74,21 +84,21 @@ export class ChartProvider {
         },
         scales: {
           yAxes: [{
-              ticks: {
-                  beginAtZero: true
-              },
-              display: true
+            ticks: {
+              beginAtZero: true
+            },
+            display: true
           }]
-      }},
+        }
+      },
     });
-    if(!customLabels) {
+    if (!customLabels) {
       this.chartInstance = chart; // other charts other than the one on the mainpage are not referenced by this service
     }
     return chart;
   }
 
-  public setyAxes(beginAtZero: boolean, display: boolean)
-  {
+  public setyAxes(beginAtZero: boolean, display: boolean) {
     this.chartInstance.options.scales.yAxes.ticks.beginAtZero = beginAtZero;
     this.chartInstance.options.scales.yAxes.display = display;
     this.chartInstance.update();
@@ -105,7 +115,7 @@ export class ChartProvider {
 
   // TODO: set config options for each type of chart !
 
-  public setLabelType(labelType: string ): void {
+  public setLabelType(labelType: string): void {
     this.labelType = labelType;
   }
 
@@ -121,19 +131,19 @@ export class ChartProvider {
     return this.dataType;
   }
 
-  public setChartType(type: string): void{
+  public setChartType(type: string): void {
     this.chartInstance.config.type = type;
-    this.chartInstance.update(); 
+    this.chartInstance.update();
   }
 
   public getChartType(): string {
     return this.chartInstance.config.type;
   }
 
-  
+
 
   // only used once for the default instance, do not reuse, use appropiate setchartlabels and getter
-  public getLabels(): string [] {
+  public getLabels(): string[] {
     return this.labels;
   }
 
@@ -143,14 +153,17 @@ export class ChartProvider {
   }
 
   // setup first chart when landing on the chart overview page 
-  public async setupDefaultChart(ctx): Promise<void> {
+  public async setupDefaultChart(ctx): Promise < void > {
     let emptyDataset = new Dataset([], []);
     this.createNewChart(ctx, emptyDataset);
     this.clearDatasets();
     let currentYearAndMonth = this.momentProvider.getCurrentYearAndMonth();
     let categories = await this.categoryProvider.getCategories(currentYearAndMonth);
     let filteredCategories = categories.filter(c => c.getTotalExpenseCost() > 0);
-    let timeperiod = {from: currentYearAndMonth, to: currentYearAndMonth};
+    let timeperiod = {
+      from: currentYearAndMonth,
+      to: currentYearAndMonth
+    };
     let labelType = 'category'; // get from default settings in useroverview 
     let labels = filteredCategories.map(c => c.getCategoryName());
     let dataType = 'category'; // get from default settings in useroverview 
@@ -158,16 +171,20 @@ export class ChartProvider {
     this.setLabelType(labelType);
     this.setDataType(dataType);
     this.setChartLabels(labels);
-    let data = await this.getDatasetData(timeperiod,undefined, labelType, dataType, operationType, filteredCategories);
+    let data = await this.getDatasetData(timeperiod, undefined, labelType, dataType, operationType, filteredCategories);
     let backgroundColor = filteredCategories.map(c => c.getCategoryColor());
-    let dataObject = new Dataset(data,backgroundColor);
+    let dataObject = new Dataset(data, backgroundColor);
+    dataObject.setBackgroundColor_singular(randomColor());
+    dataObject.setBackgroundColor_multiple(backgroundColor);
     this.addDataset(dataObject);
   }
 
-  public getDefaultDatasetButton(): DatasetButton
-  {
+  public getDefaultDatasetButton(): DatasetButton {
     let currentYearAndMonth = this.momentProvider.getCurrentYearAndMonth();
-    return new DatasetButton('total', 'category',{from: currentYearAndMonth, to: currentYearAndMonth} )
+    return new DatasetButton('total', 'category', {
+      from: currentYearAndMonth,
+      to: currentYearAndMonth
+    })
   }
 
 
@@ -176,65 +193,72 @@ export class ChartProvider {
   async handleNewDataset(operationType: string, timeperiod: {
     from: string,
     to: string
-  }, categories?: Category [], tags?: Tag [])
-  {
+  }, categories ? : Category[], tags ? : Tag[]) {
     console.log(categories);
-    if(categories)
-    {
-      if(this.dataType === 'category' && this.labelType === 'category')
-      {
-        let data =  await this.categoryProvider.getCategoryDatasetWithCategoryLabel(timeperiod.from, timeperiod.to, categories, operationType)
+    if (categories) {
+      if (this.dataType === 'category' && this.labelType === 'category') {
+        let data = await this.categoryProvider.getCategoryDatasetWithCategoryLabel(timeperiod.from, timeperiod.to, categories, operationType)
         let backgroundColor = categories.map(c => c.getCategoryColor());
         let dataset = new Dataset(data, backgroundColor);
+        dataset.setBackgroundColor_singular(randomColor());
+        dataset.setBackgroundColor_multiple(backgroundColor);
         let labels = categories.map(c => c.getCategoryName());
-        if(this.noDatasets())
-        {
+        if (this.noDatasets()) {
           this.setChartLabels(labels);
         }
         console.log(dataset);
         this.addDataset(dataset);
 
       }
-      
-    }
-    else if(tags)
-    {
+
+    } else if (tags) {
       // and so on
     }
-  } 
+  }
 
 
-  
+
   // refactor 
   public getDatasetData(timeperiod: {
     from: string,
     to: string
-  }, categoryName: string, labelType: string, dataType: string, operationType: string, categories?: Category []) {
+  }, categoryName: string, labelType: string, dataType: string, operationType: string, categories ? : Category[]) {
     if (dataType === 'category' && labelType === 'month') {
       return this.categoryProvider.getCategoryDatasetWithMonthLabel(timeperiod.from, timeperiod.to, labelType, categoryName, operationType)
-    }
-    else if(dataType === 'category' && labelType === 'category')
-    {
+    } else if (dataType === 'category' && labelType === 'category') {
       return this.categoryProvider.getCategoryDatasetWithCategoryLabel(timeperiod.from, timeperiod.to, categories, operationType)
-    } 
+    }
+  }
+
+  public updateActiveBackgroundColor(type: string) {
+    if (type === 'line' || type === 'radar') {
+      this.chartInstance.data.datasets.forEach((dataset: Dataset) => {
+        dataset.setActiveBackgroundColor('singular');
+      });
+    } else {
+       this.chartInstance.data.datasets.forEach((dataset: Dataset) => {
+        dataset.setActiveBackgroundColor('multiple');
+      });
+    }
+    this.chartInstance.update();
+
   }
 
 
-  public getDatasets(): any {
-    return this.chartInstance.data.datasets
+  public getDatasets(): Dataset[] {
+    return this.chartInstance.data.datasets;
   }
 
   public noDatasets(): boolean {
     return this.chartInstance.data.datasets.length === 0;
   }
-  public deleteDataset(index: number) {
+  public deleteDataset(index: number): void {
     this.chartInstance.data.datasets.splice(index, 1);
-    if(this.noDatasets())
-    {
+    if (this.noDatasets()) {
       this.clearChartLabels();
       this.labelType = undefined;
       this.dataType = undefined;
-    } 
+    }
     this.chartInstance.update();
   }
 
@@ -243,7 +267,7 @@ export class ChartProvider {
     this.chartInstance.update();
   }
 
-  public getChartInstance(): any {
+  public getChartInstance(): Chart {
     return this.chartInstance;
   }
 
@@ -261,12 +285,12 @@ export class ChartProvider {
     this.chartInstance.update();
   }
 
-  public setType(type: string) {
+  public setType(type: string): void {
     this.chartInstance.type = type;
     this.chartInstance.update();
   }
 
-  buildRandomColors(amount: number) {
+  buildRandomColors(amount: number): string[] {
     let colors = [];
     for (let i = 0; i <= amount; i++) {
       colors.push(randomColor());
@@ -274,11 +298,12 @@ export class ChartProvider {
     return colors;
   }
 
-  private buildIconHTMLForComplexLegend(iconName: string) {
+
+  private buildIconHTMLForComplexLegend(iconName: string): string {
     return `<ion-icon name="${iconName}" class="icon icon-md ion-md-${iconName} item-icon legend"></ion-icon>`;
   }
 
-  public buildCategoryLegendHTML(categories: Category[]) {
+  public buildCategoryLegendHTML(categories: Category[]): string {
     let html = `<ul>`;
     categories.forEach(c => {
       if (c.getTotalExpenseCost() > 0) {

@@ -149,6 +149,7 @@ export class ChartOverviewPage {
       text: 'Ok',
       handler: (type: string) => {
         this.chartProvider.setChartType(type);
+        this.chartProvider.updateActiveBackgroundColor(type);
       }
     });
     alert.present();
