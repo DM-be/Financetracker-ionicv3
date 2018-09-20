@@ -206,6 +206,11 @@ export class ChartProvider {
         if (this.noDatasets()) {
           this.setChartLabels(labels);
         }
+        // else keep current labels
+        if(this.getChartType() === 'line' || this.getChartType() === 'radar')
+        {
+          dataset.setActiveBackgroundColor('singular');
+        }
         this.addDataset(dataset);
 
       }
