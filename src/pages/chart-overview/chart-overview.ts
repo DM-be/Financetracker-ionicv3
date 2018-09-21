@@ -1,3 +1,4 @@
+import { DatasetbuttonProvider } from './../../providers/datasetbutton/datasetbutton';
 import {
   DatasetButton
 } from './../../models/DatasetButton';
@@ -53,9 +54,8 @@ export class ChartOverviewPage {
 
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public momentProvider: MomentProvider, public monthOverviewProvider: MonthOverviewProvider, public modalCtrl: ModalController, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public momentProvider: MomentProvider, public monthOverviewProvider: MonthOverviewProvider, public modalCtrl: ModalController, public alertCtrl: AlertController, public datasetButtonProvider: DatasetbuttonProvider) {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth() || this.momentProvider.getCurrentYearAndMonth();
-    this.datasetButtons = [];
 
   }
 
@@ -64,9 +64,14 @@ export class ChartOverviewPage {
   }
   async ionViewCanEnter() {
     this.setupFirstChart();
+    this.datasetButtons = this.datasetButtonProvider.getDatasetButtons();
   }
 
-  updateChart() {}
+  private refreshDatasetButtons(): void {
+    this.datasetButtons = this.datasetButtonProvider.getDatasetButtons();
+  }
+
+  
 
   ionViewWillEnter() {
     this.chart = this.chartProvider.getChartInstance();
@@ -81,7 +86,7 @@ export class ChartOverviewPage {
     this.ctx = document.getElementById("myChart");
     await this.chartProvider.setupDefaultChart(this.ctx);
     this.chart = this.chartProvider.getChartInstance();
-    this.datasetButtons.push(this.chartProvider.getDefaultDatasetButton());
+   // this.datasetButtons.push(this.chartProvider.getDefaultDatasetButton());
 
   }
 
@@ -116,9 +121,12 @@ export class ChartOverviewPage {
 
         // rebuild chart
         console.log(selectedCategories);
+        
         this.chartProvider.handleNewDataset(operationType, timeperiod, backgroundColor, selectedCategories);
         // add datasetbutton
-        this.datasetButtons.push(new DatasetButton(operationType, dataType, timeperiod, backgroundColor));
+        
+        // refresh 
+        this.refreshDatasetButtons();
       }
     });
 
@@ -130,7 +138,8 @@ export class ChartOverviewPage {
 
   public deleteDataset(i: number): void {
     this.chartProvider.deleteDataset(i);
-    this.datasetButtons.splice(i, 1);
+    this.datasetButtonProvider.deleteDatasetButton(i);
+    this.refreshDatasetButtons();
     if (this.chartProvider.noDatasets()) {
       let legend = document.getElementById("chartjs-legend");
       legend.innerHTML = '';

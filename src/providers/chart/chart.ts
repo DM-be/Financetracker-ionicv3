@@ -1,3 +1,4 @@
+import { DatasetbuttonProvider } from './../datasetbutton/datasetbutton';
 import {
   DatasetButton
 } from './../../models/DatasetButton';
@@ -47,13 +48,13 @@ export class ChartProvider {
   private dataType: string; // data on which operations are executed --> category etc..., needs to be the same for each dataset
 
   public chartTypes: string[];
-  private defaultDatasetButton: DatasetButton;
   private chartConfigs: {bar: Object, line: Object};
 
 
-  constructor(public events: Events, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider) {
+  constructor(public events: Events, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public datasetButtonProvider: DatasetbuttonProvider) {
     this.chartTypes = ['bar', 'line', 'doughnut', 'radar', 'polarArea' ];
     this.setupChartConfigs();
+
   }
 
   public setupChartConfigs(): void {
@@ -176,21 +177,23 @@ export class ChartProvider {
     let data = await this.getDatasetData(timeperiod, undefined, labelType, dataType, operationType, filteredCategories);
     let backgroundColor = filteredCategories.map(c => c.getCategoryColor());
     let randomColor = this.getRandomColor();
-    let dataObject = new Dataset(data, backgroundColor, randomColor, 'Dataset 1');
     
-    //dataObject.setBackgroundColor_singular(randomColor);
-    dataObject.setBackgroundColor_multiple(backgroundColor);
-    this.defaultDatasetButton = new DatasetButton('total', 'category', {
+
+    let defaultDatasetButton = new DatasetButton('total', 'category', {
       from: currentYearAndMonth,
       to: currentYearAndMonth,
     }, randomColor)
+    this.datasetButtonProvider.addDatasetButton(defaultDatasetButton);
+
+    let dataObject = new Dataset(data, backgroundColor, randomColor, this.datasetButtonProvider.getDatasetButtonLabel());
+    
+    //dataObject.setBackgroundColor_singular(randomColor);
+    dataObject.setBackgroundColor_multiple(backgroundColor);
+   
     this.addDataset(dataObject);
 
   }
 
-  public getDefaultDatasetButton(): DatasetButton {
-    return this.defaultDatasetButton;
-  }
 
 
 
@@ -199,15 +202,18 @@ export class ChartProvider {
     to: string
   }, backgroundColor_singular: string, categories ? : Category[], tags ? : Tag[]) {
     console.log(categories);
+    
     if (categories) {
       if (this.dataType === 'category' && this.labelType === 'category') {
         let data = await this.categoryProvider.getCategoryDatasetWithCategoryLabel(timeperiod.from, timeperiod.to, categories, operationType)
         let backgroundColor = categories.map(c => c.getCategoryColor());
-        let dataset = new Dataset(data, backgroundColor, backgroundColor_singular, 'Dataset 2');
+        this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, backgroundColor_singular));
+        let dataset = new Dataset(data, backgroundColor, backgroundColor_singular, this.datasetButtonProvider.getDatasetButtonLabel());
         //dataset.setBackgroundColor_singular(backgroundColor_singular);
         dataset.setBackgroundColor_multiple(backgroundColor);
         let labels = categories.map(c => c.getCategoryName());
         if (this.noDatasets()) {
+          this.datasetButtonProvider.clearDatasetButtons();
           this.setChartLabels(labels);
         }
         // else keep current labels
@@ -226,11 +232,11 @@ export class ChartProvider {
           };
           data.data = await this.categoryProvider.getCategoryDatasetWithMonthLabel(timeperiod.from, timeperiod.to, this.labelType, cat.getCategoryName(), operationType);
           for (let i = 0; i < data.data.length; i++) {
-            
             data.backgroundColor.push(cat.getCategoryColor());
           }
           let randomBackgroundColor_singular = randomColor();
-          let dataset = new Dataset(data.data, data.backgroundColor, randomBackgroundColor_singular , 'Dataset 2');
+          this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, randomBackgroundColor_singular));
+          let dataset = new Dataset(data.data, data.backgroundColor, randomBackgroundColor_singular , this.datasetButtonProvider.getDatasetButtonLabel());
           dataset.setBackgroundColor_multiple(data.backgroundColor);
           dataset.setBorderColor(randomBackgroundColor_singular);
           this.addDataset(dataset);
@@ -238,6 +244,7 @@ export class ChartProvider {
 
         let labels = this.momentProvider.getLabelsBetweenTimePeriod(timeperiod.from, timeperiod.to);
         if (this.noDatasets()) {
+          this.datasetButtonProvider.clearDatasetButtons();
           this.setChartLabels(labels);
         }
         this.updateActiveBackgroundColor(this.getChartType());
@@ -297,7 +304,7 @@ export class ChartProvider {
   }
 
   public updateBorderColor(type: string): void {
-    if (type === 'doughnut' || type === 'polarArea')
+    if (type === 'doughnut')
     {
       this.chartInstance.data.datasets.forEach((dataset: Dataset) => {
         dataset.setBorderColor(undefined);

@@ -55,6 +55,7 @@ import { CategoryProvider } from '../providers/category/category';
 import { ExpenseProvider } from '../providers/expense/expense';
 import { ChartBudgetPage } from '../pages/chart-budget/chart-budget';
 import { DatasetPage } from '../pages/dataset/dataset';
+import { DatasetbuttonProvider } from '../providers/datasetbutton/datasetbutton';
 
 @NgModule({
   declarations: [
@@ -144,7 +145,8 @@ import { DatasetPage } from '../pages/dataset/dataset';
     ModalProvider,
     BudgetProvider,
     CategoryProvider,
-    ExpenseProvider
+    ExpenseProvider,
+    DatasetbuttonProvider
   ]
 })
 export class AppModule {}
