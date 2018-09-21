@@ -211,10 +211,33 @@ export class ChartProvider {
           this.setChartLabels(labels);
         }
         // else keep current labels
-      
-        
         this.addDataset(dataset);
-        console.log(this.getChartType());
+        this.updateActiveBackgroundColor(this.getChartType());
+        this.updateBorderColor(this.getChartType());
+        this.updateChartOptions(this.getChartType());
+        this.updateFill(this.getChartType());
+      }
+      else if(this.dataType === 'category' && this.labelType === 'month')
+      {
+        categories.forEach(async cat => {
+          let data = {
+            data: [],
+            backgroundColor: []
+          };
+          data.data = await this.categoryProvider.getCategoryDatasetWithMonthLabel(timeperiod.from, timeperiod.to, this.labelType, cat.getCategoryName(), operationType);
+          for (let i = 0; i < data.data.length; i++) {
+            
+            data.backgroundColor.push(cat.getCategoryColor());
+          }
+          let dataset = new Dataset(data.data, data.backgroundColor, data.backgroundColor[0], 'Dataset 2');
+          dataset.setBackgroundColor_multiple(data.backgroundColor);
+          this.addDataset(dataset);
+        });
+
+        let labels = this.momentProvider.getLabelsBetweenTimePeriod(timeperiod.from, timeperiod.to);
+        if (this.noDatasets()) {
+          this.setChartLabels(labels);
+        }
         this.updateActiveBackgroundColor(this.getChartType());
         this.updateBorderColor(this.getChartType());
         this.updateChartOptions(this.getChartType());

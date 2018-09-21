@@ -68,10 +68,8 @@ export class DatasetPage {
     this.labels = this.chartProvider.getChartLabels();
     this.selectedCategories = [];
     this.ctx = this.navParams.get("ctx");
-    console.log(this.labelType);
 
   }
-
   async ionViewWillEnter() {
     this.categories = await this.categoryProvider.getCategories(this.momentProvider.getCurrentYearAndMonth());
     if (this.labels) {
@@ -81,57 +79,9 @@ export class DatasetPage {
         }
       });
     }
-
-  }
-
-  createDataDataset(categoryName): Promise < number[] > {
-    return this.chartProvider.getDatasetData({
-      from: this.timeperiod.from,
-      to: this.timeperiod.to
-    }, categoryName, this.labelType, this.dataType, this.operationType);
-  }
-
-  createDataDatasetSingular(categories: Category[]): Promise < number[] > {
-    return this.chartProvider.getDatasetData({
-      from: this.timeperiod.from,
-      to: this.timeperiod.to
-    }, undefined, this.labelType, this.dataType, this.operationType, categories);
   }
 
   async addAllDatasetsToChart() {
-    if (this.dataType === 'category' && this.labelType === 'month') {
-      let labels = this.momentProvider.getLabelsBetweenTimePeriod(this.timeperiod.from, this.timeperiod.to);
-      this.chartProvider.clearDatasets();
-      this.selectedCategories.forEach(async cat => {
-        let data = {
-          data: [],
-          backgroundColor: []
-        };
-        data.data = await this.createDataDataset(cat.getCategoryName());
-        for (let i = 0; i < data.data.length; i++) {
-          data.backgroundColor.push(cat.getCategoryColor());
-        }
-        // this.chartProvider.addDataset(data);
-      });
-      //this.chartProvider.setLabels(labels);
-      // this.chartProvider.setType('bar');
-      console.log(this.chartProvider.getDatasets());
-      this.view.dismiss(this.selectedCategories);
-
-
-    } else if (this.dataType === 'category' && this.labelType === 'category') {
-      // let labels = [];
-      // labels = this.selectedCategories.map(c => c.getCategoryName());
-      // let data = {data: [], backgroundColor: []};
-      // this.chartProvider.clearDatasets();
-      // console.log(await this.createDataDatasetSingular(this.selectedCategories));
-      // data.data = await this.createDataDatasetSingular(this.selectedCategories);
-      // let datas = await this.createDataDatasetSingular(this.selectedCategories);
-      // let backgroundColor = this.selectedCategories.map(c => c.getCategoryColor());
-      // let dataObject = new Dataset(datas,backgroundColor);
-      // data.backgroundColor = this.selectedCategories.map(c => c.getCategoryColor());
-      // this.chartProvider.setLabels(labels);
-      // this.chartProvider.addDataset(dataObject);
       this.chartProvider.setDataType(this.dataType);
       this.chartProvider.setLabelType(this.labelType);
       let datasetModalData = {
@@ -140,17 +90,9 @@ export class DatasetPage {
         selectedCategories: this.selectedCategories,
         dataType: this.dataType,
         backgroundColor: this.chartProvider.getRandomColor()
-      };
+      }
       this.view.dismiss(datasetModalData);
-
-
-
-
-
-    }
   }
-
-
 
   addCategoriesAlert() {
     let alert = this.alertCtrl.create();
