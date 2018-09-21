@@ -60,7 +60,7 @@ export class ChartProvider {
     this.chartConfigs = {
       bar: {
         legend: {
-          display: false
+          display: true
         },
         scales: {
           yAxes: [{
@@ -229,8 +229,10 @@ export class ChartProvider {
             
             data.backgroundColor.push(cat.getCategoryColor());
           }
-          let dataset = new Dataset(data.data, data.backgroundColor, data.backgroundColor[0], 'Dataset 2');
+          let randomBackgroundColor_singular = randomColor();
+          let dataset = new Dataset(data.data, data.backgroundColor, randomBackgroundColor_singular , 'Dataset 2');
           dataset.setBackgroundColor_multiple(data.backgroundColor);
+          dataset.setBorderColor(randomBackgroundColor_singular);
           this.addDataset(dataset);
         });
 
