@@ -156,6 +156,8 @@ export class ChartOverviewPage {
         this.chartProvider.setChartType(type);
         this.chartProvider.updateActiveBackgroundColor(type);
         this.chartProvider.updateChartOptions(type);
+        this.chartProvider.updateFill(type);
+        this.chartProvider.updateBorderColor(type);
       }
     });
     alert.present();

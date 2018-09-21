@@ -30,12 +30,6 @@
         </ion-select>
       </ion-item>
       <ion-item>
-        <ion-label>Type of chart</ion-label>
-        <ion-select [(ngModel)]="chartType" name="chartType">
-          <ion-option *ngFor="let chartType of chartTypes" [value]="chartType">{{chartType}}</ion-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
         <ion-label>Compare</ion-label>
         <ion-select [(ngModel)]="dataType" name="dataType" [disabled]="!chartProvider.noDatasets()"> 
           <ion-option *ngFor="let dataType of dataTypes" [value]="dataType">{{dataType}}</ion-option>

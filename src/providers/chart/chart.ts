@@ -48,11 +48,35 @@ export class ChartProvider {
 
   public chartTypes: string[];
   private defaultDatasetButton: DatasetButton;
+  private chartConfigs: {bar: Object, line: Object};
 
 
   constructor(public events: Events, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider) {
-    this.chartTypes = ['bar', 'line', 'doughnut', 'radar'];
+    this.chartTypes = ['bar', 'line', 'doughnut', 'radar', ];
+    this.setupChartConfigs();
 
+  }
+
+  public setupChartConfigs(): void {
+    this.chartConfigs = {
+      bar: {
+        legend: {
+          display: false
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }]
+        }
+      },
+      line: {
+
+      }
+    }
+
+  
   }
 
   public getChartTypes(): string[] {
@@ -130,12 +154,10 @@ export class ChartProvider {
   }
 
   public getChartType(): string {
-    if(this.chartInstance)
-    {
+    if (this.chartInstance) {
       return this.chartInstance.config.type
-    }
-    else {
-      return 'bar'// todo switch to default
+    } else {
+      return 'bar' // todo switch to default
     }
   }
 
@@ -153,7 +175,7 @@ export class ChartProvider {
 
   // setup first chart when landing on the chart overview page 
   public async setupDefaultChart(ctx): Promise < void > {
-    let emptyDataset = new Dataset([], []);
+    let emptyDataset = new Dataset([], [], '','');
     this.createNewChart(ctx, emptyDataset);
     this.clearDatasets();
     let currentYearAndMonth = this.momentProvider.getCurrentYearAndMonth();
@@ -172,13 +194,14 @@ export class ChartProvider {
     this.setChartLabels(labels);
     let data = await this.getDatasetData(timeperiod, undefined, labelType, dataType, operationType, filteredCategories);
     let backgroundColor = filteredCategories.map(c => c.getCategoryColor());
-    let dataObject = new Dataset(data, backgroundColor);
     let randomColor = this.getRandomColor();
-    dataObject.setBackgroundColor_singular(randomColor);
+    let dataObject = new Dataset(data, backgroundColor, randomColor, 'Dataset 1');
+    
+    //dataObject.setBackgroundColor_singular(randomColor);
     dataObject.setBackgroundColor_multiple(backgroundColor);
     this.defaultDatasetButton = new DatasetButton('total', 'category', {
       from: currentYearAndMonth,
-      to: currentYearAndMonth, 
+      to: currentYearAndMonth,
     }, randomColor)
     this.addDataset(dataObject);
 
@@ -193,26 +216,28 @@ export class ChartProvider {
   async handleNewDataset(operationType: string, timeperiod: {
     from: string,
     to: string
-  }, backgroundColor_singular: string,  categories ? : Category[], tags ? : Tag[]) {
+  }, backgroundColor_singular: string, categories ? : Category[], tags ? : Tag[]) {
     console.log(categories);
     if (categories) {
       if (this.dataType === 'category' && this.labelType === 'category') {
         let data = await this.categoryProvider.getCategoryDatasetWithCategoryLabel(timeperiod.from, timeperiod.to, categories, operationType)
         let backgroundColor = categories.map(c => c.getCategoryColor());
-        let dataset = new Dataset(data, backgroundColor);
-        dataset.setBackgroundColor_singular(backgroundColor_singular);
+        let dataset = new Dataset(data, backgroundColor, backgroundColor_singular, 'Dataset 2');
+        //dataset.setBackgroundColor_singular(backgroundColor_singular);
         dataset.setBackgroundColor_multiple(backgroundColor);
         let labels = categories.map(c => c.getCategoryName());
         if (this.noDatasets()) {
           this.setChartLabels(labels);
         }
         // else keep current labels
-        if(this.getChartType() === 'line' || this.getChartType() === 'radar')
-        {
-          dataset.setActiveBackgroundColor('singular');
-        }
+      
+        
         this.addDataset(dataset);
-
+        console.log(this.getChartType());
+        this.updateActiveBackgroundColor(this.getChartType());
+        this.updateBorderColor(this.getChartType());
+        this.updateChartOptions(this.getChartType());
+        this.updateFill(this.getChartType());
       }
 
     } else if (tags) {
@@ -240,7 +265,7 @@ export class ChartProvider {
         dataset.setActiveBackgroundColor('singular');
       });
     } else {
-       this.chartInstance.data.datasets.forEach((dataset: Dataset) => {
+      this.chartInstance.data.datasets.forEach((dataset: Dataset) => {
         dataset.setActiveBackgroundColor('multiple');
       });
     }
@@ -248,27 +273,54 @@ export class ChartProvider {
 
   }
 
+  public updateFill(type: string): void
+  {
+    if (type === 'line')
+    {
+      this.chartInstance.data.datasets.forEach((dataset: Dataset) => {
+        dataset.setFill(false);
+      });
+      this.chartInstance.update();
+    }
+    else {
+      this.chartInstance.data.datasets.forEach((dataset: Dataset) => {
+        dataset.setFill(true);
+      });
+      this.chartInstance.update();
+    }
+  }
+
+  public updateBorderColor(type: string): void {
+    if (type === 'doughnut')
+    {
+      this.chartInstance.data.datasets.forEach((dataset: Dataset) => {
+        dataset.setBorderColor(undefined);
+      });
+      this.chartInstance.update();
+    }
+    else {
+      this.chartInstance.data.datasets.forEach((dataset: Dataset) => {
+        dataset.setBorderColor(dataset.getBackgroundColor_singular());
+      });
+      this.chartInstance.update();
+    }
+
+  }
+
   public updateChartOptions(type: string): void {
     this.chartInstance.scale = undefined;
-    if(type === 'doughnut')
-    {
+    if (type === 'doughnut') {
       this.chartInstance.options = Chart.defaults.doughnut;
-    }
-    else if(type === 'line')
-    {
+    } else if (type === 'line') {
 
       this.chartInstance.options = Chart.defaults.line;
-    }
-    else if(type === 'radar')
-    {
+    } else if (type === 'radar') {
       this.chartInstance.options = Chart.defaults.radar;
-      
+
       console.log(Chart.defaults.radar);
+    } else if (type === 'bar') {
+      this.chartInstance.options = this.chartConfigs.bar;
     }
-    else if(type === 'bar')
-   {
-    this.chartInstance.options = Chart.defaults.bar;
-   }
     this.chartInstance.update();
   }
 
@@ -277,12 +329,11 @@ export class ChartProvider {
   }
 
   public noDatasets(): boolean {
-    if(this.chartInstance)
-    {
+    if (this.chartInstance) {
       return this.chartInstance.data.datasets.length === 0;
     }
     return true;
-    
+
   }
   public deleteDataset(index: number): void {
     this.chartInstance.data.datasets.splice(index, 1);
