@@ -52,9 +52,8 @@ export class ChartProvider {
 
 
   constructor(public events: Events, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider) {
-    this.chartTypes = ['bar', 'line', 'doughnut', 'radar', ];
+    this.chartTypes = ['bar', 'line', 'doughnut', 'radar', 'polarArea' ];
     this.setupChartConfigs();
-
   }
 
   public setupChartConfigs(): void {
@@ -76,7 +75,6 @@ export class ChartProvider {
       }
     }
 
-  
   }
 
   public getChartTypes(): string[] {
@@ -114,23 +112,6 @@ export class ChartProvider {
     }
     return chart;
   }
-
-  public setyAxes(beginAtZero: boolean, display: boolean) {
-    this.chartInstance.options.scales.yAxes.ticks.beginAtZero = beginAtZero;
-    this.chartInstance.options.scales.yAxes.display = display;
-    this.chartInstance.update();
-  }
-
-  public resetOptions(): void {
-    this.chartInstance.options = {
-      legend: {
-        display: false
-      },
-    }
-    this.chartInstance.update();
-  }
-
-  // TODO: set config options for each type of chart !
 
   public setLabelType(labelType: string): void {
     this.labelType = labelType;
@@ -291,7 +272,7 @@ export class ChartProvider {
   }
 
   public updateBorderColor(type: string): void {
-    if (type === 'doughnut')
+    if (type === 'doughnut' || type === 'polarArea')
     {
       this.chartInstance.data.datasets.forEach((dataset: Dataset) => {
         dataset.setBorderColor(undefined);
