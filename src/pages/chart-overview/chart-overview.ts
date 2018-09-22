@@ -141,6 +141,7 @@ export class ChartOverviewPage {
     this.datasetButtonProvider.deleteDatasetButton(i);
     this.refreshDatasetButtons();
     if (this.chartProvider.noDatasets()) {
+      
       let legend = document.getElementById("chartjs-legend");
       legend.innerHTML = '';
     }

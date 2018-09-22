@@ -30,10 +30,6 @@ export class DatasetbuttonProvider {
     return this.datasetButtons;
   }
 
-  public clearDatasetButtons(): void {
-    this.datasetButtons = [];
-  }
-
   public deleteDatasetButton(index: number)
   {
     this.datasetButtons.splice(index, 1);

@@ -48,7 +48,7 @@ export class ChartProvider {
   private dataType: string; // data on which operations are executed --> category etc..., needs to be the same for each dataset
 
   public chartTypes: string[];
-  private chartConfigs: {bar: Object, line: Object};
+  private chartConfigs: {bar: Object, line: Object, doughnut: Object};
 
 
   constructor(public events: Events, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public datasetButtonProvider: DatasetbuttonProvider) {
@@ -73,6 +73,11 @@ export class ChartProvider {
       },
       line: {
 
+      },
+      doughnut: {
+        legend: {
+          display: false
+        }
       }
     }
 
@@ -213,7 +218,6 @@ export class ChartProvider {
         dataset.setBackgroundColor_multiple(backgroundColor);
         let labels = categories.map(c => c.getCategoryName());
         if (this.noDatasets()) {
-          this.datasetButtonProvider.clearDatasetButtons();
           this.setChartLabels(labels);
         }
         // else keep current labels
@@ -235,16 +239,15 @@ export class ChartProvider {
             data.backgroundColor.push(cat.getCategoryColor());
           }
           let randomBackgroundColor_singular = randomColor();
-          this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, randomBackgroundColor_singular));
-          let dataset = new Dataset(data.data, data.backgroundColor, randomBackgroundColor_singular , this.datasetButtonProvider.getDatasetButtonLabel());
+          this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, cat.getCategoryColor()));
+          let dataset = new Dataset(data.data, data.backgroundColor, cat.getCategoryColor() , cat.getCategoryName());
           dataset.setBackgroundColor_multiple(data.backgroundColor);
-          dataset.setBorderColor(randomBackgroundColor_singular);
+          dataset.setBorderColor(cat.getCategoryColor());
           this.addDataset(dataset);
         });
 
         let labels = this.momentProvider.getLabelsBetweenTimePeriod(timeperiod.from, timeperiod.to);
         if (this.noDatasets()) {
-          this.datasetButtonProvider.clearDatasetButtons();
           this.setChartLabels(labels);
         }
         this.updateActiveBackgroundColor(this.getChartType());
@@ -265,18 +268,18 @@ export class ChartProvider {
     from: string,
     to: string
   }, categoryName: string, labelType: string, dataType: string, operationType: string, categories ? : Category[]) {
-    if (dataType === 'category' && labelType === 'month') {
+    if (dataType === 'category' && labelType === 'month'){
       return this.categoryProvider.getCategoryDatasetWithMonthLabel(timeperiod.from, timeperiod.to, labelType, categoryName, operationType)
     } else if (dataType === 'category' && labelType === 'category') {
       return this.categoryProvider.getCategoryDatasetWithCategoryLabel(timeperiod.from, timeperiod.to, categories, operationType)
     }
   }
 
-  public updateActiveBackgroundColor(type: string) {
+  public updateActiveBackgroundColor(type: string): void { 
     if (type === 'line' || type === 'radar') {
       this.chartInstance.data.datasets.forEach((dataset: Dataset) => {
         dataset.setActiveBackgroundColor('singular');
-      });
+      }); 
     } else {
       this.chartInstance.data.datasets.forEach((dataset: Dataset) => {
         dataset.setActiveBackgroundColor('multiple');
@@ -323,7 +326,7 @@ export class ChartProvider {
   public updateChartOptions(type: string): void {
     this.chartInstance.scale = undefined;
     if (type === 'doughnut') {
-      this.chartInstance.options = Chart.defaults.doughnut;
+      this.chartInstance.options = this.chartConfigs.doughnut;
     } else if (type === 'line') {
 
       this.chartInstance.options = Chart.defaults.line;
