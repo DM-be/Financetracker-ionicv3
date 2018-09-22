@@ -54,7 +54,9 @@ export class DatasetPage {
   public operationType: string;
   public ctx;
   public categories: Category[];
-  public selectedCategories: Category[];
+  public selectedCategories: Category[]; // obs
+  public selectedData: string [];
+
 
 
 
@@ -63,26 +65,31 @@ export class DatasetPage {
       from: '',
       to: ''
     };
+  }
+
+  checkForLabels() {
+    if(this.labelType === 'month') {
+      if(this.timeperiod.from !== '' && this.timeperiod.to !== '')
+      {
+        this.labels = this.momentProvider.getLabelsBetweenTimePeriod(this.timeperiod.from, this.timeperiod.to);
+      }
+    }
+  }
+
+  async ionViewWillEnter() {
+    this.categories = await this.categoryProvider.getCategories(this.momentProvider.getCurrentYearAndMonth());
+    
     this.dataType = this.chartProvider.getDataType() || undefined;
     this.labelType = this.chartProvider.getLabelType() || undefined;
     this.labels = this.chartProvider.getChartLabels();
+    this.selectedData = this.chartProvider.getSelectedData();
     this.selectedCategories = [];
     this.ctx = this.navParams.get("ctx");
-
-  }
-  async ionViewWillEnter() {
-    this.categories = await this.categoryProvider.getCategories(this.momentProvider.getCurrentYearAndMonth());
-    if (this.labels) {
-      this.categories.forEach(cat => {
-        if (this.labels.findIndex(c => c === cat.categoryName) >= 0) {
-          this.selectedCategories.push(cat);
-        }
-      });
-    }
   }
 
   async addAllDatasetsToChart() {
       this.chartProvider.setDataType(this.dataType);
+      this.chartProvider.setSelectedData(this.selectedData);
       this.chartProvider.setLabelType(this.labelType);
       let datasetModalData = {
         operationType: this.operationType,
@@ -109,13 +116,15 @@ export class DatasetPage {
     alert.addButton({
       text: 'Okay',
       handler: data => {
-        console.log('Checkbox data:', data);
-        this.labels = [];
         data.forEach(cat => {
           let parsedCat = JSON.parse(cat)
           let catObject = new Category(parsedCat.categoryName, parsedCat.categoryColor, parsedCat.iconName, parsedCat.createdDate, parsedCat.expenses, parsedCat.budget);
           this.selectedCategories.push(catObject);
-          this.labels.push(parsedCat.categoryName);
+          this.selectedData.push(parsedCat.categoryName);
+          if(this.dataType === this.labelType)
+          {
+            this.labels = this.selectedData;
+          }
         });
       }
     });

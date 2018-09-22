@@ -47,7 +47,9 @@ export class ChartProvider {
   private chartInstance: any; // holds the chartjs instance
   private labels: string[]; // kept here for setup reasons --> chart constructor needs labels before instantiation
   private labelType: string; // selected labelType --> determines the labels 
-  private dataType: string; // data on which operations are executed --> category etc..., needs to be the same for each dataset
+  private dataType: string; // datatype on which operations are executed --> category etc..., needs to be the same for each dataset
+  // TODO: keep datatype???
+  private selectedData: string []; // data on which operations are executed --> category etc..., needs to be the same for each dataset
 
   public chartTypes: string[];
   private chartConfigs: {
@@ -96,6 +98,14 @@ export class ChartProvider {
 
   public getChartTypes(): string[] {
     return this.chartTypes;
+  }
+
+  public getSelectedData(): string [] {
+    return this.selectedData;
+  }
+
+  public setSelectedData(selectedData: string [] ): void {
+    this.selectedData = selectedData;
   }
 
   createNewChart(ctx: any, dataset ? : Dataset, type ? : string, expense ? : boolean, customLegend ? : boolean, customLabels ? : string[]) {
@@ -158,9 +168,6 @@ export class ChartProvider {
       return 'bar' // todo switch to default
     }
   }
-
-
-
   // only used once for the default instance, do not reuse, use appropiate setchartlabels and getter
   public getLabels(): string[] {
     return this.labels;
@@ -185,8 +192,13 @@ export class ChartProvider {
     };
     let labelType = 'category'; // get from default settings in useroverview 
     let labels = filteredCategories.map(c => c.getCategoryName());
+    
     let dataType = 'category'; // get from default settings in useroverview 
     let operationType = 'total'; // get from default settings in useroverview 
+    if(labelType === dataType)
+    {
+      this.setSelectedData(labels); // only in this case --> refactor above in defaults and refactor in a single function
+    }
     this.setLabelType(labelType);
     this.setDataType(dataType);
     this.setChartLabels(labels);
@@ -195,7 +207,7 @@ export class ChartProvider {
     let randomColor = this.getRandomColor();
 
 
-    let defaultDatasetButton = new DatasetButton('total', 'category', {
+    let defaultDatasetButton = new DatasetButton(operationType, dataType, {
       from: currentYearAndMonth,
       to: currentYearAndMonth,
     }, randomColor)
@@ -301,11 +313,12 @@ export class ChartProvider {
         data.backgroundColor.push(cat.getCategoryColor());
       }
       this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, cat.getCategoryColor()));
-      let dataset = new Dataset(data.data, data.backgroundColor, cat.getCategoryColor(), cat.getCategoryName());
+      let dataset = new Dataset(data.data, data.backgroundColor, cat.getCategoryColor(), this.datasetButtonProvider.getDatasetButtonLabel());
       dataset.setBackgroundColor_multiple(data.backgroundColor);
       dataset.setBorderColor(cat.getCategoryColor());
       this.addDataset(dataset);
     });
+      
   }
 
   async handleNewDataset(operationType: string, timeperiod: {
@@ -316,7 +329,9 @@ export class ChartProvider {
       if (this.dataType === 'category' && this.labelType === 'category') {
         this.buildDatasetAndButton_category_category(operationType, timeperiod, backgroundColor_singular, categories);
         if (this.noDatasets()) {
-          this.setChartLabels(categories.map(c => c.getCategoryName()));
+          let labelsAndSelectedData =categories.map(c => c.getCategoryName()); 
+          this.setChartLabels(labelsAndSelectedData);
+          this.setSelectedData(labelsAndSelectedData);
         }
         this.updateChartInstanceAccordingToType(this.getChartType());
       } else if (this.dataType === 'category' && this.labelType === 'month') {
@@ -324,8 +339,9 @@ export class ChartProvider {
         let labels = this.momentProvider.getLabelsBetweenTimePeriod(timeperiod.from, timeperiod.to);
         if (this.noDatasets()) {
           this.setChartLabels(labels);
+          this.setSelectedData(categories.map(c => c.getCategoryName()));
         }
-        this.updateChartInstanceAccordingToType(this.getChartType())
+        this.updateChartInstanceAccordingToType(this.getChartType());
       }
 
     } else if (tags) {
@@ -362,6 +378,7 @@ export class ChartProvider {
       this.clearChartLabels();
       this.labelType = undefined;
       this.dataType = undefined;
+      this.setSelectedData([]);
     }
     this.chartInstance.update();
   }

@@ -28,6 +28,12 @@
         <ion-select [(ngModel)]="labelType" name="labelType" [disabled]="!chartProvider.noDatasets()">
           <ion-option *ngFor="let labelType of labelTypes" [value]="labelType">{{labelType}}</ion-option>
         </ion-select>
+        
+      </ion-item>
+      <ion-item>
+        <ion-list>
+          <ion-badge *ngFor="let label of labels" >{{label}}</ion-badge>
+        </ion-list>
       </ion-item>
       <ion-item>
         <ion-label>Compare</ion-label>
@@ -35,19 +41,21 @@
           <ion-option *ngFor="let dataType of dataTypes" [value]="dataType">{{dataType}}</ion-option>
         </ion-select>
       </ion-item>
+
       <button ion-button *ngIf="(dataType === 'category' && selectedCategories.length === 0)" (click)="addCategoriesAlert()">add</button>
       <ion-item>
         <ion-list>
-          <ion-badge *ngFor="let label of labels" >{{label}}</ion-badge>
+          <ion-badge *ngFor="let selectedData of selectedData" >{{selectedData}}</ion-badge>
         </ion-list>
       </ion-item>
+      
       <ion-item item-end>
         <ion-label>Starting date</ion-label>
-        <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.from" name="from"></ion-datetime>
+        <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.from" name="from" (ionChange)="checkForLabels()"></ion-datetime>
       </ion-item>
       <ion-item item-end>
         <ion-label>Ending date</ion-label>
-        <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.to" name="to"></ion-datetime>
+        <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.to" name="to" (ionChange)="checkForLabels()"></ion-datetime>
       </ion-item>
       <ion-item>
         <ion-label>Calculate</ion-label>
