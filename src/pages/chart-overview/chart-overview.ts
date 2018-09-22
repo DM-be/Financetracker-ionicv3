@@ -164,10 +164,7 @@ export class ChartOverviewPage {
       text: 'Ok',
       handler: (type: string) => {
         this.chartProvider.setChartType(type);
-        this.chartProvider.updateActiveBackgroundColor(type);
-        this.chartProvider.updateChartOptions(type);
-        this.chartProvider.updateFill(type);
-        this.chartProvider.updateBorderColor(type);
+        this.chartProvider.updateChartInstanceAccordingToType(type);
       }
     });
     alert.present();
