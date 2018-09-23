@@ -183,6 +183,8 @@ export class ChartProvider {
   }
 
   // setup first chart when landing on the chart overview page 
+
+  // todo: refactor!
   public async setupDefaultChart(ctx): Promise < void > {
     let emptyDataset = new Dataset([], [], '', '');
     this.createNewChart(ctx, emptyDataset);
@@ -209,8 +211,6 @@ export class ChartProvider {
     let data = await this.getDatasetData(timeperiod, undefined, labelType, dataType, operationType, filteredCategories);
     let backgroundColor = filteredCategories.map(c => c.getCategoryColor());
     let randomColor = this.getRandomColor();
-    
-  
     let defaultDatasetButton = new DatasetButton(operationType, dataType, {
       from: currentYearAndMonth,
       to: currentYearAndMonth,
@@ -219,11 +219,10 @@ export class ChartProvider {
 
     let dataObject = new Dataset(data, backgroundColor, randomColor, this.datasetButtonProvider.getDatasetButtonLabel());
 
-    //dataObject.setBackgroundColor_singular(randomColor);
     dataObject.setBackgroundColor_multiple(backgroundColor);
 
     this.addDataset(dataObject);
-    this.updateChartOptions(this.getChartType());
+    this.updateChartInstanceAccordingToType(this.getChartType());
     // add updates
 
   }
