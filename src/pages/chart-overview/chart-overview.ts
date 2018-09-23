@@ -106,7 +106,7 @@ export class ChartOverviewPage {
     });
     datasetModal.present()
     datasetModal.onDidDismiss(datasetModalData => {
-      if (datasetModal) {
+      if (datasetModalData) {
         const {
           selectedCategories,
           operationType,

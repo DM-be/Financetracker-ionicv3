@@ -108,6 +108,10 @@ export class ChartProvider {
     this.selectedData = selectedData;
   }
 
+  public clearSelectedData(): void {
+    this.selectedData = [];
+  }
+
   createNewChart(ctx: any, dataset ? : Dataset, type ? : string, expense ? : boolean, customLegend ? : boolean, customLabels ? : string[]) {
     let chartData = {
       datasets: [{
@@ -376,9 +380,10 @@ export class ChartProvider {
     this.chartInstance.data.datasets.splice(index, 1);
     if (this.noDatasets()) {
       this.clearChartLabels();
+      this.clearSelectedData();
       this.labelType = undefined;
       this.dataType = undefined;
-      this.setSelectedData([]);
+      
     }
     this.chartInstance.update();
   }

@@ -10,7 +10,7 @@
       add dataset
     </ion-title>
     <ion-buttons start>
-      <button ion-button (click)="navCtrl.pop()">
+      <button ion-button (click)="dismiss()">
         <span ion-text color="primary" showWhen="ios">Cancel</span>
         <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
       </button>
@@ -30,11 +30,14 @@
         </ion-select>
         
       </ion-item>
-      <ion-item>
+      <div *ngIf="labels.length > 0">
+        <ion-item>
         <ion-list>
           <ion-badge *ngFor="let label of labels" >{{label}}</ion-badge>
         </ion-list>
-      </ion-item>
+        </ion-item>
+      </div>
+      
       <ion-item>
         <ion-label>Compare</ion-label>
         <ion-select [(ngModel)]="dataType" name="dataType" [disabled]="!chartProvider.noDatasets()"> 
@@ -42,13 +45,15 @@
         </ion-select>
       </ion-item>
 
-      <button ion-button *ngIf="(dataType === 'category' && selectedCategories.length === 0)" (click)="addCategoriesAlert()">add</button>
+      <button ion-button *ngIf="chartProvider.noDatasets() && dataType === 'category'" (click)="addCategoriesAlert()">add</button>
+      
+      <div *ngIf="selectedData.length > 0">
       <ion-item>
         <ion-list>
           <ion-badge *ngFor="let selectedData of selectedData" >{{selectedData}}</ion-badge>
         </ion-list>
       </ion-item>
-      
+      </div>
       <ion-item item-end>
         <ion-label>Starting date</ion-label>
         <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.from" name="from" (ionChange)="checkForLabels()"></ion-datetime>

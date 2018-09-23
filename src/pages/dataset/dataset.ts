@@ -37,11 +37,7 @@ import {
 })
 
 export class DatasetPage {
-
-
-
-  public labels: string[]; // needs to be the same for multiple datasets!
-  public data: number[]; // numbers associated with the labels --> hobby - 200
+  public labels: string[] = [] // needs to be the same for multiple datasets!
   public labelTypes: string[] = ['month', 'year', 'category', 'tag'] //can be week,month,year but also category name, expense description, tag name
   public labelType: string;
   public dataTypes: string[] = ['category', 'tag'];
@@ -55,9 +51,7 @@ export class DatasetPage {
   public ctx;
   public categories: Category[];
   public selectedCategories: Category[]; // obs
-  public selectedData: string [];
-
-
+  public selectedData: string[] = [];
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public alertCtrl: AlertController, private view: ViewController) {
@@ -68,9 +62,8 @@ export class DatasetPage {
   }
 
   checkForLabels() {
-    if(this.labelType === 'month') {
-      if(this.timeperiod.from !== '' && this.timeperiod.to !== '')
-      {
+    if (this.labelType === 'month') {
+      if (this.timeperiod.from !== '' && this.timeperiod.to !== '') {
         this.labels = this.momentProvider.getLabelsBetweenTimePeriod(this.timeperiod.from, this.timeperiod.to);
       }
     }
@@ -78,7 +71,6 @@ export class DatasetPage {
 
   async ionViewWillEnter() {
     this.categories = await this.categoryProvider.getCategories(this.momentProvider.getCurrentYearAndMonth());
-    
     this.dataType = this.chartProvider.getDataType() || undefined;
     this.labelType = this.chartProvider.getLabelType() || undefined;
     this.labels = this.chartProvider.getChartLabels();
@@ -88,23 +80,22 @@ export class DatasetPage {
   }
 
   async addAllDatasetsToChart() {
-      this.chartProvider.setDataType(this.dataType);
-      this.chartProvider.setSelectedData(this.selectedData);
-      this.chartProvider.setLabelType(this.labelType);
-      let datasetModalData = {
-        operationType: this.operationType,
-        timeperiod: this.timeperiod,
-        selectedCategories: this.selectedCategories,
-        dataType: this.dataType,
-        backgroundColor: this.chartProvider.getRandomColor()
-      }
-      this.view.dismiss(datasetModalData);
+    this.chartProvider.setDataType(this.dataType);
+    this.chartProvider.setSelectedData(this.selectedData);
+    this.chartProvider.setLabelType(this.labelType);
+    let datasetModalData = {
+      operationType: this.operationType,
+      timeperiod: this.timeperiod,
+      selectedCategories: this.selectedCategories,
+      dataType: this.dataType,
+      backgroundColor: this.chartProvider.getRandomColor()
+    }
+    this.view.dismiss(datasetModalData);
   }
 
   addCategoriesAlert() {
     let alert = this.alertCtrl.create();
-    alert.setTitle('What categories do you want to see?');
-
+    alert.setTitle('Select categories');
     this.categories.forEach(category => {
       alert.addInput({
         type: 'checkbox',
@@ -116,13 +107,14 @@ export class DatasetPage {
     alert.addButton({
       text: 'Okay',
       handler: data => {
+        this.selectedData = [];
+        this.selectedCategories = [];
         data.forEach(cat => {
           let parsedCat = JSON.parse(cat)
           let catObject = new Category(parsedCat.categoryName, parsedCat.categoryColor, parsedCat.iconName, parsedCat.createdDate, parsedCat.expenses, parsedCat.budget);
           this.selectedCategories.push(catObject);
           this.selectedData.push(parsedCat.categoryName);
-          if(this.dataType === this.labelType)
-          {
+          if (this.dataType === this.labelType) {
             this.labels = this.selectedData;
           }
         });
@@ -131,6 +123,9 @@ export class DatasetPage {
     alert.present();
   }
 
+  public dismiss() {
+    this.view.dismiss();
+  }
 
 
 
