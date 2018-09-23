@@ -32,7 +32,7 @@
       <div id="dataset-container">
         <button ion-item [style.backgroundColor]="datasetButton.backgroundColor" *ngFor="let datasetButton of datasetButtons; let i = index " (click)="deleteDataset(i)">
           <ion-grid>
-            <ion-row><ion-col>{{datasetButton.operationType}} of {{datasetButton.dataType}}</ion-col></ion-row>
+            <ion-row><ion-col>{{datasetButton.operationType}} of {{datasetButton.getFormattedSelectedData()}}</ion-col></ion-row>
             <ion-row><ion-col>{{datasetButton.getFormattedTimeperiod()}}</ion-col></ion-row>
           </ion-grid>
         </button>

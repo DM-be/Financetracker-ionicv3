@@ -199,7 +199,7 @@ export class ChartProvider {
     
     let dataType = 'category'; // get from default settings in useroverview 
     let operationType = 'total'; // get from default settings in useroverview 
-    if(labelType === dataType)
+    if(labelType === dataType) 
     {
       this.setSelectedData(labels); // only in this case --> refactor above in defaults and refactor in a single function
     }
@@ -209,12 +209,12 @@ export class ChartProvider {
     let data = await this.getDatasetData(timeperiod, undefined, labelType, dataType, operationType, filteredCategories);
     let backgroundColor = filteredCategories.map(c => c.getCategoryColor());
     let randomColor = this.getRandomColor();
-
-
+    
+  
     let defaultDatasetButton = new DatasetButton(operationType, dataType, {
       from: currentYearAndMonth,
       to: currentYearAndMonth,
-    }, randomColor)
+    }, randomColor, labels) // data is labels in this case
     this.datasetButtonProvider.addDatasetButton(defaultDatasetButton);
 
     let dataObject = new Dataset(data, backgroundColor, randomColor, this.datasetButtonProvider.getDatasetButtonLabel());
@@ -297,7 +297,8 @@ export class ChartProvider {
   }, backgroundColor_singular: string, categories ? : Category[]) {
     let data = await this.categoryProvider.getCategoryDatasetWithCategoryLabel(timeperiod.from, timeperiod.to, categories, operationType)
     let backgroundColor = categories.map(c => c.getCategoryColor());
-    this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, backgroundColor_singular));
+    let selectedData = categories.map(c => c.getCategoryName());
+    this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, backgroundColor_singular, selectedData));
     let dataset = new Dataset(data, backgroundColor, backgroundColor_singular, this.datasetButtonProvider.getDatasetButtonLabel());
     dataset.setBackgroundColor_multiple(backgroundColor);
     this.addDataset(dataset);
@@ -316,7 +317,7 @@ export class ChartProvider {
       for (let i = 0; i < data.data.length; i++) {
         data.backgroundColor.push(cat.getCategoryColor());
       }
-      this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, cat.getCategoryColor()));
+      this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, cat.getCategoryColor(), [cat.getCategoryName()]));
       let dataset = new Dataset(data.data, data.backgroundColor, cat.getCategoryColor(), this.datasetButtonProvider.getDatasetButtonLabel());
       dataset.setBackgroundColor_multiple(data.backgroundColor);
       dataset.setBorderColor(cat.getCategoryColor());
@@ -333,7 +334,7 @@ export class ChartProvider {
       if (this.dataType === 'category' && this.labelType === 'category') {
         this.buildDatasetAndButton_category_category(operationType, timeperiod, backgroundColor_singular, categories);
         if (this.noDatasets()) {
-          let labelsAndSelectedData =categories.map(c => c.getCategoryName()); 
+          let labelsAndSelectedData = categories.map(c => c.getCategoryName()); 
           this.setChartLabels(labelsAndSelectedData);
           this.setSelectedData(labelsAndSelectedData);
         }
