@@ -300,6 +300,7 @@ export class ChartProvider {
     this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, backgroundColor_singular, selectedData));
     let dataset = new Dataset(data, backgroundColor, backgroundColor_singular, this.datasetButtonProvider.getDatasetButtonLabel());
     dataset.setBackgroundColor_multiple(backgroundColor);
+    dataset.setBorderColor(backgroundColor_singular);
     this.addDataset(dataset);
   }
 
