@@ -69,13 +69,30 @@ export class DatasetPage {
     }
   }
 
+  private convertSelectedDataToCategories(selectedCategoriesCategoryName: string []): Category []
+  {
+    let cats = [];
+    this.categories.forEach(c => {
+      this.selectedData.forEach(sd => {
+        if(sd === c.getCategoryName())
+        {
+          cats.push(c);
+        }
+      })
+    });
+    return cats;
+  }
+
   async ionViewWillEnter() {
     this.categories = await this.categoryProvider.getCategories(this.momentProvider.getCurrentYearAndMonth());
     this.dataType = this.chartProvider.getDataType() || undefined;
     this.labelType = this.chartProvider.getLabelType() || undefined;
     this.labels = this.chartProvider.getChartLabels();
     this.selectedData = this.chartProvider.getSelectedData();
-    this.selectedCategories = [];
+    if(this.dataType === 'category' && this.selectedData.length > 0)
+    {
+      this.selectedCategories = this.convertSelectedDataToCategories(this.selectedData);
+    }
     this.ctx = this.navParams.get("ctx");
   }
 
