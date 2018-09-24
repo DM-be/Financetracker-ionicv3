@@ -6,8 +6,8 @@
   </div>
 
   <ion-scroll style="height: 20vh;">
-    <button ion-item [style.backgroundColor]="datasetButton.backgroundColor" *ngFor="let datasetButton of datasetButtons; let i = index "
-      (click)="deleteDataset(i)">
+    <button ion-button full [style.backgroundColor]="datasetButton.backgroundColor" ion-long-press [interval]="400" (onPressEnd)="deleteDataset(i)"  *ngFor="let datasetButton of datasetButtons; let i = index "
+      >
       Dataset {{i + 1}}
     </button>
   </ion-scroll>
