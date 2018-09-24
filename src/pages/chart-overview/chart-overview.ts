@@ -77,6 +77,7 @@ export class ChartOverviewPage {
 
   private async setupDefaultChart() {
     await this.refreshMonthOverview();
+    this.ctx = document.getElementById("myChart");
     await this.chartProvider.setupDefaultChart(this.ctx);
     this.chart = this.chartProvider.getChartInstance();
   }
