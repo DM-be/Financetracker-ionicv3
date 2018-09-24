@@ -123,20 +123,6 @@ export class ChartProvider {
     let chart = new Chart(ctx, {
       type: type || 'bar',
       data: chartData,
-      options: {
-        events: ["mousemove", "mouseout", "click", "touchstart", "touchmove", "touchend"],
-        onClick: (evt, item) => {
-          //evt.stopImmediatePropagation();
-          //2x events fired 
-          // touchend + click --> stilll need touchend?
-          if (item.length > 0 && expense) {
-            this.events.publish('expense:clicked', item[0]._index);
-          }
-        },
-        legend: {
-          display: false
-        },
-      },
     });
     if (!customLabels) {
       this.chartInstance = chart; // other charts other than the one on the mainpage are not referenced by this service
@@ -223,11 +209,10 @@ export class ChartProvider {
 
     this.addDataset(dataObject);
     this.updateChartInstanceAccordingToType(this.getChartType());
-    // add updates
 
   }
 
-  public updateChartInstanceAccordingToType(type: string) {
+  public updateChartInstanceAccordingToType(type: string): void{
     this.updateActiveBackgroundColor(type);
     this.updateBorderColor(type);
     this.updateChartOptions(type);
@@ -293,7 +278,7 @@ export class ChartProvider {
   private async buildDatasetAndButton_category_category(operationType: string, timeperiod: {
     from: string,
     to: string
-  }, backgroundColor_singular: string, categories ? : Category[]) {
+  }, backgroundColor_singular: string, categories ? : Category[]): Promise <void> {
     let data = await this.categoryProvider.getCategoryDatasetWithCategoryLabel(timeperiod.from, timeperiod.to, categories, operationType)
     let backgroundColor = categories.map(c => c.getCategoryColor());
     let selectedData = categories.map(c => c.getCategoryName());
@@ -307,19 +292,16 @@ export class ChartProvider {
   private async buildDatasetAndButtons_category_month(operationType: string, timeperiod: {
     from: string,
     to: string
-  }, categories ? : Category[]) {
+  }, categories ? : Category[]): Promise <void> {
     categories.forEach(async cat => {
-      let data = {
-        data: [],
-        backgroundColor: []
-      };
-      data.data = await this.categoryProvider.getCategoryDatasetWithMonthLabel(timeperiod.from, timeperiod.to, this.labelType, cat.getCategoryName(), operationType);
-      for (let i = 0; i < data.data.length; i++) {
-        data.backgroundColor.push(cat.getCategoryColor());
+      let data = await this.categoryProvider.getCategoryDatasetWithMonthLabel(timeperiod.from, timeperiod.to, this.labelType, cat.getCategoryName(), operationType);
+      let backgroundColor: string [] = [];
+      for (let i = 0; i < data.length; i++) {
+        backgroundColor.push(cat.getCategoryColor());
       }
       this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, cat.getCategoryColor(), [cat.getCategoryName()]));
-      let dataset = new Dataset(data.data, data.backgroundColor, cat.getCategoryColor(), this.datasetButtonProvider.getDatasetButtonLabel());
-      dataset.setBackgroundColor_multiple(data.backgroundColor);
+      let dataset = new Dataset(data, backgroundColor, cat.getCategoryColor(), this.datasetButtonProvider.getDatasetButtonLabel());
+      dataset.setBackgroundColor_multiple(backgroundColor);
       dataset.setBorderColor(cat.getCategoryColor());
       this.addDataset(dataset);
     });
@@ -329,7 +311,7 @@ export class ChartProvider {
   async handleNewDataset(operationType: string, timeperiod: {
     from: string,
     to: string
-  }, backgroundColor_singular: string, categories ? : Category[], tags ? : Tag[]) {
+  }, backgroundColor_singular: string, categories ? : Category[], tags ? : Tag[]): Promise <void> {
     if (categories) {
       if (this.dataType === 'category' && this.labelType === 'category') {
         this.buildDatasetAndButton_category_category(operationType, timeperiod, backgroundColor_singular, categories);
@@ -384,7 +366,6 @@ export class ChartProvider {
       this.clearSelectedData();
       this.labelType = undefined;
       this.dataType = undefined;
-      
     }
     this.chartInstance.update();
   }
@@ -428,29 +409,5 @@ export class ChartProvider {
   public getRandomColor(): string {
     return randomColor();
   }
-
-
-  private buildIconHTMLForComplexLegend(iconName: string): string {
-    return `<ion-icon name="${iconName}" class="icon icon-md ion-md-${iconName} item-icon legend"></ion-icon>`;
-  }
-
-  public buildCategoryLegendHTML(categories: Category[]): string {
-    let html = `<ul>`;
-    categories.forEach(c => {
-      if (c.getTotalExpenseCost() > 0) {
-        html += `<li> <span style="background-color:${c.getCategoryColor()}">`
-        html += this.buildIconHTMLForComplexLegend(c.getIconName());
-        html += `</span>`
-        html += '</li>'
-      }
-    });
-    html += `</ul>`
-    return html;
-  }
-
-
-
-
-
 
 }
