@@ -10,14 +10,6 @@
 <ion-content padding>
   
  
-  <ion-grid fixed>
-    <ion-row>
-      <ion-col align-self-center>
-        <div id="chartjs-legend" [style.opacity]="legendHidden() ?  0 : 1" ></div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
 
 <div>
   <canvas id="myChart" width="400" height="400" [style.opacity]="this.chartProvider.noDatasets() ?  0 : 1"></canvas>
