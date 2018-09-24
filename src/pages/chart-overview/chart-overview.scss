@@ -1,7 +1,5 @@
 page-chart-overview {
 
-    // https://codepen.io/michiel-huiskens/pen/RRaRRv
-    // todo: refactor in grid? looks nice now but needs responsiveness
     .chart-container {
         position: relative;
         margin: auto;
@@ -9,29 +7,6 @@ page-chart-overview {
         width: 80vw;
       }
 
-      #chartjs-legend li {
-        margin: 10px 4px;
-      }
-      #chartjs-legend li span {
-        position:relative;
-        padding: 6px 20px ;
+      // https://codepen.io/michiel-huiskens/pen/RRaRRv --- custom legend if needed
 
-        border-radius:13px ;
-        color:white ;
-        z-index:2 ;
-      }
-
-      ul {
-        list-style: none;
-        margin:0;
-        margin-bottom: 20px;
-        padding:0;
-        text-align:center;
-      }
-      li {
-        display: inline-table;
-      }
-
-  
-     
 }
