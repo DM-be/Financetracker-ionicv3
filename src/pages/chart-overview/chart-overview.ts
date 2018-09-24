@@ -1,4 +1,9 @@
-import { DatasetbuttonProvider } from './../../providers/datasetbutton/datasetbutton';
+import {
+  Chart
+} from 'chart.js';
+import {
+  DatasetbuttonProvider
+} from './../../providers/datasetbutton/datasetbutton';
 import {
   DatasetButton
 } from './../../models/DatasetButton';
@@ -48,56 +53,43 @@ export class ChartOverviewPage {
   public selectedYearAndMonth: string;
   public monthOverview: MonthOverView;
   public selectedChartType: string;
-  public chart: any;
+  public chart: Chart;
   public ctx = document.getElementById("myChart");
   public datasetButtons: DatasetButton[];
 
-
-
   constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public momentProvider: MomentProvider, public monthOverviewProvider: MonthOverviewProvider, public modalCtrl: ModalController, public alertCtrl: AlertController, public datasetButtonProvider: DatasetbuttonProvider) {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth() || this.momentProvider.getCurrentYearAndMonth();
-
   }
 
-  async ionViewDidLoad() {
-
-  }
   async ionViewCanEnter() {
-    this.setupFirstChart();
+    this.setupDefaultChart();
     this.datasetButtons = this.datasetButtonProvider.getDatasetButtons();
   }
-
-  private refreshDatasetButtons(): void {
-    this.datasetButtons = this.datasetButtonProvider.getDatasetButtons();
-  }
-
-  
 
   ionViewWillEnter() {
     this.chart = this.chartProvider.getChartInstance();
     console.log(this.chart);
   }
 
-  private async setupFirstChart(): Promise<void> {
-    await this.refreshMonthOverview();
-    this.ctx = document.getElementById("myChart");
-    await this.chartProvider.setupDefaultChart(this.ctx);
-    this.chart = this.chartProvider.getChartInstance();
-   // this.datasetButtons.push(this.chartProvider.getDefaultDatasetButton());
-
+  private refreshDatasetButtons(): void {
+    this.datasetButtons = this.datasetButtonProvider.getDatasetButtons();
   }
 
-  public async updateDate(): Promise<void> {
+  private async setupDefaultChart() {
+    await this.refreshMonthOverview();
+    await this.chartProvider.setupDefaultChart(this.ctx);
+    this.chart = this.chartProvider.getChartInstance();
+  }
+
+  public async updateDate(): Promise < void > {
     this.momentProvider.setSelectedYearAndMonth(this.selectedYearAndMonth);
     await this.refreshMonthOverview();
   }
-
-
-  private async refreshMonthOverview(): Promise<void> {
+  private async refreshMonthOverview(): Promise < void > {
     this.monthOverview = await this.monthOverviewProvider.getMonthOverview(this.selectedYearAndMonth);
   }
 
-  public addDatasetModal() {
+  public addDatasetModal(): void {
     let datasetModal = this.modalCtrl.create(DatasetPage, {
       ctx: this.ctx
     });
@@ -107,44 +99,22 @@ export class ChartOverviewPage {
         const {
           selectedCategories,
           operationType,
-          dataType,
           timeperiod,
           backgroundColor
         } = datasetModalData;
-
-        // rebuild legend
-        let legend = document.getElementById("chartjs-legend");
-        legend.innerHTML = this.chartProvider.buildCategoryLegendHTML(selectedCategories);
-
-        // rebuild chart
-        console.log(selectedCategories);
-        
         this.chartProvider.handleNewDataset(operationType, timeperiod, backgroundColor, selectedCategories);
-        // add datasetbutton
-        
-        // refresh 
         this.refreshDatasetButtons();
       }
     });
-
-  }
-
-  public legendHidden(): boolean {
-    return this.chartProvider.getChartType() === 'line' || this.chartProvider.getChartType() === 'radar';
   }
 
   public deleteDataset(i: number): void {
     this.chartProvider.deleteDataset(i);
     this.datasetButtonProvider.deleteDatasetButton(i);
     this.refreshDatasetButtons();
-    if (this.chartProvider.noDatasets()) {
-      
-      let legend = document.getElementById("chartjs-legend");
-      legend.innerHTML = '';
-    }
   }
 
-  public setChartTypeAlert():void  {
+  public setChartTypeAlert(): void {
     let alert = this.alertCtrl.create();
     alert.setTitle('Chart type');
     let selectedType = this.chartProvider.getChartType();
@@ -152,7 +122,7 @@ export class ChartOverviewPage {
       alert.addInput({
         type: 'radio',
         label: type,
-        value: type, 
+        value: type,
         checked: type === selectedType
       })
     });
