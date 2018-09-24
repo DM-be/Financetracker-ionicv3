@@ -7,7 +7,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      add dataset
+      New Dataset
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismiss()">
@@ -73,8 +73,8 @@
 
     </form>
 
-    <button ion-button icon-only (click)="addAllDatasetsToChart()" full round>
-      <ion-icon name="done-all"></ion-icon>
+    <button ion-button icon-only full no-margin (click)="addAllDatasetsToChart()" full>
+      <ion-icon name="checkmark"></ion-icon>
     </button>
 
   </ion-grid>

@@ -7,7 +7,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Add a new Category
+      New Category
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismiss()">
@@ -21,7 +21,7 @@
 
 
 <ion-content padding>
-  <ion-grid fixed>
+  <ion-grid no-padding>
 
     <form>
       <ion-item item-end>
@@ -40,7 +40,7 @@
 
     </form>
 
-    <button ion-button full (click)="addNewCategory()">CREATE</button>
+    <button ion-button full icon-only no-margin (click)="addNewCategory()"><ion-icon name="checkmark"></ion-icon></button>
 
 
   </ion-grid>

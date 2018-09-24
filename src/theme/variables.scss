@@ -31,6 +31,8 @@ $grid-breakpoints: (
 $grid-max-widths: (
  lg: 992px
 );
+$customMinWidth: 80vw;
+
 
 $grid-padding-width:  0px;
 //$popover-md-width: 300px;
@@ -40,6 +42,10 @@ $grid-padding-width:  0px;
 //  $modal-inset-height-small: 85vh;
 //  $modal-inset-height-large: 85vh;
 //  $modal-inset-min-width: 85vw;
+
+
+
+
 // Named Color Variables
 // --------------------------------------------------
 // Named colors makes it easy to reuse colors on various components.

@@ -6,9 +6,7 @@
 -->
 <ion-header>
   <ion-toolbar>
-    <ion-title>
-      Details
-    </ion-title>
+    <ion-title>{{titleText}}</ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismiss()">
         <span ion-text color="primary" showWhen="ios">Cancel</span>
@@ -21,44 +19,43 @@
 
 
 <ion-content padding>
-    <ion-grid fixed>
+  <ion-grid fixed>
 
-      <form>
-        <ion-item>
-          <ion-label>Category</ion-label>
-          <ion-select  (ionChange)="setIconName(expense.categoryName)" disabled="{{!editMode}}" [(ngModel)]="expense.categoryName" name="categoryName">
-            <ion-option  *ngFor="let category of categories" [value]="category.getCategoryName()">{{category.getCategoryName()}}</ion-option>
-          </ion-select>
-        </ion-item>
-        <ion-item item-end>
-          <ion-label>Account</ion-label>
-          <ion-select disabled="{{!editMode}}" [(ngModel)]="expense.usedAccountName" name="usedAccountName">
-              <ion-option *ngFor="let account of accounts" [value]="account.getAccountName()">{{account.getAccountName()}}</ion-option>
-            </ion-select>
-        </ion-item>
-        <ion-item item-end>
-          <ion-label>Date</ion-label>
-          <ion-datetime (ionChange)="refreshCategoriesAndAccounts()" disabled="{{!editMode}}" displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="expense.createdDate"
-            name="date"></ion-datetime>
-        </ion-item>
-        <ion-item item-end>
-          <ion-label>Description</ion-label>
-          <ion-input text-right disabled="{{!editMode}}" [(ngModel)]="expense.description" name="description"></ion-input>
-        </ion-item>
-        <ion-item item-end>
-          <ion-label>Cost</ion-label>
-          <ion-input text-right disabled="{{!editMode}}" type="number" [(ngModel)]="expense.cost" name="cost"></ion-input>
-        </ion-item>
+    <form>
+      <ion-item>
+        <ion-label>Category</ion-label>
+        <ion-select (ionChange)="setIconName(expense.categoryName)" disabled="{{!editMode}}" [(ngModel)]="expense.categoryName"
+          name="categoryName">
+          <ion-option *ngFor="let category of categories" [value]="category.getCategoryName()">{{category.getCategoryName()}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item item-end>
+        <ion-label>Account</ion-label>
+        <ion-select disabled="{{!editMode}}" [(ngModel)]="expense.usedAccountName" name="usedAccountName">
+          <ion-option *ngFor="let account of accounts" [value]="account.getAccountName()">{{account.getAccountName()}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item item-end>
+        <ion-label>Date</ion-label>
+        <ion-datetime (ionChange)="refreshCategoriesAndAccounts()" disabled="{{!editMode}}" displayFormat="YYYY-MM-DD HH:mm"
+          pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="expense.createdDate" name="date"></ion-datetime>
+      </ion-item>
+      <ion-item item-end>
+        <ion-label>Description</ion-label>
+        <ion-input text-right disabled="{{!editMode}}" [(ngModel)]="expense.description" name="description"></ion-input>
+      </ion-item>
+      <ion-item item-end>
+        <ion-label>Cost</ion-label>
+        <ion-input text-right disabled="{{!editMode}}" type="number" [(ngModel)]="expense.cost" name="cost"></ion-input>
+      </ion-item>
+      <ion-tags-input no-padding name="tags" [(ngModel)]="tags" [separatorStr]="','" [readonly]=!editMode [hideRemove]='!editMode'
+        [canBackspaceRemove]="!editMode" [verifyMethod]="verifyTag" [once]="'true'"></ion-tags-input>
 
-        
-           <ion-tags-input name="tags" [(ngModel)]="tags" [separatorStr]="','"  [readonly]=!editMode  [hideRemove]='!editMode'  [canBackspaceRemove]="!editMode" [verifyMethod]="verifyTag" [once]="'true'"></ion-tags-input>
-      
+    </form>
 
+    <button ion-button icon-only full no-margin [hidden]="!editMode" (click)="updateExpense()">
+      <ion-icon name="checkmark"></ion-icon>
+    </button>
 
-        
-      </form>
-
-<button ion-button icon-only [hidden]="!editMode" (click)="updateExpense()" full round ><ion-icon name="done-all"></ion-icon></button>
-
-    </ion-grid>
-  </ion-content>
+  </ion-grid>
+</ion-content>

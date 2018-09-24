@@ -95,7 +95,7 @@ export class ChartOverviewPage {
   public addDatasetModal(): void {
     let datasetModal = this.modalCtrl.create(DatasetPage, {
       ctx: this.ctx
-    });
+    },{cssClass: "alertModal"});
     datasetModal.present()
     datasetModal.onDidDismiss(datasetModalData => {
       if (datasetModalData) {

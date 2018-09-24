@@ -86,7 +86,7 @@ ion-loading.transparent {
         position: relative;
         top: auto;
         left: auto;
-        padding:1px;
+        padding:0px;
   
       }
   
@@ -94,7 +94,7 @@ ion-loading.transparent {
       display: flex;
       overflow: hidden;
       flex-direction: column;
-      min-width: $alert-min-width;
+      min-width: $customMinWidth;
       max-height: $alert-max-height;
       opacity: 0;
       height: auto;
@@ -103,7 +103,7 @@ ion-loading.transparent {
       background-color: $alert-md-background-color;
       box-shadow: $alert-md-box-shadow;
       border-radius: 5px;
-      padding:5px;
+      padding:0px;
       
   
       .ion-page .content {

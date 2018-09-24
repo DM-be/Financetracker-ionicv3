@@ -50,6 +50,7 @@ export class ExpenseDetailPage {
   public page = this; // for use in tags
   public selectedYearAndMonth: string; // is set in momentProvider, only updated when top datepicker is selected
   public currentDate_ISO_8601: string;
+  public titleText: string; 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider, public expenseProvider: ExpenseProvider) {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth();
@@ -63,9 +64,13 @@ export class ExpenseDetailPage {
   async ionViewWillEnter() {
     if(this.editMode)
     {
+      this.titleText = 'Add expense';
        await this.getCategoriesAndAccounts();
     this.bindDateToModel();
     this.oldExpense = new Expense(this.expense.cost, this.expense.description, this.expense.createdDate, this.expense.usedAccountName, this.expense.categoryName, this.expense.iconName, this.expense.tags);
+    }
+    else {
+      this.titleText = 'Expense details';
     }
   }
 
