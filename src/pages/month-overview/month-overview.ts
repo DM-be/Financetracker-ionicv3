@@ -178,7 +178,7 @@ export class MonthOverviewPage {
     let expenseModal = this.modalCtrl.create(ExpenseDetailPage, {
       editMode: true,
       newExpense: true
-    });
+    }, {cssClass: 'alertModal'});
     expenseModal.present();
   }
 
@@ -210,7 +210,7 @@ export class MonthOverviewPage {
   }
 
   addCategoryModal() {
-    let categoryModal = this.modalCtrl.create(CategoryPage);
+    let categoryModal = this.modalCtrl.create(CategoryPage, undefined, {cssClass: 'alertModal'});
     categoryModal.present();
   }
 

@@ -27,7 +27,9 @@ import {
   NavController,
   NavParams,
   ModalController,
-  AlertController
+  AlertController,
+  Platform,
+  ActionSheetController, 
 } from 'ionic-angular';
 import {
   MonthOverviewProvider
@@ -57,7 +59,7 @@ export class ChartOverviewPage {
   public ctx = document.getElementById("myChart");
   public datasetButtons: DatasetButton[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public momentProvider: MomentProvider, public monthOverviewProvider: MonthOverviewProvider, public modalCtrl: ModalController, public alertCtrl: AlertController, public datasetButtonProvider: DatasetbuttonProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public chartProvider: ChartProvider, public momentProvider: MomentProvider, public monthOverviewProvider: MonthOverviewProvider, public modalCtrl: ModalController, public alertCtrl: AlertController, public datasetButtonProvider: DatasetbuttonProvider, public platform: Platform,public actionSheetCtrl: ActionSheetController) {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth() || this.momentProvider.getCurrentYearAndMonth();
   }
 
@@ -136,6 +138,48 @@ export class ChartOverviewPage {
       }
     });
     alert.present();
+  }
+
+  presentActionSheet(datasetIndex: number): void {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: `Dataset ${datasetIndex + 1}`,
+      buttons: [
+        {
+          text: 'Delete',
+          role: 'destructive',
+          icon: 'trash',
+          handler: () => this.deleteDataset(datasetIndex)
+        },
+        {
+          text: 'Details',
+          icon: 'arrow-forward',
+          handler: () => {
+            console.log('Details clicked');
+          }
+        },
+        {
+          text: 'Favorite',
+          icon: 'star',
+          handler: () => {
+            console.log('Share clicked');
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel', // will always sort to be on the bottom
+          icon: !this.platform.is('ios') ? 'close' : null,
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+
+    actionSheet.present();
+  }
+
+  presentDatasetButtonAlert(datasetIndex): void {
+
   }
 
 }
