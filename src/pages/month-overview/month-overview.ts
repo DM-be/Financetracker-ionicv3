@@ -1,4 +1,6 @@
-import { ChartBudgetPage } from './../chart-budget/chart-budget';
+import {
+  ChartBudgetPage
+} from './../chart-budget/chart-budget';
 import {
   ExpenseProvider
 } from './../../providers/expense/expense';
@@ -71,6 +73,9 @@ import {
 import {
   MonthOverviewProvider
 } from '../../providers/month-overview/month-overview';
+import {
+  AccountsPage
+} from '../accounts/accounts';
 
 
 /**
@@ -95,44 +100,28 @@ export class MonthOverviewPage {
   public minDate: string;
   public maxDate: string;
 
-
   constructor(public navCtrl: NavController, public dbProvider: DbProvider, public monthOverviewProvider: MonthOverviewProvider, public modalCtrl: ModalController,
     public popoverCtrl: PopoverController, public momentProvider: MomentProvider, public expenseProvider: ExpenseProvider) {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth() || this.momentProvider.getCurrentYearAndMonth();
   }
 
+  async ionViewWillEnter(): Promise < void > {
+    await this.refreshData();
+  }
 
-  async refreshData() {
+  async refreshData(): Promise < void > {
     this.monthOverviewObject = await this.monthOverviewProvider.getMonthOverview(this.selectedYearAndMonth);
     this.categories = this.monthOverviewObject.getCategories();
     this.expenses = this.monthOverviewObject.getAllExpenses();
     this.accounts = this.monthOverviewObject.getAllAccounts();
   }
 
-  async updateDate() {
+  async updateDate(): Promise < void > {
     await this.refreshData();
     this.momentProvider.setSelectedYearAndMonth(this.selectedYearAndMonth);
-    console.log(this.selectedYearAndMonth);
-    // await this.dbProvider.getCategoryCosts(this.selectedDate);
   }
 
-  chartBudgetModal(expenses: Expense []) {
-    let chartModal = this.navCtrl.push(ChartBudgetPage, {
-      expenses: expenses,
-    });
-
-  }
-
-  async ionViewWillEnter() {
-    await this.refreshData();
-    // let data  = this.buildData(this.categories);
-    // this.buildChart(data);
-  }
-
-
-
-
-  loadProgress(budget: Budget) {
+  public loadProgress(budget: Budget): number {
     let percentage = (budget.currentAmountSpent / budget.limitAmount) * 100;
     if (percentage <= 100) {
       return percentage;
@@ -162,46 +151,28 @@ export class MonthOverviewPage {
     });
   }
 
-
-  presentPopover(myEvent) {
-    let popover = this.popoverCtrl.create(AccountsPopoverPage);
-    console.log(myEvent);
-    popover.present({
-      ev: myEvent
-    });
-
-
+  public addAccountModal(): void {
+    this.modalCtrl.create(AccountsPage, undefined, {
+      cssClass: 'alertModal'
+    }).present();
   }
 
-
-  addExpenseModal() {
-    let expenseModal = this.modalCtrl.create(ExpenseDetailPage, {
-      editMode: true,
-      newExpense: true
-    }, {cssClass: 'alertModal'});
-    expenseModal.present();
-  }
-
-  addAccountModal() {
-    //this.modalProvider.displayAddAccountModal();
-  }
-
-  detailExpenseModal(expense: Expense, editMode ? : any) {
-    let detailExpenseModal = this.navCtrl.push(ExpenseDetailPage, {
+  public detailExpenseModal(expense?: Expense, editMode ? : boolean, newExpense?: boolean): void {
+    this.modalCtrl.create(ExpenseDetailPage, {
       expense: expense,
       editMode: editMode,
-    })
-    //  detailExpenseModal.present();
+      newExpense: newExpense
+    },{
+      cssClass: 'alertModal'
+    }).present();
   }
 
-  async deleteExpense(expense: Expense) {
+  async deleteExpense(expense: Expense): Promise < void > {
     await this.expenseProvider.deleteExpense(this.selectedYearAndMonth, expense);
     await this.refreshData();
   }
 
-
-  accountsDetailPage(account: Account) {
-
+  public accountsDetailPage(account: Account): void {
     this.navCtrl.push(AccountDetailsPage, {
       account: account,
       expenses: this.monthOverviewObject.getExpensesByAccountName(account.accountName),
@@ -209,42 +180,32 @@ export class MonthOverviewPage {
     });
   }
 
-  addCategoryModal() {
-    let categoryModal = this.modalCtrl.create(CategoryPage, undefined, {cssClass: 'alertModal'});
+  public addCategoryModal(): void {
+    let categoryModal = this.modalCtrl.create(CategoryPage, undefined, {
+      cssClass: 'alertModal'
+    });
     categoryModal.present();
   }
 
-  transferAccountsModal() {
-    this.modalCtrl.create(TransferPage).present();
+  public chartBudgetModal(expenses: Expense[]): void {
+    this.modalCtrl.create(ChartBudgetPage, {
+      expenses: expenses,
+    }, {
+      cssClass: 'alertModal'
+    }).present();
+
   }
 
-  transferExternalAccountsModal() {
-    this.modalCtrl.create(TransferExternalPage).present();
+  public transferAccountsModal(): void {
+    this.modalCtrl.create(TransferPage, undefined, {
+      cssClass: 'alertModal'
+    }).present();
   }
 
-
-
-
-
-  // handleSwipe($e) {
-  //   if ($e.offsetDirection == 4) {
-  //     // Swiped right
-  //     this.selectedDate = moment(this.selectedDate).subtract(1, 'M').format('YYYY-MM');
-  //   } else if ($e.offsetDirection == 2) {
-  //     // Swiped left
-  //     this.selectedDate = moment(this.selectedDate).add(1, 'M').format('YYYY-MM');
-  //   } else if ($e.offsetDirection == 8) {
-  //     // swiped up
-  //     let dateToTest = moment(this.selectedDate).add(1, 'years').format('YYYY');
-  //     let now = moment().format('YYYY');
-  //     if (dateToTest <= now) {
-  //       this.selectedDate = moment(this.selectedDate).add(1, 'years').format('YYYY-MM');
-  //     }
-  //   } else if ($e.offsetDirection == 16) {
-  //     // swiped down
-  //     this.selectedDate = moment(this.selectedDate).subtract(1, 'years').format('YYYY-MM');
-  //   }
-  // }
-
+  public transferExternalAccountsModal(): void {
+    this.modalCtrl.create(TransferExternalPage, undefined, {
+      cssClass: 'alertModal'
+    }).present();
+  }
 
 }

@@ -40,11 +40,10 @@ export class CategoryPage {
   public selectedIcon: string;
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public popoverCtrl: PopoverController, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider) {}
 
-  colorPickerPopover(ev) {
+  colorPickerPopover() {
     // this.modalCtrl.create(ColorPickerPage).present();
-    let popover = this.popoverCtrl.create(ColorPickerPage);
+    let popover = this.modalCtrl.create(ColorPickerPage, undefined, {cssClass: 'alertModal'});
     popover.present({
-      ev: ev
     });
     popover.onDidDismiss(color => {
       if (color !== undefined) {
