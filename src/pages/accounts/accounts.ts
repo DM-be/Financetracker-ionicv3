@@ -1,3 +1,4 @@
+import { UserProvider } from './../../providers/user/user';
 import { UserOverviewProvider } from './../../providers/user-overview/user-overview';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, App, PopoverController } from 'ionic-angular';
@@ -7,6 +8,7 @@ import { TabsPage } from '../tabs/tabs';
 import { IconsPage } from '../icons/icons';
 import { SettingsProvider } from '../../providers/settings/settings';
 import { LoggedInTabsPage } from '../logged-in-tabs/logged-in-tabs';
+import { AccountProvider } from '../../providers/account/account';
 
 /**
  * Generated class for the AccountsPage page.
@@ -22,10 +24,12 @@ import { LoggedInTabsPage } from '../logged-in-tabs/logged-in-tabs';
 })
 export class AccountsPage {
   public accountName: string;
-  public balance: string;
+  public balance: number;
   public selectedIcon: string;
+
+  // add account owner 
     
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public appCtrl: App, public popoverCtrl: PopoverController, public userOverviewProvider: UserOverviewProvider ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public appCtrl: App, public popoverCtrl: PopoverController, public userProvider: UserProvider, public accountProvider: AccountProvider ) {
   }
 
   ionViewDidLoad() {
@@ -37,16 +41,26 @@ export class AccountsPage {
     this.navCtrl.pop();
   }
 
-  addAccount() {
+  public notFilledIn(): boolean {
+    if(this.balance === undefined && this.accountName === undefined)
+    {
+      return true;
+    }
+  }
+
+  async addAccount() {
+    let loggedInUserName = await this.userProvider.getLoggedInUserName(); // setup 
+    let account = new Account(loggedInUserName, this.accountName, this.balance, this.selectedIcon);
+    //this.accountProvider.addAccount()
    // this.dbProvider.setupUserOverview(this.accounts);
    // this.dbProvider.setupFirstMonthOverview(this.accounts);
    // ---> check if a monthoverview exists, if not do setupfirstmonthoverview
   //let account = new Account(this.userOverviewProvider.getUserOverview, this.accountName, parseInt(this.balance));
-  if(true)
-  {
-   // this.dbProvider.setupFirstMonthOverview([account]);
-    this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
-  } 
+  // if(true)
+  // {
+  //  // this.dbProvider.setupFirstMonthOverview([account]);
+  //   this.appCtrl.getRootNav().setRoot(LoggedInTabsPage);
+  // } 
   }
 
 

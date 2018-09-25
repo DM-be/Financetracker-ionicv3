@@ -52,7 +52,11 @@ export class MonthOverView {
         return this.accounts;
     }
 
-   
+    public addAccount(account: Account): void
+    {
+        this.accounts.push(account);
+    }
+
 
     public getAccByName(accountName: string): Account
     {

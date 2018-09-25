@@ -1,3 +1,5 @@
+import { UserProvider } from './../user/user';
+import { UserOverviewProvider } from './../user-overview/user-overview';
 import { MonthOverviewProvider } from './../month-overview/month-overview';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -5,6 +7,7 @@ import { DbProvider } from '../db/db';
 import { MonthOverView } from '../../models/monthOverview';
 import { Account } from '../../models/Account';
 import { ExternalAccount } from '../../models/ExternalAccount';
+import { MomentProvider } from '../moment/moment';
 
 /*
   Generated class for the AccountProvider provider.
@@ -15,11 +18,27 @@ import { ExternalAccount } from '../../models/ExternalAccount';
 @Injectable()
 export class AccountProvider {
   
+  private _id_now: string;
+  private loggedInUserName: string; 
 
-  constructor(public dbProvider: DbProvider, public monthOverviewProvider: MonthOverviewProvider) {
+  constructor(public dbProvider: DbProvider, public monthOverviewProvider: MonthOverviewProvider, public momentProvider: MomentProvider, public userProvider: UserProvider) {
+   
+  this.setup();
+
   }
 
-  async getAccounts(_id: string)
+  public async setup(): Promise<void> {
+    this._id_now = this.momentProvider.getCurrentYearAndMonth();
+    this.loggedInUserName = await this.userProvider.getLoggedInUserName(); 
+  }
+
+  async addAccount(account: Account): Promise<void> {
+    let monthOverview = await this.monthOverviewProvider.getMonthOverview(this._id_now);
+    monthOverview.addAccount(account);
+    await this.monthOverviewProvider.saveMonthOverview(monthOverview);
+  } 
+
+  async getAccounts(_id: string): Promise<Account []>
   {
     let monthOverview: MonthOverView = await this.monthOverviewProvider.getMonthOverview(_id);
     return monthOverview.getAllAccounts();

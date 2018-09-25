@@ -48,9 +48,10 @@
         <ion-label>Cost</ion-label>
         <ion-input text-right disabled="{{!editMode}}" type="number" [(ngModel)]="expense.cost" name="cost"></ion-input>
       </ion-item>
-      <ion-tags-input no-padding name="tags" [(ngModel)]="tags" [separatorStr]="','" [readonly]=!editMode [hideRemove]='!editMode'
-        [canBackspaceRemove]="!editMode" [verifyMethod]="verifyTag" [once]="'true'"></ion-tags-input>
-
+      <div [hidden]="!editMode">
+        <ion-tags-input no-padding name="tags" [(ngModel)]="tags" [separatorStr]="','" [verifyMethod]="verifyTag"
+          [once]="'true'"></ion-tags-input>
+      </div>
     </form>
 
     <button ion-button icon-only full no-margin [hidden]="!editMode" (click)="updateExpense()">

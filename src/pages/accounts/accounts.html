@@ -32,7 +32,7 @@
           <ion-icon [name]="getSelectedIcon()" item-end></ion-icon>
         </button>
     </form>
-    <button ion-button >done</button>
+    <button [disabled]="notFilledIn()"ion-button full no-margin icon-only><ion-icon name="checkmark"></ion-icon></button>
 
 
   </ion-grid>

@@ -55,7 +55,7 @@ export class ExpenseDetailPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider, public expenseProvider: ExpenseProvider) {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth();
     this.currentDate_ISO_8601 = this.momentProvider.getCurrentDate_ISO_8601();
-    this.expense = this.navParams.get("expense") || new Expense(0,'', this.currentDate_ISO_8601, '', '', '');
+    this.expense = this.navParams.get("expense") || new Expense(undefined,'', this.currentDate_ISO_8601, '', '', '');
     this.editMode = this.navParams.get("editMode");
     this.newExpense = this.navParams.get("newExpense");
     this.tags = this.expense.getTags().map(tag => tag.tagName);

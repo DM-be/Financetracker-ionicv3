@@ -57,6 +57,7 @@ import { ChartBudgetPage } from '../pages/chart-budget/chart-budget';
 import { DatasetPage } from '../pages/dataset/dataset';
 import { DatasetbuttonProvider } from '../providers/datasetbutton/datasetbutton';
 import { LongPressModule } from 'ionic-long-press';
+import { UserProvider } from '../providers/user/user';
 
 @NgModule({
   declarations: [
@@ -148,7 +149,8 @@ import { LongPressModule } from 'ionic-long-press';
     BudgetProvider,
     CategoryProvider,
     ExpenseProvider,
-    DatasetbuttonProvider
+    DatasetbuttonProvider,
+    UserProvider
   ]
 })
 export class AppModule {}
