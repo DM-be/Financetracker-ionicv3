@@ -47,7 +47,6 @@ export class TransferExternalPage {
   public recievingAccounts: Account[];
   public externalAccounts: ExternalAccount[];
   public selectedYearAndMonth: string; // defaults at this month/year --> can be updated 
-  public accountHolderName: string;
   public recievingAccountName: string;
   public amount: string;
   public currentYearMonthAndDay: string;
@@ -78,6 +77,11 @@ export class TransferExternalPage {
 
   dismiss() {
     this.navCtrl.pop();
+  }
+
+  // todo link with userprovider to make this wokr
+  notFilledIn() {
+    return (this.searchbar.getValue() !== '' || this.searchbar.getValue() !== undefined || this.recievingAccountName !== '' || this.recievingAccountName !== undefined || this.amount !== '' || this.amount !== undefined);
   }
 
 

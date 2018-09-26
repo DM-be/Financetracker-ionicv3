@@ -46,11 +46,11 @@
       </ion-item>
       <ion-item item-end>
         <ion-label>Cost</ion-label>
-        <ion-input text-right disabled="{{!editMode}}" type="number" [(ngModel)]="expense.cost" name="cost"></ion-input>
+        <ion-input text-right disabled="{{!editMode}}" type="number" [(ngModel)]="expense.cost" name="cost" [class.borderless]="!editMode"></ion-input>
       </ion-item>
-      <div [hidden]="!editMode">
+      <div [hidden]="tags.length === 0">
         <ion-tags-input no-padding name="tags" [(ngModel)]="tags" [separatorStr]="','" [verifyMethod]="verifyTag"
-          [once]="'true'"></ion-tags-input>
+          [once]="'true'" [readonly]="!editMode"></ion-tags-input>
       </div>
     </form>
 

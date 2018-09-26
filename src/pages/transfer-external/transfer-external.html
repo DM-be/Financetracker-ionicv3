@@ -51,7 +51,7 @@
 
     </form>
     
-    <button ion-button icon-only (click)="transferFromExternalAccount()" full no-margin ><ion-icon name="card"></ion-icon></button>
+    <button ion-button icon-only (click)="transferFromExternalAccount()" full no-margin [disabled]="notFilledIn()"><ion-icon name="card"></ion-icon></button>
 
 
   </ion-grid>
