@@ -24,7 +24,7 @@ import { AccountProvider } from '../../providers/account/account';
 })
 export class AccountsPage {
   public accountName: string;
-  public balance: number;
+  public balance: string;
   public selectedIcon: string;
 
   // add account owner 
@@ -40,17 +40,19 @@ export class AccountsPage {
   dismiss() {
     this.navCtrl.pop();
   }
+  
+
+  log(test: string) {
+    console.log(typeof test)
+  }
 
   public notFilledIn(): boolean {
-    if(this.balance === undefined && this.accountName === undefined)
-    {
-      return true;
-    }
+    return (this.balance === undefined || this.balance === '' || this.accountName === undefined || this.accountName === '' || this.getSelectedIcon() === 'add-circle');
   }
 
   async addAccount() {
     let loggedInUserName = await this.userProvider.getLoggedInUserName(); // setup 
-    let account = new Account(loggedInUserName, this.accountName, this.balance, this.selectedIcon);
+    let account = new Account(loggedInUserName, this.accountName, parseInt(this.balance), this.selectedIcon);
 
 
     //this.accountProvider.addAccount()

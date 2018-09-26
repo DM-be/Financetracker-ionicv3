@@ -20,11 +20,11 @@
     <form >
       <ion-item item-end>
         <ion-label>Account name</ion-label>
-        <ion-input text-right type="text" [(ngModel)]="accountName" name="accountName"></ion-input>
+        <ion-input text-right type="text" [(ngModel)]="accountName" (ionChange)="log(accountName)" name="accountName"></ion-input>
       </ion-item>
       <ion-item item-end>
         <ion-label>Account balance</ion-label>
-        <ion-input text-right type="number" [(ngModel)]="balance" name="balance"></ion-input>
+        <ion-input text-right type="number" [(ngModel)]="balance" (ionChange)="log(balance)" name="balance"></ion-input>
       </ion-item>
 
       <button ion-item (click)="iconsModal()">
