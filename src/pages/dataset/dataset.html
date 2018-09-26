@@ -73,7 +73,7 @@
 
     </form>
 
-    <button ion-button icon-only full no-margin (click)="addAllDatasetsToChart()" full>
+    <button ion-button icon-only full no-margin (click)="addAllDatasetsToChart()" full [disabled]="notFilledIn()">
       <ion-icon name="checkmark"></ion-icon>
     </button>
 

@@ -144,6 +144,9 @@ export class DatasetPage {
     this.view.dismiss();
   }
 
+  notFilledIn(): boolean {
+    return (this.dataType === undefined || this.dataType === ''|| this.timeperiod.from === '' || this.timeperiod.to === ''|| this.operationType === undefined || this.operationType === '' || this.labelType === undefined || this.labelType === '');
+  }       
 
 
 

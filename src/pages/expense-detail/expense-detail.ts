@@ -1,4 +1,6 @@
-import { Category } from './../../models/Category';
+import {
+  Category
+} from './../../models/Category';
 import {
   ExpenseProvider
 } from './../../providers/expense/expense';
@@ -50,26 +52,24 @@ export class ExpenseDetailPage {
   public page = this; // for use in tags
   public selectedYearAndMonth: string; // is set in momentProvider, only updated when top datepicker is selected
   public currentDate_ISO_8601: string;
-  public titleText: string; 
+  public titleText: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider, public expenseProvider: ExpenseProvider) {
     this.selectedYearAndMonth = this.momentProvider.getSelectedYearAndMonth();
     this.currentDate_ISO_8601 = this.momentProvider.getCurrentDate_ISO_8601();
-    this.expense = this.navParams.get("expense") || new Expense(undefined,'', this.currentDate_ISO_8601, '', '', '');
+    this.expense = this.navParams.get("expense") || new Expense(undefined, '', this.currentDate_ISO_8601, '', '', '');
     this.editMode = this.navParams.get("editMode");
     this.newExpense = this.navParams.get("newExpense");
     this.tags = this.expense.getTags().map(tag => tag.tagName);
   }
 
   async ionViewWillEnter() {
-    if(this.editMode)
-    {
+    if (this.editMode) {
       this.titleText = 'Add expense';
-       await this.getCategoriesAndAccounts();
-    this.bindDateToModel();
-    this.oldExpense = new Expense(this.expense.cost, this.expense.description, this.expense.createdDate, this.expense.usedAccountName, this.expense.categoryName, this.expense.iconName, this.expense.tags);
-    }
-    else {
+      await this.getCategoriesAndAccounts();
+      this.bindDateToModel();
+      this.oldExpense = new Expense(this.expense.cost, this.expense.description, this.expense.createdDate, this.expense.usedAccountName, this.expense.categoryName, this.expense.iconName, this.expense.tags);
+    } else {
       this.titleText = 'Expense details';
     }
   }
@@ -125,21 +125,15 @@ export class ExpenseDetailPage {
   }
 
   public notFilledIn(): boolean {
-    
     return this.checkProperties(this.expense);
   }
 
-  public test() {
-    console.log(this.checkProperties(this.expense));
-    console.log(this.expense);
-  }
-
-  private checkProperties(obj) {
-    for (var key in obj) {
-        if (obj[key] === undefined || obj[key] === "")
-            return true;
+  private checkProperties(expense: Expense) {
+    for (var key in expense) {
+      if (expense[key] === undefined || expense[key] === "")
+        return true;
     }
     return false;
-}
- 
+  }
+
 }
