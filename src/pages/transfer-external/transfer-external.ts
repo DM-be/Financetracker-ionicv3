@@ -80,7 +80,7 @@ export class TransferExternalPage {
   }
 
   // todo link with userprovider to make this wokr
-  notFilledIn() {
+  public notFilledIn(): boolean {
     return (this.searchbar.getValue() === '' || this.searchbar.getValue() === undefined || this.recievingAccountName === '' || this.recievingAccountName === undefined || this.amount === '' || this.amount === undefined);
   }
 

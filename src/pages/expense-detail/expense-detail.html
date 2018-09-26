@@ -42,19 +42,19 @@
       </ion-item>
       <ion-item item-end>
         <ion-label>Description</ion-label>
-        <ion-input text-right disabled="{{!editMode}}" [(ngModel)]="expense.description" name="description"></ion-input>
+        <ion-input text-right disabled="{{!editMode}}" (ionChange)="test()" [(ngModel)]="expense.description" name="description"></ion-input>
       </ion-item>
       <ion-item item-end>
         <ion-label>Cost</ion-label>
         <ion-input text-right disabled="{{!editMode}}" type="number" [(ngModel)]="expense.cost" name="cost" [class.borderless]="!editMode"></ion-input>
       </ion-item>
-      <div [hidden]="tags.length === 0">
+      <div [hidden]="tags.length === 0 && !editMode">
         <ion-tags-input no-padding name="tags" [(ngModel)]="tags" [separatorStr]="','" [verifyMethod]="verifyTag"
           [once]="'true'" [readonly]="!editMode"></ion-tags-input>
       </div>
     </form>
 
-    <button ion-button icon-only full no-margin [hidden]="!editMode" (click)="updateExpense()">
+    <button ion-button icon-only full no-margin [hidden]="!editMode" (click)="updateExpense()" [disabled]="notFilledIn()">
       <ion-icon name="checkmark"></ion-icon>
     </button>
 

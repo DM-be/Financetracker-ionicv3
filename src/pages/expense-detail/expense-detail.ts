@@ -124,5 +124,22 @@ export class ExpenseDetailPage {
     }
   }
 
+  public notFilledIn(): boolean {
+    
+    return this.checkProperties(this.expense);
+  }
 
+  public test() {
+    console.log(this.checkProperties(this.expense));
+    console.log(this.expense);
+  }
+
+  private checkProperties(obj) {
+    for (var key in obj) {
+        if (obj[key] === undefined || obj[key] === "")
+            return true;
+    }
+    return false;
+}
+ 
 }
