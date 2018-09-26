@@ -104,7 +104,7 @@ export class ExpenseDetailPage {
     this.navCtrl.pop();
   }
 
-  //todo: add verifying tags code --> no duplicates, no empties, ....
+  //todo: add verifying tags code no empties, .... (duplicates OK)
   verifyTag(tag: string): boolean {
     console.log(this)
     return true;

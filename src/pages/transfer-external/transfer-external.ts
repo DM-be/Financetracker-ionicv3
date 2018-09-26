@@ -50,10 +50,13 @@ export class TransferExternalPage {
   public accountHolderName: string;
   public recievingAccountName: string;
   public amount: string;
+  public currentYearMonthAndDay: string;
+
   @ViewChild('searchbar') searchbar: AutoCompleteComponent;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public externalAccountProvider: ExternalAccountProvider, public momentProvider: MomentProvider, public accountProvider: AccountProvider) {
     this.initialize();
+    this.currentYearMonthAndDay = this.momentProvider.getCurrentYearMonthAndDay();
   }
 
   async initialize() {

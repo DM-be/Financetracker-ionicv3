@@ -152,17 +152,22 @@ export class MonthOverviewPage {
   }
 
   public addAccountModal(): void {
-    this.modalCtrl.create(AccountsPage, undefined, {
+    let modal = this.modalCtrl.create(AccountsPage, undefined, {
       cssClass: 'alertModal'
-    }).present();
+    });
+    modal.present();
+    // dont refactor into account and push it locally - in case multiple users
+    modal.onDidDismiss(async () => {
+      await this.refreshData();
+    })
   }
 
-  public detailExpenseModal(expense?: Expense, editMode ? : boolean, newExpense?: boolean): void {
+  public detailExpenseModal(expense ? : Expense, editMode ? : boolean, newExpense ? : boolean): void {
     this.modalCtrl.create(ExpenseDetailPage, {
       expense: expense,
       editMode: editMode,
       newExpense: newExpense
-    },{
+    }, {
       cssClass: 'alertModal'
     }).present();
   }
@@ -175,16 +180,19 @@ export class MonthOverviewPage {
   public accountsDetailPage(account: Account): void {
     this.navCtrl.push(AccountDetailsPage, {
       account: account,
-      expenses: this.monthOverviewObject.getExpensesByAccountName(account.accountName),
+      expenses: this.monthOverviewObject.getExpensesByAccountName(account.getAccountName()),
       categories: this.categories
     });
   }
 
   public addCategoryModal(): void {
-    let categoryModal = this.modalCtrl.create(CategoryPage, undefined, {
+    let modal = this.modalCtrl.create(CategoryPage, undefined, {
       cssClass: 'alertModal'
     });
-    categoryModal.present();
+    modal.present();
+    modal.onDidDismiss(async () => {
+      await this.refreshData();
+    });
   }
 
   public chartBudgetModal(expenses: Expense[]): void {
@@ -193,19 +201,26 @@ export class MonthOverviewPage {
     }, {
       cssClass: 'alertModal'
     }).present();
-
   }
 
   public transferAccountsModal(): void {
-    this.modalCtrl.create(TransferPage, undefined, {
+    let modal = this.modalCtrl.create(TransferPage, undefined, {
       cssClass: 'alertModal'
-    }).present();
+    });
+    modal.present();
+    modal.onDidDismiss(async () => {
+      await this.refreshData();
+    });
   }
 
   public transferExternalAccountsModal(): void {
-    this.modalCtrl.create(TransferExternalPage, undefined, {
+    let modal = this.modalCtrl.create(TransferExternalPage, undefined, {
       cssClass: 'alertModal'
-    }).present();
+    });
+    modal.present();
+    modal.onDidDismiss(async () => {
+      await this.refreshData();
+    });
   }
 
 }

@@ -1,7 +1,7 @@
 import { UserProvider } from './../../providers/user/user';
 import { UserOverviewProvider } from './../../providers/user-overview/user-overview';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, App, PopoverController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, App, PopoverController, ModalController } from 'ionic-angular';
 import { Account } from '../../models/Account';
 import { DbProvider } from '../../providers/db/db';
 import { TabsPage } from '../tabs/tabs';
@@ -29,7 +29,7 @@ export class AccountsPage {
 
   // add account owner 
     
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public appCtrl: App, public popoverCtrl: PopoverController, public userProvider: UserProvider, public accountProvider: AccountProvider ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public dbProvider: DbProvider, public appCtrl: App, public popoverCtrl: PopoverController, public userProvider: UserProvider, public accountProvider: AccountProvider, public modalCtrl: ModalController ) {
   }
 
   ionViewDidLoad() {
@@ -51,6 +51,8 @@ export class AccountsPage {
   async addAccount() {
     let loggedInUserName = await this.userProvider.getLoggedInUserName(); // setup 
     let account = new Account(loggedInUserName, this.accountName, this.balance, this.selectedIcon);
+
+
     //this.accountProvider.addAccount()
    // this.dbProvider.setupUserOverview(this.accounts);
    // this.dbProvider.setupFirstMonthOverview(this.accounts);
@@ -68,10 +70,10 @@ export class AccountsPage {
     return this.selectedIcon || "add-circle";
   }
 
-  iconsPopover() {
-    let popover = this.popoverCtrl.create(IconsPage);
-    popover.present();
-    popover.onDidDismiss(icon => {
+  iconsModal() {
+    let modal = this.modalCtrl.create(IconsPage, undefined, {cssClass: 'alertModal'});
+    modal.present();
+    modal.onDidDismiss(icon => {
       if (icon !== undefined) {
         this.selectedIcon = icon
       } else {

@@ -11,18 +11,25 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class UserProvider {
 
-  private loggedInUsername: string;
+  private loggedInUsername: string; // sets set when user logs in/registers
+  private isNewUser: boolean; 
 
-  constructor(public userOverviewProvider: UserOverviewProvider) {
-  }
-
-   public async getLoggedInUserName(): Promise<string> {
-    let userOverview = await this.userOverviewProvider.getUserOverview();
-    return userOverview.getUserName();
+  constructor(public userOverviewProvider: UserOverviewProvider) {}  
+  public getLoggedInUserName(): string {
+    return this.loggedInUsername;
   }
 
   public setLoggedInUsername(username: string): void {
     this.loggedInUsername = username;
+  }
+
+  public setIsNewUser(newUser: boolean)
+  {
+    this.isNewUser = newUser;
+  }
+
+  public getIsNewUser(): boolean {
+    return this.isNewUser;
   }
 
 

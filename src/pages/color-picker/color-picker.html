@@ -8,9 +8,19 @@
 
 <ion-content padding>
 
-  
-      <color-picker [hexColor]="hexColor" (colorChanged)="setColor($event)"(colorTouchStart)="colorTouchStart()" (colorTouchEnd)="colorTouchEnd()"></color-picker>
-    
-    <button ion-button [style.backgroundColor]="hexColor" full icon-only (click)="dismiss()"><ion-icon name="brush" ></ion-icon></button>
-   
+  <ion-grid>
+    <ion-row>
+      <ion-col align-self-center>
+        <color-picker [hexColor]="hexColor" (colorChanged)="setColor($event)" (colorTouchStart)="colorTouchStart()"
+          (colorTouchEnd)="colorTouchEnd()"></color-picker>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+
+
+  <button ion-button [style.backgroundColor]="hexColor" full icon-only no-margin (click)="dismiss()">
+    <ion-icon name="brush"></ion-icon>
+  </button>
+
 </ion-content>

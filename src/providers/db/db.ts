@@ -31,7 +31,7 @@ import {
 import {
   MomentProvider
 } from '../moment/moment';
-
+import { UserProvider } from './../user/user';
 
 
 /*
@@ -43,26 +43,27 @@ import {
 @Injectable()
 export class DbProvider {
   private db: PouchDB;
-  private _id_now; // moment object
+  private _id_now: string // doc _id fields in nosql
   private remote: any;
-  private registeredUsername: string
-
+  private loggedInUsername: string
 
   constructor(public momentProvider: MomentProvider) {
     /* used for doc _id fields*/
     this._id_now = this.momentProvider.getCurrentYearAndMonth();
-
-    //PouchDB.plugin(pouchdbUpsert);
+  }
+  
+  initSignUp(details) {
+    this.initSignIn(details, true);
   }
 
   initSignIn(details, signUp ? : boolean): void {
     this.remote = details.userDBs.supertest;
-    this.registeredUsername = details.user_id;
+    this.loggedInUsername = details.user_id;
+   // this.userProvider.setLoggedInUsername(this.loggedInUsername)
     this.db = new PouchDB('finance');
     this.db.sync(this.remote).on('complete', () => { // with the live options, complete never fires, so when its in sync, fire an event in the register page
       // initialized here, the datetime [min] and [max] does not work with promises
       this.initializeMinAndMaxDate();
-
       this.db.sync(this.remote, {
         live: true,
         retry: true, // waiting is overkill?
@@ -70,23 +71,18 @@ export class DbProvider {
       });
     })
     if (signUp) {
-      this.db.put(new UserOverview(this.registeredUsername));
+      this.db.put(new UserOverview(this.loggedInUsername));
+     // this.userProvider.setIsNewUser(true); 
     }
   }
-
-  initSignUp(details) {
-    this.initSignIn(details, true);
-  }
-
   /* needs to be setup before app starts, the ion datepicker doesnt handle promises */
-
   async initializeMinAndMaxDate() {
     this.momentProvider.setMaxDate(await this.getMaxDate());
     this.momentProvider.setMinDate(await this.getMinDate());
   }
 
   async getUserOverview() {
-    let doc = await this.db.get(this.registeredUsername);
+    let doc = await this.db.get(this.loggedInUsername);
     return new UserOverview(doc._id, doc._rev, doc.externalAccounts);
   }
 
@@ -101,7 +97,6 @@ export class DbProvider {
   async saveUserOverview(userOverview: UserOverview) {
     await this.db.put(userOverview);
   }
-
 
   public async setupFirstMonthOverview(accounts: Account[]) {
     try {
@@ -140,7 +135,6 @@ export class DbProvider {
   }
 
   private async getMonthOverviewObject(_id_month: string): Promise < MonthOverView > {
-
     try {
       let doc = await this.db.get(_id_month);
       console.log(_id_month);
@@ -148,12 +142,10 @@ export class DbProvider {
     } catch (error) {
       if (error.name === 'not_found') {
         await this.initializeMinAndMaxDate();
-        return this.createNewMonthOverview(_id_month); 
-        
+        return this.createNewMonthOverview(_id_month);
       }
     }
   }
-
 
   private addTransactionBetweenAccounts(accountA: Account, operationA: string, accountB: Account, operationB: string, amount: number, transactionDate ? : string) {
     accountA.addTransaction(new Transaction(amount, accountA.getAccountName(), accountB.getAccountName(), operationA, transactionDate));
@@ -173,23 +165,12 @@ export class DbProvider {
     accountB.updateFinalBalance(operationB, amount);
   }
 
-
-
-  // private updateFinalBalanceRecievingAccount(recievingAccount: Account, amount: number) {
-  //   recievingAccount.updateFinalBalance('increase', amount);
-  // }
-
-  // private updateFinalBalanceSendingAccount(sendingAccount: Account, amount: number) {
-  //   sendingAccount.updateFinalBalance('decrease', amount);
-  // }
-
-  private updateFinalBalanceAccount(account: Account, amount: number, operation: string)
-  {
+  private updateFinalBalanceAccount(account: Account, amount: number, operation: string) {
     account.updateFinalBalance(operation, amount);
   }
 
-  private updateInitialBalanceAccount(account: Account, amount: number, operation: string)
-  {
+  //todo: will ever be used? 
+  private updateInitialBalanceAccount(account: Account, amount: number, operation: string) {
     account.updateInitialBalance(operation, amount);
   }
 
@@ -204,7 +185,6 @@ export class DbProvider {
       console.log('error in transferring funds between external accounts', error);
     }
   }
-
 
   public async transferBetweenOwnAccounts(_id_month: string, accountNameA: string, accountNameB: string, amount: number, transactionDate ? : string) {
     try {
@@ -233,7 +213,6 @@ export class DbProvider {
       });
       _id_monthPlusAmonth = moment(_id_monthPlusAmonth).add(1, 'M').format('YYYY-MM'); // refactor in moment provider.
     }
-
   }
 
   private async updateBalanceInFollowingMonthsAfterExternalTransfer(_id_month: string, accountHolderName: string, recievingAccountName: string, amount: number) {
@@ -248,17 +227,6 @@ export class DbProvider {
         force: true
       });
       _id_monthPlusAmonth = moment(_id_monthPlusAmonth).add(1, 'M').format('YYYY-MM'); // refactor in moment provider.
-    }
-  }
-
-
-
-
-  async getRangeOfDateTimes() { // implement range for date time picker via end and start, look at docs
-    try {
-
-    } catch (error) {
-
     }
   }
 
@@ -285,20 +253,14 @@ export class DbProvider {
                 accountObject.addTransaction(new Transaction(tr.amount, tr.sendingAccountName, tr.recievingAccountName, tr.operation, tr.transactionDate, tr.uniqId));
               }
             });
-
           }
         });
       }
-
     });
-
     return accountsWithAllTransactions;
-
-
   }
 
-
-  private async updateBalanceInFollowingMonthsAfterExpense(_id_month: string, expense: Expense, oldAccountName?: string) {
+  private async updateBalanceInFollowingMonthsAfterExpense(_id_month: string, expense: Expense, oldAccountName ? : string) {
     var _id_monthPlusAmonth = moment(_id_month).add(1, 'M').format('YYYY-MM');
     var nowPlusAmonth = moment(this._id_now).add(1, 'M').format('YYYY-MM'); // refactor in moment provider.
     while (_id_monthPlusAmonth !== nowPlusAmonth) {
@@ -307,8 +269,7 @@ export class DbProvider {
       account.updateFinalBalance('decrease', expense.getCost());
       account.updateInitialBalance('decrease', expense.getCost());
       monthOverview.addTagsToUsedTags(expense.getTags());
-      if(oldAccountName)
-      {
+      if (oldAccountName) {
         let oldAccount = monthOverview.getAccByName(oldAccountName);
         oldAccount.updateFinalBalance('increase', expense.getCost());
         account.updateInitialBalance('increase', expense.getCost());
@@ -321,12 +282,12 @@ export class DbProvider {
     }
   }
 
-    // REFACTOR 
+  // REFACTOR 
   // seperate category and expenses? extra db call but now its a mess...
   private async addExpenseToCategoryToMonthOverview(_id_month: string, categoryName: string, expense: Expense) {
     let monthOverview = await this.getMonthOverviewObject(_id_month);
     let account = monthOverview.getAccByName(expense.getUsedAccountName());
-    account.updateFinalBalance('decrease', expense.getCost());  // --> 2 times??
+    account.updateFinalBalance('decrease', expense.getCost()); // --> 2 times??
     let category = monthOverview.getCategoryByName(categoryName);
     category.addExpense(expense);
     let budget = category.getBudget();
@@ -335,8 +296,6 @@ export class DbProvider {
     await this.db.put(monthOverview);
   }
 
-
-
   public async addExpenseToCategory(_id_month: string, categoryName: string, expense: Expense) {
     try {
       this.addExpenseToCategoryToMonthOverview(_id_month, categoryName, expense);
@@ -344,11 +303,9 @@ export class DbProvider {
         console.log('updating balances in following months');
         this.updateBalanceInFollowingMonthsAfterExpense(_id_month, expense);
       }
-
     } catch (error) {
       console.log('error in adding expenses', error);
     }
-
   }
 
   public async addTransfer(_id_month: string, accountNameA: string, accountNameB: string, amount: number, transactionDate: string) {
@@ -360,7 +317,6 @@ export class DbProvider {
       }
     } catch (error) {
       console.log(error);
-
     }
   }
 
@@ -376,10 +332,7 @@ export class DbProvider {
     }
   }
 
-
-
   public async updateCategoryAndExpensesIconName(categoryName: string, iconName: string) {
-
     let newDocs: MonthOverView[] = [];
     let allDocs = await this.db.allDocs({
       include_docs: true
@@ -394,7 +347,9 @@ export class DbProvider {
       }
       newDocs.push(monthOverviewObJect);
     });
-    await this.db.bulkDocs({docs: newDocs});
+    await this.db.bulkDocs({
+      docs: newDocs
+    });
   }
 
   public async updateCategoryColor(categoryName: string, newColor: string) {
@@ -403,16 +358,15 @@ export class DbProvider {
       include_docs: true
     });
     allDocs.rows.forEach(mo => {
-      
-        let monthOverviewObJect = new MonthOverView(mo.doc._id, mo.doc.accounts, mo.doc.categories, mo.doc._rev, mo.doc.usedTags);
-        if (monthOverviewObJect.containsCategory(categoryName)) {
-          monthOverviewObJect.getCategoryByName(categoryName).setCategoryColor(newColor);
-        }
-        newDocs.push(monthOverviewObJect);
-      
-      
+      let monthOverviewObJect = new MonthOverView(mo.doc._id, mo.doc.accounts, mo.doc.categories, mo.doc._rev, mo.doc.usedTags);
+      if (monthOverviewObJect.containsCategory(categoryName)) {
+        monthOverviewObJect.getCategoryByName(categoryName).setCategoryColor(newColor);
+      }
+      newDocs.push(monthOverviewObJect);
     });
-    await this.db.bulkDocs({docs: newDocs});
+    await this.db.bulkDocs({
+      docs: newDocs
+    });
   }
 
   public async updateCategoryName(categoryName: string, newCategoryName: string) {
@@ -421,18 +375,16 @@ export class DbProvider {
       include_docs: true
     });
     allDocs.rows.forEach(mo => {
-      
         let monthOverviewObJect = new MonthOverView(mo.doc._id, mo.doc.accounts, mo.doc.categories, mo.doc._rev, mo.doc.usedTags);
-      if (monthOverviewObJect.containsCategory(categoryName)) {
-        monthOverviewObJect.getCategoryByName(categoryName).setCategoryName(newCategoryName);
+        if (monthOverviewObJect.containsCategory(categoryName)) {
+          monthOverviewObJect.getCategoryByName(categoryName).setCategoryName(newCategoryName);
+        }
+        newDocs.push(monthOverviewObJect);
       }
-      newDocs.push(monthOverviewObJect);
-      }
-      
-      
     );
-    await this.db.bulkDocs({docs: newDocs});
-
+    await this.db.bulkDocs({
+      docs: newDocs
+    });
   }
 
   async getMinDate() {
@@ -442,8 +394,7 @@ export class DbProvider {
 
   async getMaxDate() {
     let allDocs = await this.db.allDocs();
-    return allDocs.rows[allDocs.rows.length -1].id || this.momentProvider.getCurrentYearAndMonth();
+    return allDocs.rows[allDocs.rows.length - 1].id || this.momentProvider.getCurrentYearAndMonth();
   }
-
 
 }

@@ -33,6 +33,7 @@ export class TransferPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public accountProvider: AccountProvider, public momentProvider: MomentProvider) {
     this.initialize();
+    this.currentYearMonthAndDay = this.momentProvider.getCurrentYearMonthAndDay();
   }
 
   ionViewDidLoad() {
