@@ -40,12 +40,17 @@ export class CategoryPage {
   public selectedIcon: string;
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public popoverCtrl: PopoverController, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider) {}
 
-  colorPickerPopover() {
-    // this.modalCtrl.create(ColorPickerPage).present();
-    let popover = this.modalCtrl.create(ColorPickerPage, undefined, {cssClass: 'alertModal'});
-    popover.present({
+
+  public notFilledIn(): boolean {
+    return (this.categoryName === undefined || this.categoryName === '' || this.getSelectedIcon() === 'add-circle' || this.selectedColor === '#000000' || this.selectedColor === undefined );
+  }
+
+
+  colorPickerModal() {
+    let modal = this.modalCtrl.create(ColorPickerPage, undefined, {cssClass: 'alertModal'});
+    modal.present({
     });
-    popover.onDidDismiss(color => {
+    modal.onDidDismiss(color => {
       if (color !== undefined) {
         this.selectedColor = color
       } else {
@@ -79,12 +84,9 @@ export class CategoryPage {
   }
 
   async addNewCategory() {
-    // implement checking for form validity (formbuilder instead of ngmodel?)
-    
     let category = new Category(this.categoryName, this.selectedColor, this.selectedIcon, this.momentProvider.getCurrentYearAndMonth())
     await this.categoryProvider.addCategory(category);
     this.navCtrl.pop();
   }
-
 
 }

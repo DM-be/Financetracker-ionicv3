@@ -23,24 +23,24 @@
 <ion-content padding>
   <ion-grid no-padding>
 
-    <form>
-      <ion-item item-end>
-        <ion-label>Name</ion-label>
-        <ion-input text-right type="text" [(ngModel)]="categoryName" name="categoryName"></ion-input>
-      </ion-item>
+    <ion-item item-end>
+      <ion-label>Name</ion-label>
+      <ion-input text-right type="text" [(ngModel)]="categoryName" name="categoryName"></ion-input>
+    </ion-item>
 
-      <button ion-item (click)="colorPickerPopover($event)">
-        <ion-label>Color</ion-label>
-        <ion-icon name="color-palette" item-end [style.color]="getSelectedColor()"></ion-icon>
-      </button>
-      <button ion-item (click)="iconsPopover()">
-        <ion-label>Icon</ion-label>
-        <ion-icon [name]="getSelectedIcon()" item-end></ion-icon>
-      </button>
+    <button ion-item (click)="colorPickerModal()">
+      <ion-label>Color</ion-label>
+      <ion-icon name="color-palette" item-end [style.color]="getSelectedColor()"></ion-icon>
+    </button>
+    <button ion-item (click)="iconsPopover()">
+      <ion-label>Icon</ion-label>
+      <ion-icon [name]="getSelectedIcon()" item-end></ion-icon>
+    </button>
 
-    </form>
 
-    <button ion-button full icon-only no-margin (click)="addNewCategory()"><ion-icon name="checkmark"></ion-icon></button>
+    <button [disabled]="notFilledIn()" ion-button full icon-only no-margin (click)="addNewCategory()">
+      <ion-icon name="checkmark"></ion-icon>
+    </button>
 
 
   </ion-grid>
