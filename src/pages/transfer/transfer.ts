@@ -65,4 +65,8 @@ export class TransferPage {
     this.navCtrl.pop();
   }
 
+  public notFilledIn(): boolean {
+    return (this.amount === undefined|| this.amount === '' || this.sendingAccountName === '' || this.sendingAccountName === undefined || this.recievingAccountName === '' || this.recievingAccountName === undefined);
+  }
+
 }
