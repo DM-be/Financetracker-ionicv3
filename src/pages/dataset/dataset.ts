@@ -110,7 +110,7 @@ export class DatasetPage {
       timeperiod: this.timeperiod,
       selectedCategories: this.selectedCategories,
       dataType: this.dataType,
-      backgroundColor: this.chartProvider.getRandomColor()
+      backgroundColor: this.chartProvider.getRandomColor(),
     }
     this.view.dismiss(datasetModalData);
   }

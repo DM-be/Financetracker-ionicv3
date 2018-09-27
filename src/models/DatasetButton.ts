@@ -1,6 +1,7 @@
+import { Category } from './Category';
 import { MomentProvider } from './../providers/moment/moment';
 export class DatasetButton {
-    constructor(public operationType: string, public dataType: string, public timeperiod: {from: string, to: string}, public backgroundColor: string, public selectedData: string []) {        
+    constructor(public operationType: string, public dataType: string, public timeperiod: {from: string, to: string}, public backgroundColor: string, public selectedData: string [], public selectedCategories?: Category []) {        
     }
     public getFormattedTimeperiod(): string {
         let momentProvider = new MomentProvider();

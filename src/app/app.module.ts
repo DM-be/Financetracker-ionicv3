@@ -1,3 +1,4 @@
+import { DatasetDetailsPage } from './../pages/dataset-details/dataset-details';
 
 import { AccountsPopoverPage } from './../pages/accounts-popover/accounts-popover';
 
@@ -88,7 +89,8 @@ import { UserProvider } from '../providers/user/user';
     AccountsPopoverPage,
     CategoryOptionsPage,
     ChartBudgetPage,
-    DatasetPage
+    DatasetPage,
+    DatasetDetailsPage
   ],
   imports: [
     BrowserModule,
@@ -127,7 +129,8 @@ import { UserProvider } from '../providers/user/user';
     AccountsPopoverPage,
     CategoryOptionsPage,
     ChartBudgetPage,
-    DatasetPage
+    DatasetPage,
+    DatasetDetailsPage
   ],
   providers: [
     StatusBar,

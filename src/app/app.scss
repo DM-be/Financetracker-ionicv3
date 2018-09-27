@@ -110,5 +110,10 @@ ion-loading.transparent {
         background-color: color($colors, light);
         
       }
+
+      .customScroll {
+        max-height: 15vh;
+        overflow-y: scroll;
+      }
     }
   }

@@ -199,7 +199,7 @@ export class ChartProvider {
     let defaultDatasetButton = new DatasetButton(operationType, dataType, {
       from: currentYearAndMonth,
       to: currentYearAndMonth,
-    }, randomColor, labels) // data is labels in this case
+    }, randomColor, labels, filteredCategories) // data is labels in this case
     this.datasetButtonProvider.addDatasetButton(defaultDatasetButton);
 
     let dataObject = new Dataset(data, backgroundColor, randomColor, this.datasetButtonProvider.getDatasetButtonLabel());
@@ -281,7 +281,7 @@ export class ChartProvider {
     let data = await this.categoryProvider.getCategoryDatasetWithCategoryLabel(timeperiod.from, timeperiod.to, categories, operationType)
     let backgroundColor = categories.map(c => c.getCategoryColor());
     let selectedData = categories.map(c => c.getCategoryName());
-    this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, backgroundColor_singular, selectedData));
+    this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, backgroundColor_singular, selectedData, categories));
     let dataset = new Dataset(data, backgroundColor, backgroundColor_singular, this.datasetButtonProvider.getDatasetButtonLabel());
     dataset.setBackgroundColor_multiple(backgroundColor);
     dataset.setBorderColor(backgroundColor_singular);
@@ -298,7 +298,7 @@ export class ChartProvider {
       for (let i = 0; i < data.length; i++) {
         backgroundColor.push(cat.getCategoryColor());
       }
-      this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, cat.getCategoryColor(), [cat.getCategoryName()]));
+      this.datasetButtonProvider.addDatasetButton(new DatasetButton(operationType, this.dataType, timeperiod, cat.getCategoryColor(), [cat.getCategoryName()], [cat]));
       let dataset = new Dataset(data, backgroundColor, cat.getCategoryColor(), this.datasetButtonProvider.getDatasetButtonLabel());
       dataset.setBackgroundColor_multiple(backgroundColor);
       dataset.setBorderColor(cat.getCategoryColor());

@@ -37,6 +37,7 @@ import {
 import {
   DatasetPage
 } from '../dataset/dataset';
+import { DatasetDetailsPage } from '../dataset-details/dataset-details';
 
 /**
  * Generated class for the ChartOverviewPage page.
@@ -154,7 +155,8 @@ export class ChartOverviewPage {
           text: 'Details',
           icon: 'arrow-forward',
           handler: () => {
-            console.log('Details clicked');
+            let modal = this.modalCtrl.create(DatasetDetailsPage,{datasetButton:this.datasetButtons[datasetIndex] }, {cssClass: 'alertModal'});
+            modal.present();
           }
         },
         {
