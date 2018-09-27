@@ -68,7 +68,9 @@ export class DatasetPage {
       }
     }
     else if( this.labelType === 'category'){ 
+      console.log(this.labelType);
       this.labels = this.selectedData; 
+      console.log(this.selectedData);
     }
   }
 
@@ -150,6 +152,10 @@ export class DatasetPage {
   }
 
   public notFilledIn(): boolean {
+    if((!this.chartProvider.noDatasets() && this.labelType === 'month'))
+    {
+      return (this.operationType === undefined || this.operationType === '')
+    }
     return (this.dataType === undefined || this.dataType === ''|| this.timeperiod.from === '' || this.timeperiod.to === ''|| this.operationType === undefined || this.operationType === '' || this.labelType === undefined || this.labelType === '');
   }       
 

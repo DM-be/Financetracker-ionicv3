@@ -1,8 +1,6 @@
 <!--
-  Generated template for the ExpenseDetailPage page.
 
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
+  TODO: disable starting and end date when in month labeltype, adding another dataset
 -->
 <ion-header>
   <ion-toolbar>
@@ -59,7 +57,8 @@
           <ion-option *ngFor="let operationType of operationTypes" [value]="operationType">{{operationType}}</ion-option>
         </ion-select>
       </ion-item>
-      <ion-item item-end>
+      <div *ngIf="!(!chartProvider.noDatasets() && labelType === 'month')"> 
+        <ion-item item-end>
         <ion-label>Starting date</ion-label>
         <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.from" name="from"
         (ionChange)="checkForLabels()" ></ion-datetime>
@@ -68,6 +67,8 @@
         <ion-label>Ending date</ion-label>
         <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.to" name="to" (ionChange)="checkForLabels()"></ion-datetime>
       </ion-item>
+      </div>
+      
 
 
 
