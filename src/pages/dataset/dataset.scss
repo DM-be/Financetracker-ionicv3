@@ -2,4 +2,9 @@ page-dataset {
     ion-badge {
         margin: 5px;
     }
+
+    .customScroll {
+        max-height: 15vh;
+        overflow-y: scroll;
+      }
 }

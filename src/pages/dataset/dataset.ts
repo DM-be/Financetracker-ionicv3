@@ -50,7 +50,7 @@ export class DatasetPage {
   public operationType: string;
   public ctx;
   public categories: Category[];
-  public selectedCategories: Category[]; // obs
+  public selectedCategories: Category[] = []// obs
   public selectedData: string[] = [];
 
 
@@ -61,11 +61,14 @@ export class DatasetPage {
     };
   }
 
-  checkForLabels() {
+  public checkForLabels(): void {
     if (this.labelType === 'month') {
       if (this.timeperiod.from !== '' && this.timeperiod.to !== '') {
         this.labels = this.momentProvider.getLabelsBetweenTimePeriod(this.timeperiod.from, this.timeperiod.to);
       }
+    }
+    else if( this.labelType === 'category'){ 
+      this.labels = this.selectedData; 
     }
   }
 
@@ -96,7 +99,7 @@ export class DatasetPage {
     this.ctx = this.navParams.get("ctx");
   }
 
-  async addAllDatasetsToChart() {
+  public addAllDatasetsToChart(): void {
     this.chartProvider.setDataType(this.dataType);
     this.chartProvider.setSelectedData(this.selectedData);
     this.chartProvider.setLabelType(this.labelType);
@@ -110,7 +113,7 @@ export class DatasetPage {
     this.view.dismiss(datasetModalData);
   }
 
-  addCategoriesAlert() {
+  public addCategoriesAlert(): void {
     let alert = this.alertCtrl.create();
     alert.setTitle('Select categories');
     this.categories.forEach(category => {
@@ -118,6 +121,7 @@ export class DatasetPage {
         type: 'checkbox',
         label: category.getCategoryName(),
         value: JSON.stringify(category),
+        checked: (this.selectedCategories.findIndex(sc => sc.categoryName === category.categoryName) >= 0)
       })
     });
     alert.addButton('Cancel');
@@ -131,7 +135,8 @@ export class DatasetPage {
           let catObject = new Category(parsedCat.categoryName, parsedCat.categoryColor, parsedCat.iconName, parsedCat.createdDate, parsedCat.expenses, parsedCat.budget);
           this.selectedCategories.push(catObject);
           this.selectedData.push(parsedCat.categoryName);
-          if (this.dataType === this.labelType) {
+          if (this.dataType === this.labelType) // for category and category
+          {
             this.labels = this.selectedData;
           }
         });
@@ -140,15 +145,12 @@ export class DatasetPage {
     alert.present();
   }
 
-  public dismiss() {
+  public dismiss(): void {
     this.view.dismiss();
   }
 
-  notFilledIn(): boolean {
+  public notFilledIn(): boolean {
     return (this.dataType === undefined || this.dataType === ''|| this.timeperiod.from === '' || this.timeperiod.to === ''|| this.operationType === undefined || this.operationType === '' || this.labelType === undefined || this.labelType === '');
   }       
-
-
-
 
 }

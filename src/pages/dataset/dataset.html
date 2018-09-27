@@ -24,56 +24,70 @@
   <ion-grid fixed>
     <form>
 
-        <ion-item>
-            <ion-label>Compare</ion-label>
-            <ion-select [(ngModel)]="dataType" name="dataType" [disabled]="!chartProvider.noDatasets()"> 
-              <ion-option *ngFor="let dataType of dataTypes" [value]="dataType">{{dataType}}</ion-option>
-            </ion-select>
-          </ion-item>
-    
-          <button ion-button full icon-only margin-bottom *ngIf="chartProvider.noDatasets() && dataType === 'category'" (click)="addCategoriesAlert()"><ion-icon name="add"></ion-icon></button>
-          
-          <div margin *ngIf="selectedData.length > 0">
-            <ion-row  >
-              <ion-col col-4 text-center *ngFor="let selectedData of selectedData">
-                <ion-badge  >{{selectedData}}</ion-badge>
-              </ion-col>
-            </ion-row>
+      <ion-item>
+        <ion-label>Compare</ion-label>
+        <ion-select [(ngModel)]="dataType" name="dataType" [disabled]="!chartProvider.noDatasets()">
+          <ion-option *ngFor="let dataType of dataTypes" [value]="dataType">{{dataType}}</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <button ion-button full icon-only margin-bottom *ngIf="chartProvider.noDatasets() && dataType === 'category'"
+        (click)="addCategoriesAlert()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+      <div *ngIf="selectedData.length > 0">
+        <ion-list class="customScroll">
+          <div *ngFor="let category of selectedCategories; let i = index">
+            <ion-item-sliding>
+              <button ion-item [style.opacity]="!chartProvider.noDatasets() ? 0.4 : 1">
+                <ion-icon small [name]="category.getIconName()" item-start></ion-icon>
+                {{category.getCategoryName()}}
+              </button>
+              <ion-item-options side="left" *ngIf="chartProvider.noDatasets()" >
+                <button ion-button color="danger" (click)="selectedCategories.splice(i,1)">
+                  <ion-icon name="trash"></ion-icon>
+                  Delete
+                </button>
+              </ion-item-options>
+            </ion-item-sliding>
           </div>
-          <ion-item>
-              <ion-label>Calculate</ion-label>
-              <ion-select [(ngModel)]="operationType" name="operationType">
-                <ion-option *ngFor="let operationType of operationTypes" [value]="operationType">{{operationType}}</ion-option>
-              </ion-select>
-            </ion-item>
-            <ion-item item-end>
-                <ion-label>Starting date</ion-label>
-                <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.from" name="from" (ionChange)="checkForLabels()"></ion-datetime>
-              </ion-item>
-              <ion-item item-end>
-                <ion-label>Ending date</ion-label>
-                <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.to" name="to" (ionChange)="checkForLabels()"></ion-datetime>
-              </ion-item>
-              
+        </ion-list>
+      </div>
+      <ion-item>
+        <ion-label>Calculate</ion-label>
+        <ion-select [(ngModel)]="operationType" name="operationType">
+          <ion-option *ngFor="let operationType of operationTypes" [value]="operationType">{{operationType}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item item-end>
+        <ion-label>Starting date</ion-label>
+        <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.from" name="from"
+        (ionChange)="checkForLabels()" ></ion-datetime>
+      </ion-item>
+      <ion-item item-end>
+        <ion-label>Ending date</ion-label>
+        <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.to" name="to" (ionChange)="checkForLabels()"></ion-datetime>
+      </ion-item>
+
 
 
       <ion-item>
         <ion-label>Labels</ion-label>
-        <ion-select [(ngModel)]="labelType" name="labelType" [disabled]="!chartProvider.noDatasets()" (ionChange)="checkForLabels()">
+        <ion-select [(ngModel)]="labelType" name="labelType" [disabled]="!chartProvider.noDatasets()" (ionChange)="checkForLabels()" >
           <ion-option *ngFor="let labelType of labelTypes" [value]="labelType">{{labelType}}</ion-option>
         </ion-select>
       </ion-item>
       <div margin *ngIf="labels.length > 0">
-          <ion-row  >
-            <ion-col col-4 text-center *ngFor="let label of labels">
-              <ion-badge  >{{label}}</ion-badge>
-            </ion-col>
-          </ion-row>
-        </div>
-      
-      
-    
-      
+        <ion-row>
+          <ion-col col-4 text-center *ngFor="let label of labels">
+            <ion-badge>{{label}}</ion-badge>
+          </ion-col>
+        </ion-row>
+      </div>
+
+
+
+
 
 
     </form>
