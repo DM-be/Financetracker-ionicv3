@@ -60,9 +60,8 @@ export class ChartProvider {
 
 
   constructor(public events: Events, public categoryProvider: CategoryProvider, public momentProvider: MomentProvider, public datasetButtonProvider: DatasetbuttonProvider) {
-    this.chartTypes = ['bar', 'line', 'doughnut', 'radar', 'polarArea'];
+    this.chartTypes = ['bar', 'line', 'doughnut', 'radar'];
     this.setupChartConfigs();
-
   }
 
   public setupChartConfigs(): void {
@@ -112,7 +111,7 @@ export class ChartProvider {
     this.selectedData = [];
   }
 
-  createNewChart(ctx: any, dataset ? : Dataset, type ? : string, expense ? : boolean, customLegend ? : boolean, customLabels ? : string[]) {
+  public createNewChart(ctx: any, dataset ? : Dataset, type ? : string, expense ? : boolean, customLegend ? : boolean, customLabels ? : string[]) {
     let chartData = {
       datasets: [{
         data: dataset.data || [],

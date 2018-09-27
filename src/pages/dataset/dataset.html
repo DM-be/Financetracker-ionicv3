@@ -23,51 +23,56 @@
 <ion-content padding>
   <ion-grid fixed>
     <form>
+
+        <ion-item>
+            <ion-label>Compare</ion-label>
+            <ion-select [(ngModel)]="dataType" name="dataType" [disabled]="!chartProvider.noDatasets()"> 
+              <ion-option *ngFor="let dataType of dataTypes" [value]="dataType">{{dataType}}</ion-option>
+            </ion-select>
+          </ion-item>
+    
+          <button ion-button full icon-only margin-bottom *ngIf="chartProvider.noDatasets() && dataType === 'category'" (click)="addCategoriesAlert()"><ion-icon name="add"></ion-icon></button>
+          
+          <div margin *ngIf="selectedData.length > 0">
+            <ion-row  >
+              <ion-col col-4 text-center *ngFor="let selectedData of selectedData">
+                <ion-badge  >{{selectedData}}</ion-badge>
+              </ion-col>
+            </ion-row>
+          </div>
+          <ion-item>
+              <ion-label>Calculate</ion-label>
+              <ion-select [(ngModel)]="operationType" name="operationType">
+                <ion-option *ngFor="let operationType of operationTypes" [value]="operationType">{{operationType}}</ion-option>
+              </ion-select>
+            </ion-item>
+            <ion-item item-end>
+                <ion-label>Starting date</ion-label>
+                <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.from" name="from" (ionChange)="checkForLabels()"></ion-datetime>
+              </ion-item>
+              <ion-item item-end>
+                <ion-label>Ending date</ion-label>
+                <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.to" name="to" (ionChange)="checkForLabels()"></ion-datetime>
+              </ion-item>
+              
+
+
       <ion-item>
         <ion-label>Labels</ion-label>
-        <ion-select [(ngModel)]="labelType" name="labelType" [disabled]="!chartProvider.noDatasets()">
+        <ion-select [(ngModel)]="labelType" name="labelType" [disabled]="!chartProvider.noDatasets()" (ionChange)="checkForLabels()">
           <ion-option *ngFor="let labelType of labelTypes" [value]="labelType">{{labelType}}</ion-option>
         </ion-select>
-        
       </ion-item>
-      <div *ngIf="labels.length > 0">
-        <ion-item>
-        <ion-list>
-          <ion-badge *ngFor="let label of labels" >{{label}}</ion-badge>
-        </ion-list>
-        </ion-item>
-      </div>
+      <div margin *ngIf="labels.length > 0">
+          <ion-row  >
+            <ion-col col-4 text-center *ngFor="let label of labels">
+              <ion-badge  >{{label}}</ion-badge>
+            </ion-col>
+          </ion-row>
+        </div>
       
-      <ion-item>
-        <ion-label>Compare</ion-label>
-        <ion-select [(ngModel)]="dataType" name="dataType" [disabled]="!chartProvider.noDatasets()"> 
-          <ion-option *ngFor="let dataType of dataTypes" [value]="dataType">{{dataType}}</ion-option>
-        </ion-select>
-      </ion-item>
-
-      <button ion-button *ngIf="chartProvider.noDatasets() && dataType === 'category'" (click)="addCategoriesAlert()">add</button>
       
-      <div *ngIf="selectedData.length > 0">
-      <ion-item>
-        <ion-list>
-          <ion-badge *ngFor="let selectedData of selectedData" >{{selectedData}}</ion-badge>
-        </ion-list>
-      </ion-item>
-      </div>
-      <ion-item item-end>
-        <ion-label>Starting date</ion-label>
-        <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.from" name="from" (ionChange)="checkForLabels()"></ion-datetime>
-      </ion-item>
-      <ion-item item-end>
-        <ion-label>Ending date</ion-label>
-        <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.to" name="to" (ionChange)="checkForLabels()"></ion-datetime>
-      </ion-item>
-      <ion-item>
-        <ion-label>Calculate</ion-label>
-        <ion-select [(ngModel)]="operationType" name="operationType">
-          <ion-option *ngFor="let operationType of operationTypes" [value]="operationType">{{operationType}}</ion-option>
-        </ion-select>
-      </ion-item>
+    
       
 
 

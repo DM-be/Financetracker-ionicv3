@@ -69,7 +69,7 @@ export class DatasetPage {
     }
   }
 
-  private convertSelectedDataToCategories(selectedCategoriesCategoryName: string []): Category []
+  private convertSelectedDataToCategories(): Category []
   {
     let cats = [];
     this.categories.forEach(c => {
@@ -91,7 +91,7 @@ export class DatasetPage {
     this.selectedData = this.chartProvider.getSelectedData();
     if(this.dataType === 'category' && this.selectedData.length > 0)
     {
-      this.selectedCategories = this.convertSelectedDataToCategories(this.selectedData);
+      this.selectedCategories = this.convertSelectedDataToCategories();
     }
     this.ctx = this.navParams.get("ctx");
   }
