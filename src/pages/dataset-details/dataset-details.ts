@@ -23,10 +23,11 @@ export class DatasetDetailsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.datasetButtonNumber = this.navParams.get("datasetButtonNumber");
     this.datasetButton = this.navParams.get("datasetButton");
-    console.log(this.datasetButton);
   }
 
   async ionViewWillEnter() {
+    let toolbar: HTMLElement = document.getElementsByClassName("toolbar-background-md")[0] as HTMLElement;
+    toolbar.style.backgroundColor = this.datasetButton.backgroundColor;
   }
 
 }

@@ -4,10 +4,16 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header style.background-color="{{datasetButton.backgroundColor}} !important">
-  <ion-navbar>
+
+<ion-header>
+  
+  <ion-toolbar>
+
     <ion-title>Dataset {{datasetButtonNumber + 1}}</ion-title>
-  </ion-navbar>
+
+
+  </ion-toolbar>
+  
 </ion-header>
 
 <ion-content padding>
@@ -16,7 +22,7 @@
       <ion-item>
         <ion-label>Compare</ion-label>
         <ion-select [(ngModel)]="datasetButton.dataType" name="dataType" [disabled]="true">
-          <ion-option  [value]="datasetButton.dataType">{{datasetButton.dataType}}</ion-option>
+          <ion-option [value]="datasetButton.dataType">{{datasetButton.dataType}}</ion-option>
         </ion-select>
       </ion-item>
 
@@ -34,23 +40,23 @@
       <ion-item>
         <ion-label>Operation</ion-label>
         <ion-select [(ngModel)]="datasetButton.operationType" name="operationType" [disabled]="true">
-            <ion-option  [value]="datasetButton.operationType">{{datasetButton.operationType}}</ion-option>
+          <ion-option [value]="datasetButton.operationType">{{datasetButton.operationType}}</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item item-end>
         <ion-label>Starting date</ion-label>
-        <ion-datetime [disabled]="true" displayFormat="MMM YY" pickerFormat="MMMM YYYY"[(ngModel)]="datasetButton.timeperiod.from"
+        <ion-datetime [disabled]="true" displayFormat="MMM YY" pickerFormat="MMMM YYYY" [(ngModel)]="datasetButton.timeperiod.from"
           name="from"></ion-datetime>
       </ion-item>
 
       <ion-item item-end>
-          <ion-label>Ending date</ion-label>
-          <ion-datetime [disabled]="true" displayFormat="MMM YY" pickerFormat="MMMM YYYY" [(ngModel)]="datasetButton.timeperiod.to"
-            name="to"></ion-datetime>
-        </ion-item>
-  
-      
+        <ion-label>Ending date</ion-label>
+        <ion-datetime [disabled]="true" displayFormat="MMM YY" pickerFormat="MMMM YYYY" [(ngModel)]="datasetButton.timeperiod.to"
+          name="to"></ion-datetime>
+      </ion-item>
+
+
     </form>
   </ion-grid>
 </ion-content>

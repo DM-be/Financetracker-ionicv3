@@ -60,7 +60,7 @@ export class ExpenseDetailPage {
     this.expense = this.navParams.get("expense") || new Expense(undefined, '', this.currentDate_ISO_8601, '', '', '');
     this.editMode = this.navParams.get("editMode");
     this.newExpense = this.navParams.get("newExpense");
-    this.tags = this.expense.getTags().map(tag => tag.tagName);
+    this.tags = this.expense.getTags().map(tag => tag.getTagName());
   }
 
   async ionViewWillEnter() {
