@@ -163,13 +163,17 @@ export class MonthOverviewPage {
   }
 
   public detailExpenseModal(expense ? : Expense, editMode ? : boolean, newExpense ? : boolean): void {
-    this.modalCtrl.create(ExpenseDetailPage, {
+    let modal = this.modalCtrl.create(ExpenseDetailPage, {
       expense: expense,
       editMode: editMode,
       newExpense: newExpense
     }, {
       cssClass: 'alertModal'
-    }).present();
+    });
+    modal.present();
+    modal.onDidDismiss(async () => {
+      await this.refreshData();
+    });
   }
 
   async deleteExpense(expense: Expense): Promise < void > {
