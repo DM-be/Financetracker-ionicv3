@@ -37,7 +37,10 @@ export class Dataset {
     } else {
       this.borderColor = undefined;
     }
+  }
 
+  public setLabel(indexPlusOne: number): void {
+    this.label = `Dataset ${indexPlusOne}`;
   }
 
 

@@ -366,7 +366,14 @@ export class ChartProvider {
       this.labelType = undefined;
       this.dataType = undefined;
     }
+    this.updateLabels();
     this.chartInstance.update();
+  }
+
+  private updateLabels(): void {
+    this.chartInstance.data.datasets.forEach((dataset: Dataset, index) => {
+      dataset.setLabel(index + 1);
+    })
   }
 
   public clearDatasets(): void {
