@@ -60,12 +60,14 @@
       <div *ngIf="!(!chartProvider.noDatasets() && labelType === 'month')"> 
         <ion-item item-end>
         <ion-label>Starting date</ion-label>
-        <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.from" name="from"
-        (ionChange)="checkForLabels()" ></ion-datetime>
+        <ion-datetime displayFormat="MMM YY" pickerFormat="MMMM YYYY" [(ngModel)]="timeperiod.from" name="from"
+        (ionChange)="checkForLabels()" [min]="momentProvider.getMinDate()"
+        [max]="momentProvider.getMaxDate()" ></ion-datetime>
       </ion-item>
       <ion-item item-end>
         <ion-label>Ending date</ion-label>
-        <ion-datetime displayFormat="YYYY-MM" pickerFormat="YYYY-MM" [(ngModel)]="timeperiod.to" name="to" (ionChange)="checkForLabels()"></ion-datetime>
+        <ion-datetime displayFormat="MMM YY" pickerFormat="MMMM YYYY" [(ngModel)]="timeperiod.to" name="to" (ionChange)="checkForLabels()" [min]="momentProvider.getMinDate()"
+        [max]="momentProvider.getMaxDate()"></ion-datetime>
       </ion-item>
       </div>
       

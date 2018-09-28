@@ -39,7 +39,8 @@
         <ion-item item-end>
           <ion-label>Date</ion-label>
           <ion-datetime  displayFormat="DDD MMM YY" pickerFormat="DD MM YY" [(ngModel)]="currentYearMonthAndDay"
-            name="date"></ion-datetime>
+            name="date" [min]="momentProvider.getMinDate()"
+            [max]="momentProvider.getMaxDate()"></ion-datetime>
         </ion-item>
         <ion-item item-end>
           <ion-label>Amount</ion-label>

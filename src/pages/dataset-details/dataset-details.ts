@@ -21,7 +21,7 @@ export class DatasetDetailsPage {
   public datasetButtonNumber: number;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.datasetButtonNumber = this.navParams.get("number");
+    this.datasetButtonNumber = this.navParams.get("datasetButtonNumber");
     this.datasetButton = this.navParams.get("datasetButton");
     console.log(this.datasetButton);
   }

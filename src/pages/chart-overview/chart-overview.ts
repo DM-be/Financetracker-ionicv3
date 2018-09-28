@@ -155,7 +155,7 @@ export class ChartOverviewPage {
           text: 'Details',
           icon: 'arrow-forward',
           handler: () => {
-            let modal = this.modalCtrl.create(DatasetDetailsPage,{datasetButton:this.datasetButtons[datasetIndex] }, {cssClass: 'alertModal'});
+            let modal = this.modalCtrl.create(DatasetDetailsPage,{datasetButton:this.datasetButtons[datasetIndex], datasetButtonNumber: datasetIndex }, {cssClass: 'alertModal'});
             modal.present();
           }
         },
