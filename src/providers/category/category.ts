@@ -104,6 +104,16 @@ export class CategoryProvider {
           resultingData.push(0);
         }
       }
+      else if (operation === 'average' && labelType === 'month')
+      {
+        if (monthOverviewObJect.containsCategory(categoryName)) {
+          let category = monthOverviewObJect.getCategoryByName(categoryName);
+          let average = category.getTotalExpenseCost()/category.getNumberOfExpenses();
+          resultingData.push(average);
+        } else {
+          resultingData.push(0);
+        }
+      }
     })
     return resultingData;
   }
@@ -138,6 +148,15 @@ export class CategoryProvider {
             resultingData[i] += cat.getTotalExpenseCost();
           }
         });
+      }
+      else if (operation === 'average') {
+        monthOverviewObJect.getCategories().forEach(cat => {
+          let i = categories.findIndex(c => c.categoryName === cat.categoryName);
+          if (i >= 0) {
+            resultingData[i] += (cat.getTotalExpenseCost() / cat.getNumberOfExpenses());
+          }
+        });
+        // median - max - min?
       }
     })
     return resultingData;

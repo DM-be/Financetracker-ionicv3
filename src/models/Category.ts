@@ -58,6 +58,10 @@ export class Category {
         return cost;
     }
 
+    public getNumberOfExpenses(): number {
+        return this.expenses.length;
+    }
+
     public replaceExpense(expense: Expense)
     {
         let i = this.expenses.findIndex(
